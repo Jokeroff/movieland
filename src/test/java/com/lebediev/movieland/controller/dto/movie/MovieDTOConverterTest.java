@@ -50,7 +50,7 @@ public class MovieDTOConverterTest {
 
     @Test
     public void testToMovieDTOList() {
-        List<Movie> moviesList = new ArrayList<>();
+        List <Movie> moviesList = new ArrayList <>();
         Movie movieOne = mock(Movie.class);
         Movie movieTwo = mock(Movie.class);
         when(movieOne.getMovieId()).thenReturn(222);
@@ -59,7 +59,7 @@ public class MovieDTOConverterTest {
         moviesList.add(movieTwo);
 
         MovieDTOConverter movieDTOConverter = new MovieDTOConverter();
-        List<MovieDTO> actual = movieDTOConverter.toMovieDTOList(moviesList);
+        List <MovieDTO> actual = movieDTOConverter.toMovieDTOList(moviesList);
         assertEquals(actual.get(0).movieId, 222);
         assertEquals(actual.get(1).movieId, 333);
     }

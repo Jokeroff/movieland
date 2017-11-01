@@ -9,8 +9,8 @@ import java.util.List;
 @Service
 public class MovieDTOConverter {
 
-    public static List<MovieDTO> toMovieDTOList(List<Movie> moviesList) {
-        List<MovieDTO> movieDTOList = new ArrayList<>();
+    public static List <MovieDTO> toMovieDTOList(List <Movie> moviesList) {
+        List <MovieDTO> movieDTOList = new ArrayList <>();
         for (Movie movie : moviesList) {
             movieDTOList.add(toMovieDTO(movie));
         }

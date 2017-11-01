@@ -12,7 +12,7 @@ import java.util.List;
 public class JsonConverter {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String toJson(List<MovieDTO> movieDTOList) throws JsonProcessingException {
+    public static String toJson(List <MovieDTO> movieDTOList) throws JsonProcessingException {
         return objectMapper.writerWithView(MovieViews.BaseMovie.class).writeValueAsString(movieDTOList);
     }
 }

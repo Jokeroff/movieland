@@ -12,8 +12,11 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieDAO movieDAO;
 
-    public List<Movie> getAllMovies() {
+    public List <Movie> getAllMovies() {
         return movieDAO.getAllMovies();
+    }
 
+    public List<Movie> getRandomMovies(){
+        return movieDAO.getRandomMovies();
     }
 }

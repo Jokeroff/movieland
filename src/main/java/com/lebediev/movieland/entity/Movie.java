@@ -10,8 +10,8 @@ public class Movie {
     private String description;
     private double rating;
     private double price;
-    private List<Genre> genres;
-    private List<Country> countries;
+    private List <Genre> genres;
+    private List <Country> countries;
     private String poster;
 
     public String getPoster() {
@@ -50,11 +50,11 @@ public class Movie {
         return price;
     }
 
-    public List<Genre> getGenres() {
+    public List <Genre> getGenres() {
         return genres;
     }
 
-    public List<Country> getCountries() {
+    public List <Country> getCountries() {
         return countries;
     }
 
@@ -82,11 +82,11 @@ public class Movie {
         this.price = price;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List <Genre> genres) {
         this.genres = genres;
     }
 
-    public void setCountries(List<Country> countries) {
+    public void setCountries(List <Country> countries) {
         this.countries = countries;
     }
 
@@ -94,7 +94,7 @@ public class Movie {
         this.movieId = movieId;
     }
 
-    public Movie(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List<Genre> genres, List<Country> countries, String poster) {
+    public Movie(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List <Genre> genres, List <Country> countries, String poster) {
         this.movieId = movieId;
         this.movieNameRus = movieNameRus;
         this.movieNameNative = movieNameNative;

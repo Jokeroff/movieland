@@ -49,12 +49,12 @@ public class MovieControllerTest {
         Genre genre = mock(Genre.class);
         Country country = mock(Country.class);
         Movie movieOne = new Movie(44, "testMovieNameRus", "testMovieNameNative",
-                1999, "testDescription", 0.1, 2.2, Arrays.asList(genre),
-                Arrays.asList(country), "testPoster");
+                                   1999, "testDescription", 0.1, 2.2, Arrays.asList(genre),
+                                   Arrays.asList(country), "testPoster");
         Movie movieTwo = new Movie(88, "testMovieNameRusTwo", "testMovieNameNativeTwo",
-                2050, "testDescriptionTwo", 4.4, 5.0, Arrays.asList(genre),
-                Arrays.asList(country), "testPosterTwo");
-        List<Movie> movieList = Arrays.asList(movieOne, movieTwo);
+                                   2050, "testDescriptionTwo", 4.4, 5.0, Arrays.asList(genre),
+                                   Arrays.asList(country), "testPosterTwo");
+        List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
         when(movieService.getAllMovies()).thenReturn(movieList);
         System.out.println(jsonConverter.toJson(movieDTOConverter.toMovieDTOList(movieService.getAllMovies())));
 

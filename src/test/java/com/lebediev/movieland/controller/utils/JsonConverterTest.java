@@ -18,12 +18,12 @@ public class JsonConverterTest {
     @Test
     public void testToJson() throws JsonProcessingException {
         JsonConverter jsonConverter = new JsonConverter();
-        List<MovieDTO> MovieDTOList = new ArrayList<>();
+        List <MovieDTO> MovieDTOList = new ArrayList <>();
         Genre genre = mock(Genre.class);
         Country country = mock(Country.class);
         MovieDTO movieDTO = new MovieDTO(44, "testMovieNameRus", "testMovieNameNative",
-                1999, "testDescription", 0.1, 2.2, Arrays.asList(genre),
-                Arrays.asList(country), "testPoster");
+                                         1999, "testDescription", 0.1, 2.2, Arrays.asList(genre),
+                                         Arrays.asList(country), "testPoster");
         MovieDTOList.add(movieDTO);
         String actual = jsonConverter.toJson(MovieDTOList);
         String expected = "[{\"movieId\":44,\"movieNameRus\":\"testMovieNameRus\",\"movieNameNative\":\"testMovieNameNative\",\"date\":1999,\"rating\":0.1,\"price\":2.2,\"poster\":\"testPoster\"}]";
