@@ -3,7 +3,6 @@ package com.lebediev.movieland.dao.jdbc.impl;
 import com.lebediev.movieland.dao.GenreDAO;
 import com.lebediev.movieland.dao.jdbc.mapper.MovieToGenreRowMapper;
 import com.lebediev.movieland.entity.Genre;
-import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.MovieToGenre;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,16 +31,13 @@ public class GenreDAOJdbc implements GenreDAO{
     }
 
     public List<Genre> getGenresByMovieId(List<MovieToGenre> movieToGenreList, int movieId){
-        log.info("Start getting genres by movieId ");
-        long startTime = System.currentTimeMillis();
         List<Genre> genreList = new ArrayList <>();
 
         for (MovieToGenre movieToGenre : movieToGenreList){
-            if (movieToGenre.getMovieId()== movieId){
+            if (movieToGenre.getMovieId() == movieId){
                 genreList.add(new Genre(movieToGenre.getGenreId(), movieToGenre.getGenreName()));
             }
         }
-        log.info("Finish getting genres by movieId. It took {} ms", System.currentTimeMillis() - startTime);
         return genreList;
     }
  }

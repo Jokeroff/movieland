@@ -28,4 +28,11 @@ public class MovieToGenre {
     public void setGenreName(String genreName) {
         this.genreName = genreName;
     }
+
+    public MovieToGenre(int movieId, int genreId, String genreName) {
+        this.movieId = movieId;
+        this.genreId = genreId;
+        this.genreName = genreName;
+    }
+    public  MovieToGenre(){}
 }

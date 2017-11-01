@@ -1,6 +1,7 @@
-package com.lebediev.movieland.dao.jdbc.impl;
+package com.lebediev.movieland.dao.jdbc.integrationtests;
 
 
+import com.lebediev.movieland.dao.jdbc.impl.GenreDAOJdbc;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.MovieToGenre;
 import org.junit.Test;

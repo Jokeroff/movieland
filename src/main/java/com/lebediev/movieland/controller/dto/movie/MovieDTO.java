@@ -22,9 +22,9 @@ public class MovieDTO {
     @JsonView(MovieViews.BaseMovie.class)
     public double price;
     @JsonView(MovieViews.ExtendedMovie.class)
-    public List <Genre> genres;
-    @JsonView(MovieViews.ExtendedMovie.class)
     public List <Country> countries;
+    @JsonView(MovieViews.ExtendedMovie.class)
+    public List <Genre> genres;
     @JsonView(MovieViews.BaseMovie.class)
     public String poster;
 

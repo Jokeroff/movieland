@@ -42,26 +42,34 @@ public class MovieControllerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(movieController).build();
+
+        Genre genre = mock(Genre.class);
+        Country country = mock(Country.class);
+        country.setCountryName("testCountry");
+        Movie movieOne = new Movie(44, "testMovieNameRus", "testMovieNameNative",
+                1999, "testDescription", 0.1, 2.2, Arrays.asList(genre),
+                Arrays.asList(country), "testPoster");
+        Movie movieTwo = new Movie(88, "testMovieNameRusTwo", "testMovieNameNativeTwo",
+                2050, "testDescriptionTwo", 4.4, 5.0, Arrays.asList(genre),
+                Arrays.asList(country), "testPosterTwo");
+        List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
+        when(movieService.getAllMovies()).thenReturn(movieList);
     }
 
     @Test
     public void testGetAllMovies() throws Exception {
-        Genre genre = mock(Genre.class);
-        Country country = mock(Country.class);
-        Movie movieOne = new Movie(44, "testMovieNameRus", "testMovieNameNative",
-                                   1999, "testDescription", 0.1, 2.2, Arrays.asList(genre),
-                                   Arrays.asList(country), "testPoster");
-        Movie movieTwo = new Movie(88, "testMovieNameRusTwo", "testMovieNameNativeTwo",
-                                   2050, "testDescriptionTwo", 4.4, 5.0, Arrays.asList(genre),
-                                   Arrays.asList(country), "testPosterTwo");
-        List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
-        when(movieService.getAllMovies()).thenReturn(movieList);
-        System.out.println(jsonConverter.toJson(movieDTOConverter.toMovieDTOList(movieService.getAllMovies())));
 
         mockMvc.perform(get("/v1/movie")).
                 andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2))).
                 andExpect(jsonPath("$[0].movieId", is(44))).
                 andExpect(jsonPath("$[1].movieNameNative", is("testMovieNameNativeTwo")));
+    }
+
+    @Test
+    public void testGetRandomMovies() throws Exception {
+
+        mockMvc.perform(get("/v1/movie/random")).
+                andExpect(status().isOk());
     }
 }

@@ -30,20 +30,20 @@ public class MovieController {
     @RequestMapping("/movie")
     @ResponseBody
     public String getAllMovies() throws JsonProcessingException {
-        log.info("Start getting Json movie from controller");
+        log.info("Start getting Json AllMovies from controller (v1/movie)");
         long startTime = System.currentTimeMillis();
         List <MovieDTO> moviesList = movieDTOConverter.toMovieDTOList(movieService.getAllMovies());
-        log.info("Finish getting Json movie from controller. It took {} ms", System.currentTimeMillis() - startTime);
-        return jsonConverter.toJson(moviesList);
+        log.info("Finish getting Json AllMovies from controller (v1/movie). It took {} ms", System.currentTimeMillis() - startTime);
+        return jsonConverter.toJson(moviesList, JsonConverter.JsonView.BASE);
     }
 
     @RequestMapping("/movie/random")
     @ResponseBody
     public String getRandomMovies() throws JsonProcessingException {
-       // log.info("Start getting Json movie from controller");
-      //  long startTime = System.currentTimeMillis();
-         movieService.getRandomMovies();
-     //   log.info("Finish getting Json movie from controller. It took {} ms", System.currentTimeMillis() - startTime);
-        return movieService.getRandomMovies().toString();
+        log.info("Start getting Json RandomMovies from controller (v1/movie/random)");
+        long startTime = System.currentTimeMillis();
+        List <MovieDTO> moviesList = movieDTOConverter.toMovieDTOList(movieService.getRandomMovies());
+        log.info("Finish getting Json RandomMovies from controller (v1/movie/random). It took {} ms", System.currentTimeMillis() - startTime);
+        return jsonConverter.toJson(moviesList, JsonConverter.JsonView.EXTENDED);
     }
 }
