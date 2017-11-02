@@ -1,7 +1,7 @@
 package com.lebediev.movieland.dao.jdbc.mapper;
 
 
-import com.lebediev.movieland.entity.MovieToGenre;
+import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
 import org.junit.Test;
 import java.sql.ResultSet;
 import java.sql.SQLException;

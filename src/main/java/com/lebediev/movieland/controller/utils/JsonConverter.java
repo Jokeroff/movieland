@@ -2,29 +2,31 @@ package com.lebediev.movieland.controller.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lebediev.movieland.controller.dto.movie.MovieDTO;
-import com.lebediev.movieland.controller.dto.movie.MovieViews;
-import org.springframework.stereotype.Service;
+import com.lebediev.movieland.controller.dto.MovieDto;
+import com.lebediev.movieland.controller.dto.MovieViews;
 
 import java.util.List;
 
 
-@Service
 public class JsonConverter {
     private static ObjectMapper objectMapper = new ObjectMapper();
-    public enum JsonView{
+
+    public enum JsonView {
         BASE,
         EXTENDED
     }
 
-    public static String toJson(List <MovieDTO> movieDTOList, JsonView jsonView) throws JsonProcessingException {
-        String json = "dummy json";
-        if(jsonView.equals(jsonView.BASE)) {
-            json = objectMapper.writerWithView(MovieViews.BaseMovie.class).writeValueAsString(movieDTOList);
+    public static String toJson(List <MovieDto> movieDtoList, JsonView jsonView) {
+        try {
+            if (jsonView.equals(jsonView.BASE)) {
+                return objectMapper.writerWithView(MovieViews.BaseMovie.class).writeValueAsString(movieDtoList);
+            } else if (jsonView.equals(jsonView.EXTENDED)) {
+                return objectMapper.writerWithView(MovieViews.ExtendedMovie.class).writeValueAsString(movieDtoList);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException();
         }
-        else if(jsonView.equals(jsonView.EXTENDED)){
-            json = objectMapper.writerWithView(MovieViews.ExtendedMovie.class).writeValueAsString(movieDTOList);
-        }
-        return json;
     }
 }
