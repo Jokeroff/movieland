@@ -1,15 +1,12 @@
 package com.lebediev.movieland.dao.jdbc.mapper;
 
-import com.lebediev.movieland.entity.MovieToGenre;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Service
 public class MovieToGenreRowMapper implements RowMapper<MovieToGenre> {
 
     @Override

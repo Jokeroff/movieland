@@ -1,8 +1,8 @@
 package com.lebediev.movieland.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.lebediev.movieland.controller.dto.movie.MovieDTO;
-import com.lebediev.movieland.controller.dto.movie.MovieDTOConverter;
+import com.lebediev.movieland.controller.dto.MovieDto;
+import com.lebediev.movieland.controller.utils.MovieDtoConverter;
 import com.lebediev.movieland.controller.utils.JsonConverter;
 import com.lebediev.movieland.service.MovieService;
 import org.slf4j.Logger;
@@ -18,21 +18,19 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/v1", produces = "text/plain;charset=UTF-8")
 public class MovieController {
-    Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private MovieService movieService;
-    @Autowired
-    private MovieDTOConverter movieDTOConverter;
-    @Autowired
-    private JsonConverter jsonConverter;
+    private MovieDtoConverter movieDtoConverter = new MovieDtoConverter();
+    private JsonConverter jsonConverter = new JsonConverter();
 
     @RequestMapping("/movie")
     @ResponseBody
     public String getAllMovies() throws JsonProcessingException {
         log.info("Start getting Json AllMovies from controller (v1/movie)");
         long startTime = System.currentTimeMillis();
-        List <MovieDTO> moviesList = movieDTOConverter.toMovieDTOList(movieService.getAllMovies());
+        List <MovieDto> moviesList = movieDtoConverter.toMovieDtoList(movieService.getAllMovies());
         log.info("Finish getting Json AllMovies from controller (v1/movie). It took {} ms", System.currentTimeMillis() - startTime);
         return jsonConverter.toJson(moviesList, JsonConverter.JsonView.BASE);
     }
@@ -42,7 +40,7 @@ public class MovieController {
     public String getRandomMovies() throws JsonProcessingException {
         log.info("Start getting Json RandomMovies from controller (v1/movie/random)");
         long startTime = System.currentTimeMillis();
-        List <MovieDTO> moviesList = movieDTOConverter.toMovieDTOList(movieService.getRandomMovies());
+        List <MovieDto> moviesList = movieDtoConverter.toMovieDtoList(movieService.getRandomMovies());
         log.info("Finish getting Json RandomMovies from controller (v1/movie/random). It took {} ms", System.currentTimeMillis() - startTime);
         return jsonConverter.toJson(moviesList, JsonConverter.JsonView.EXTENDED);
     }

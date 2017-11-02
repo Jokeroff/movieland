@@ -1,6 +1,6 @@
 package com.lebediev.movieland.dao.jdbc.mapper;
 
-import com.lebediev.movieland.entity.MovieToCountry;
+import com.lebediev.movieland.dao.jdbc.entity.MovieToCountry;
 import org.junit.Test;
 
 import java.sql.ResultSet;

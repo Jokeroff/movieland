@@ -1,6 +1,6 @@
 package com.lebediev.movieland.controller;
 
-import com.lebediev.movieland.controller.dto.movie.MovieDTOConverter;
+import com.lebediev.movieland.controller.utils.MovieDtoConverter;
 import com.lebediev.movieland.controller.utils.JsonConverter;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
@@ -13,13 +13,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,30 +29,47 @@ public class MovieControllerTest {
     @Mock
     MovieService movieService;
     @Mock
-    MovieDTOConverter movieDTOConverter;
+    MovieDtoConverter movieDtoConverter;
     @Mock
     JsonConverter jsonConverter;
-
     @InjectMocks
     MovieController movieController;
+
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(movieController).build();
+        Genre genre = new Genre (33, "testGenre");
+        Country country = new Country(55, "testCountry");
+        Movie movieOne = new Movie();
+        movieOne.setMovieId(44);
+        movieOne.setMovieNameRus("testMovieNameRus");
+        movieOne.setMovieNameNative("testMovieNameNative");
+        movieOne.setDate(1999);
+        movieOne.setDescription("testDescription");
+        movieOne.setRating(0.1);
+        movieOne.setPrice(2.2);
+        movieOne.setGenres(Arrays.asList(genre));
+        movieOne.setCountries(Arrays.asList(country));
+        movieOne.setPoster("testPoster");
 
-        Genre genre = mock(Genre.class);
-        Country country = mock(Country.class);
-        country.setCountryName("testCountry");
-        Movie movieOne = new Movie(44, "testMovieNameRus", "testMovieNameNative",
-                1999, "testDescription", 0.1, 2.2, Arrays.asList(genre),
-                Arrays.asList(country), "testPoster");
-        Movie movieTwo = new Movie(88, "testMovieNameRusTwo", "testMovieNameNativeTwo",
-                2050, "testDescriptionTwo", 4.4, 5.0, Arrays.asList(genre),
-                Arrays.asList(country), "testPosterTwo");
+        Movie movieTwo = new Movie();
+        movieTwo.setMovieId(88);
+        movieTwo.setMovieNameRus("testMovieNameRusTwo");
+        movieTwo.setMovieNameNative("testMovieNameNativeTwo");
+        movieTwo.setDate(2050);
+        movieTwo.setDescription("testDescriptionTwo");
+        movieTwo.setRating(4.4);
+        movieTwo.setPrice(5.0);
+        movieTwo.setGenres(Arrays.asList(genre));
+        movieTwo.setCountries(Arrays.asList(country));
+        movieTwo.setPoster("testPosterTwo");
+
         List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
         when(movieService.getAllMovies()).thenReturn(movieList);
+        when(movieService.getRandomMovies()).thenReturn(movieList);
     }
 
     @Test
@@ -63,13 +79,30 @@ public class MovieControllerTest {
                 andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2))).
                 andExpect(jsonPath("$[0].movieId", is(44))).
-                andExpect(jsonPath("$[1].movieNameNative", is("testMovieNameNativeTwo")));
+                andExpect(jsonPath("$[0].movieNameNative", is("testMovieNameNative"))).
+                andExpect(jsonPath("$[0].movieNameRus", is("testMovieNameRus"))).
+                andExpect(jsonPath("$[0].date", is(1999))).
+                andExpect(jsonPath("$[0].rating", is(0.1))).
+                andExpect(jsonPath("$[0].price", is(2.2))).
+                andExpect(jsonPath("$[0].poster", is("testPoster"))).
+                andExpect(jsonPath("$[1].movieId", is(88))).
+                andExpect(jsonPath("$[1].movieNameNative", is("testMovieNameNativeTwo"))).
+                andExpect(jsonPath("$[1].movieNameRus", is("testMovieNameRusTwo"))).
+                andExpect(jsonPath("$[1].date", is(2050))).
+                andExpect(jsonPath("$[1].rating", is(4.4))).
+                andExpect(jsonPath("$[1].price", is(5.0))).
+                andExpect(jsonPath("$[1].poster", is("testPosterTwo")));
     }
 
     @Test
     public void testGetRandomMovies() throws Exception {
 
         mockMvc.perform(get("/v1/movie/random")).
-                andExpect(status().isOk());
+                andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(2))).
+                andExpect(jsonPath("$[0].genres", notNullValue())).
+                andExpect(jsonPath("$[0].countries", notNullValue())).
+                andExpect(jsonPath("$[1].genres", notNullValue())).
+                andExpect(jsonPath("$[1].countries", notNullValue()));
     }
 }

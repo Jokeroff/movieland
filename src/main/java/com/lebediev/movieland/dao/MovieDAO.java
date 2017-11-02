@@ -4,8 +4,7 @@ import com.lebediev.movieland.entity.Movie;
 
 import java.util.List;
 
-public interface MovieDAO {
+public interface MovieDao {
     List <Movie> getAllMovies();
     List<Movie> getRandomMovies();
-    List<Movie> enrichMovieByGenres (List<Movie> movieList);
 }
