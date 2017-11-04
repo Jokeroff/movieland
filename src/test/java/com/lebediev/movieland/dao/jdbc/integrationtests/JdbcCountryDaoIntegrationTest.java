@@ -1,8 +1,7 @@
 package com.lebediev.movieland.dao.jdbc.integrationtests;
 
 
-import com.lebediev.movieland.dao.jdbc.impl.JdbcCountryDao;
-import com.lebediev.movieland.entity.Country;
+import com.lebediev.movieland.dao.jdbc.JdbcCountryDao;
 import com.lebediev.movieland.dao.jdbc.entity.MovieToCountry;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,6 @@
 package com.lebediev.movieland.dao.jdbc.integrationtests;
 
-import com.lebediev.movieland.dao.jdbc.impl.JdbcMovieDao;
+import com.lebediev.movieland.dao.jdbc.JdbcMovieDao;
 import com.lebediev.movieland.entity.Movie;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,9 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-config.xml"})
+
 public class JdbcMovieDaoIntegrationTest {
+
     @Autowired
     private JdbcMovieDao jdbcMovieDao;
 
@@ -21,6 +23,7 @@ public class JdbcMovieDaoIntegrationTest {
     public void testGetAllMovies() {
         List <Movie> movieList = jdbcMovieDao.getAllMovies();
         assertNotEquals(movieList.size(), 0);
+        System.out.println(movieList);
     }
 
     @Test

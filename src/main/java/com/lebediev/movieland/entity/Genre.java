@@ -12,7 +12,6 @@ public class Genre {
     public Genre() {
     }
 
-    ;
 
     public int getGenreId() {
         return genreId;

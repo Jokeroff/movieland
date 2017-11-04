@@ -1,6 +1,5 @@
 package com.lebediev.movieland.dao;
 
-import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
 
 import java.util.List;
