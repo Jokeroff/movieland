@@ -63,6 +63,11 @@ public class MovieControllerTest {
         List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
         when(movieService.getAllMovies()).thenReturn(movieList);
         when(movieService.getRandomMovies()).thenReturn(movieList);
+
+        List<Movie> aloneMovieList = Arrays.asList(movieOne);
+        when(movieService.getMoviesByGenreId(12)).thenReturn(aloneMovieList);
+        when(movieService.getMoviesByGenreId(3)).thenReturn(movieList);
+
     }
 
     @Test
@@ -92,6 +97,36 @@ public class MovieControllerTest {
 
         mockMvc.perform(get("/v1/movie/random")).
                 andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(2))).
+                andExpect(jsonPath("$[0].movieId", is(44))).
+                andExpect(jsonPath("$[0].movieNameNative", is("testMovieNameNative"))).
+                andExpect(jsonPath("$[0].movieNameRus", is("testMovieNameRus"))).
+                andExpect(jsonPath("$[0].date", is(1999))).
+                andExpect(jsonPath("$[0].rating", is(0.1))).
+                andExpect(jsonPath("$[0].price", is(2.2))).
+                andExpect(jsonPath("$[0].poster", is("testPoster"))).
+                andExpect(jsonPath("$[1].movieId", is(88))).
+                andExpect(jsonPath("$[1].movieNameNative", is("testMovieNameNativeTwo"))).
+                andExpect(jsonPath("$[1].movieNameRus", is("testMovieNameRusTwo"))).
+                andExpect(jsonPath("$[1].date", is(2050))).
+                andExpect(jsonPath("$[1].rating", is(4.4))).
+                andExpect(jsonPath("$[1].price", is(5.0))).
+                andExpect(jsonPath("$[1].poster", is("testPosterTwo")));
+    }
+
+    @Test
+    public void testGetMoviesByGenreId() throws Exception{
+        mockMvc.perform(get("/v1/movie/genre/12")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(1))).
+                andExpect(jsonPath("$[0].movieId", is(44))).
+                andExpect(jsonPath("$[0].movieNameNative", is("testMovieNameNative"))).
+                andExpect(jsonPath("$[0].movieNameRus", is("testMovieNameRus"))).
+                andExpect(jsonPath("$[0].date", is(1999))).
+                andExpect(jsonPath("$[0].rating", is(0.1))).
+                andExpect(jsonPath("$[0].price", is(2.2))).
+                andExpect(jsonPath("$[0].poster", is("testPoster")));
+
+        mockMvc.perform(get("/v1/movie/genre/3")).andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2))).
                 andExpect(jsonPath("$[0].movieId", is(44))).
                 andExpect(jsonPath("$[0].movieNameNative", is("testMovieNameNative"))).

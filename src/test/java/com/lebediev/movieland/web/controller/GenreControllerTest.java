@@ -1,4 +1,4 @@
-package com.lebediev.movieland.web.controller.utils;
+package com.lebediev.movieland.web.controller;
 
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.service.GenreService;

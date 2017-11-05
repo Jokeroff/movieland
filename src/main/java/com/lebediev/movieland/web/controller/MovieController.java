@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,5 +47,16 @@ public class MovieController {
         String allRandomMovies = toJson(moviesList, JsonConverter.JsonView.EXTENDED);
         log.info("Finish getting Json RandomMovies from controller (v1/movie/random). It took {} ms", System.currentTimeMillis() - startTime);
         return allRandomMovies;
+    }
+
+    @RequestMapping(value = "/genre/{genreId}")
+    @ResponseBody
+    public String getMoviesByGenreId(@PathVariable int genreId) throws JsonProcessingException{
+        log.info("Start getting Json movies with genreId = " + genreId + " from controller (v1/movie/genre/{genreId})");
+        long startTime = System.currentTimeMillis();
+        List <MovieDto> moviesByGenreIdDTOList = toMovieDtoList(movieService.getMoviesByGenreId(genreId));
+        String moviesByGenreId = toJson(moviesByGenreIdDTOList, JsonConverter.JsonView.BASE);
+        log.info("Finish getting Json movies with genreId = " + genreId + " from controller (v1/movie/genre/{genreId}). It took {} ms", System.currentTimeMillis() - startTime);
+        return moviesByGenreId;
     }
 }
