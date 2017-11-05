@@ -1,8 +1,10 @@
 package com.lebediev.movieland.dao.jdbc;
 
 import com.lebediev.movieland.dao.GenreDao;
+import com.lebediev.movieland.dao.jdbc.mapper.GenreRowMapper;
 import com.lebediev.movieland.dao.jdbc.mapper.MovieToGenreRowMapper;
 import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
+import com.lebediev.movieland.entity.Genre;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +20,13 @@ public class JdbcGenreDao implements GenreDao {
     private JdbcTemplate jdbcTemplate;
 
     private MovieToGenreRowMapper movieToGenreRowMapper = new MovieToGenreRowMapper();
+    private GenreRowMapper genreRowMapper = new GenreRowMapper();
 
     @Value("${query.getMovieToGenreMappings}")
     private String queryGetMovieToGenreMappings;
+
+    @Value("${query.getAllGenres}")
+    private String queryGetAllGenres;
 
     public List<MovieToGenre> getMovieToGenreMappings(){
         log.info("Start getting MovieToGenre mappings ");
@@ -28,5 +34,13 @@ public class JdbcGenreDao implements GenreDao {
         List<MovieToGenre> movieToGenreList = jdbcTemplate.query(queryGetMovieToGenreMappings, movieToGenreRowMapper);
         log.info("Finish getting MovieToGenre mappings. It took {} ms", System.currentTimeMillis() - startTime);
         return movieToGenreList;
+    }
+
+    public List<Genre> getAllGenres(){
+        log.info("Start getting all genres ");
+        long startTime = System.currentTimeMillis();
+        List<Genre> genreList = jdbcTemplate.query(queryGetAllGenres, genreRowMapper);
+        log.info("Finish getting all genres. It took {} ms", System.currentTimeMillis() - startTime);
+        return genreList;
     }
  }

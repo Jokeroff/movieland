@@ -3,6 +3,7 @@ package com.lebediev.movieland.dao.jdbc.integrationtests;
 
 import com.lebediev.movieland.dao.jdbc.JdbcGenreDao;
 import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
+import com.lebediev.movieland.entity.Genre;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,15 @@ public class JdbcGenreDaoIntegrationTest {
     JdbcGenreDao jdbcGenreDao;
 
     @Test
-    public void getMovieToGenreMappings(){
+    public void testGetMovieToGenreMappings(){
         List<MovieToGenre> movieToGenreList = jdbcGenreDao.getMovieToGenreMappings();
         assertNotEquals(movieToGenreList.size(), 0);
+    }
+
+    @Test
+    public void testGetAllGenres(){
+        List<Genre> genreList = jdbcGenreDao.getAllGenres();
+        assertNotEquals(genreList.size(),0);
     }
 
 }

@@ -1,0 +1,17 @@
+package com.lebediev.movieland.dao.jdbc.mapper;
+
+import com.lebediev.movieland.entity.Genre;
+import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class GenreRowMapper implements RowMapper<Genre> {
+    @Override
+    public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
+        Genre genre = new Genre();
+        genre.setGenreId(resultSet.getInt("genreId"));
+        genre.setGenreName(resultSet.getString("genreName"));
+        return genre;
+    }
+}
