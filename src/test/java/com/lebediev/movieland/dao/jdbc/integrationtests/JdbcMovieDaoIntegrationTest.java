@@ -7,6 +7,7 @@ import com.lebediev.movieland.entity.Movie;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
@@ -22,6 +23,9 @@ public class JdbcMovieDaoIntegrationTest {
     private JdbcMovieDao jdbcMovieDao;
     @Autowired
     private JdbcGenreDao jdbcGenreDao;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
 
 
     @Test
@@ -45,6 +49,31 @@ public class JdbcMovieDaoIntegrationTest {
         assertNotEquals(genreList.size(),0);
         List<Movie> movieList = jdbcMovieDao.getMoviesByGenreId(genreList.get(0).getGenreId());
         assertNotEquals(movieList.size(), 0);
+    }
+
+    @Test
+    public void testGetAllMoviesOrdered(){
+        List<Movie> movieList = jdbcMovieDao.getAllMovies("price", "desc");
+        assertNotEquals(movieList.size(), 0);
+        Double maxPrice = jdbcTemplate.queryForObject("select max(price) from movie", Double.class);
+        assertEquals(movieList.get(0).getPrice(), maxPrice, 0);
+
+        movieList = jdbcMovieDao.getAllMovies("rating", "asc");
+        assertNotEquals(movieList.size(), 0);
+        Double minRating = jdbcTemplate.queryForObject("select min(rating) from movie", Double.class);
+        assertEquals(movieList.get(0).getRating(), minRating, 0);
+
+    }
+
+    @Test
+    public void testGetMoviesByGenreIdOrdered(){
+        int genreId = jdbcTemplate.queryForObject("select avg(genreId) from genre", int.class);
+        List<Movie> movieList = jdbcMovieDao.getMoviesByGenreId(genreId, "price", "asc");
+        assertNotEquals(movieList.size(),0);
+        movieList = jdbcMovieDao.getMoviesByGenreId(genreId, "price", "desc");
+        assertNotEquals(movieList.size(),0);
+        movieList = jdbcMovieDao.getMoviesByGenreId(genreId, "rating", "desc");
+        assertNotEquals(movieList.size(),0);
     }
 
 

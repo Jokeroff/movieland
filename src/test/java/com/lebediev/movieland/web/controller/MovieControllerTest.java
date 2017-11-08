@@ -16,6 +16,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,7 +36,7 @@ public class MovieControllerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(movieController).build();
-        Genre genre = new Genre (33, "testGenre");
+        Genre genre = new Genre (3, "testGenre");
         Country country = new Country(55, "testCountry");
         Movie movieOne = new Movie();
         movieOne.setMovieId(44);
@@ -67,6 +69,8 @@ public class MovieControllerTest {
         List<Movie> aloneMovieList = Arrays.asList(movieOne);
         when(movieService.getMoviesByGenreId(12)).thenReturn(aloneMovieList);
         when(movieService.getMoviesByGenreId(3)).thenReturn(movieList);
+        when(movieService.getAllMovies(anyString(), anyString())).thenReturn(aloneMovieList);
+        when(movieService.getMoviesByGenreId(anyInt(), anyString(), anyString())).thenReturn(aloneMovieList);
 
     }
 
@@ -143,4 +147,37 @@ public class MovieControllerTest {
                 andExpect(jsonPath("$[1].price", is(5.0))).
                 andExpect(jsonPath("$[1].poster", is("testPosterTwo")));
     }
+
+    @Test
+    public void testGetAllMoviesOrderBy() throws Exception{
+        mockMvc.perform(get("/v1/movie").param("rating", "desc")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(1)));
+
+        mockMvc.perform(get("/v1/movie").param("price", "desc")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(1)));
+
+        mockMvc.perform(get("/v1/movie").param("price", "asc")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(1)));
+
+        mockMvc.perform(get("/v1/movie").param("wrong", "param")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(2)));
+
+    }
+
+    @Test
+    public void testGetAllMoviesByGenreIdOrderBy() throws Exception{
+        mockMvc.perform(get("/v1/movie/genre/3").param("rating", "desc")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(1)));
+
+        mockMvc.perform(get("/v1/movie/genre/3").param("price", "desc")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(1)));
+
+        mockMvc.perform(get("/v1/movie/genre/3").param("price", "asc")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(1)));
+
+        mockMvc.perform(get("/v1/movie/genre/3").param("wrong", "param")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(2)));
+
+    }
+
 }

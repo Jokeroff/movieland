@@ -61,6 +61,26 @@ public class JdbcMovieDao implements MovieDao {
         return moviesByGenreList;
     }
 
+    @Override
+    public List <Movie> getAllMovies(String orderBy, String direction) {
+        log.info("Start query get all movies order by {} {}", orderBy, direction);
+        long startTime = System.currentTimeMillis();
+        String queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + orderBy + " " + direction;
+        List <Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
+        log.info("Finish query get all movies order by {} {}. It took {} ms", orderBy, direction, System.currentTimeMillis() - startTime);
+        return allMoviesOrderedList;
+    }
+
+    @Override
+    public List <Movie> getMoviesByGenreId(int genreId, String orderBy, String direction) {
+        log.info("Start getting movies by genreId = {} order by {} {}", genreId, orderBy, direction);
+        long startTime = System.currentTimeMillis();
+        String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + orderBy + " " + direction;
+        List<Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
+        log.info("Finish getting movies by genreId = {} order by {} {}. It took {} ms", genreId, orderBy, direction, System.currentTimeMillis() - startTime);
+        return moviesByGenreOrderedList;
+    }
+
 }
 
 

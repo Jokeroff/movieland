@@ -24,4 +24,14 @@ public class MovieServiceImpl implements MovieService {
         return movieDao.getMoviesByGenreId(genreId);
     }
 
+    @Override
+    public List <Movie> getAllMovies(String orderBy,String direction) {
+        return movieDao.getAllMovies(orderBy, direction);
+    }
+
+    @Override
+    public List <Movie> getMoviesByGenreId(int genreId, String orderBy,String direction) {
+        return movieDao.getMoviesByGenreId(genreId, orderBy, direction);
+    }
+
 }

@@ -8,4 +8,6 @@ public interface MovieService {
     List <Movie> getAllMovies();
     List<Movie> getRandomMovies();
     List<Movie> getMoviesByGenreId(int genreId);
+    List<Movie> getAllMovies(String orderBy, String direction);
+    List<Movie> getMoviesByGenreId(int genreId, String orderBy, String direction);
 }
