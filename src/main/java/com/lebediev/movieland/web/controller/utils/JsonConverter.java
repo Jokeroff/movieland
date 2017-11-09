@@ -2,6 +2,7 @@ package com.lebediev.movieland.web.controller.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.web.controller.dto.MovieViews;
 
@@ -26,6 +27,15 @@ public class JsonConverter {
                 throw new IllegalArgumentException();
             }
         } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String toJson(List<Genre> genreList){
+        try{
+            return objectMapper.writeValueAsString(genreList);
+        }
+        catch (JsonProcessingException e){
             throw new RuntimeException(e);
         }
     }

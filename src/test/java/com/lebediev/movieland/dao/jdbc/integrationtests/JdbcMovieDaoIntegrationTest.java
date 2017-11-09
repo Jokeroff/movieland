@@ -1,6 +1,8 @@
 package com.lebediev.movieland.dao.jdbc.integrationtests;
 
+import com.lebediev.movieland.dao.jdbc.JdbcGenreDao;
 import com.lebediev.movieland.dao.jdbc.JdbcMovieDao;
+import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,9 @@ public class JdbcMovieDaoIntegrationTest {
 
     @Autowired
     private JdbcMovieDao jdbcMovieDao;
+    @Autowired
+    private JdbcGenreDao jdbcGenreDao;
+
 
     @Test
     public void testGetAllMovies() {
@@ -32,6 +37,14 @@ public class JdbcMovieDaoIntegrationTest {
         assertEquals(movieList.size(),3);
         assertNotNull(movieList.get(0).getGenres());
         assertNotNull(movieList.get(1).getCountries());
+    }
+
+    @Test
+    public void testGetMoviesByGenreId(){
+        List<Genre> genreList = jdbcGenreDao.getAllGenres();
+        assertNotEquals(genreList.size(),0);
+        List<Movie> movieList = jdbcMovieDao.getMoviesByGenreId(genreList.get(0).getGenreId());
+        assertNotEquals(movieList.size(), 0);
     }
 
 

@@ -11,12 +11,17 @@ import java.util.List;
 public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieDao movieDao;
-
+    @Override
     public List <Movie> getAllMovies() {
         return movieDao.getAllMovies();
     }
-
+    @Override
     public List<Movie> getRandomMovies(){
         return movieDao.getRandomMovies();
     }
+    @Override
+    public List<Movie> getMoviesByGenreId(int genreId) {
+        return movieDao.getMoviesByGenreId(genreId);
+    }
+
 }

@@ -20,7 +20,6 @@ public class JdbcMovieDao implements MovieDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private MovieEnrichmentService movieEnrichmentService;
 
@@ -28,9 +27,10 @@ public class JdbcMovieDao implements MovieDao {
 
     @Value("${query.getAllMovies}")
     private String queryGetAllMovies;
-
     @Value("${query.getRandomMovies}")
     private String queryGetRandomMovies;
+    @Value("${query.getMoviesByGenreId}")
+    private String queryGetMoviesByGenreId;
 
     @Override
     public List <Movie> getAllMovies() {
@@ -41,6 +41,7 @@ public class JdbcMovieDao implements MovieDao {
         return allMoviesList;
     }
 
+    @Override
     public List <Movie> getRandomMovies() {
         log.info("Start getting random movies ");
         long startTime = System.currentTimeMillis();
@@ -49,6 +50,15 @@ public class JdbcMovieDao implements MovieDao {
         movieEnrichmentService.enrichMovieByGenres(randomMovieList);
         movieEnrichmentService.enrichMovieByCountries(randomMovieList);
         return randomMovieList;
+    }
+
+    @Override
+    public List<Movie> getMoviesByGenreId(int genreId){
+        log.info("Start getting movies by genre ");
+        long startTime = System.currentTimeMillis();
+        List<Movie> moviesByGenreList = jdbcTemplate.query(queryGetMoviesByGenreId, movieRowMapper, genreId);
+        log.info("Finish getting movies by genre. It took {} ms", System.currentTimeMillis() - startTime);
+        return moviesByGenreList;
     }
 
 }
