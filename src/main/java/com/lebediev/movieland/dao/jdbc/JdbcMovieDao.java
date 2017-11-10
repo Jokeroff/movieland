@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,15 +37,6 @@ public class JdbcMovieDao implements MovieDao {
     private String queryGetMoviesByGenreId;
 
     @Override
-    public List<Movie> getAllMovies() {
-        log.info("Start query_get_all_movies for getting all movies");
-        long startTime = System.currentTimeMillis();
-        List<Movie> allMoviesList = jdbcTemplate.query(queryGetAllMovies, movieRowMapper);
-        log.info("Finish query_get_all_movies for getting all movies. It took {} ms", System.currentTimeMillis() - startTime);
-        return allMoviesList;
-    }
-
-    @Override
     public List<Movie> getRandomMovies() {
         log.info("Start getting random movies ");
         long startTime = System.currentTimeMillis();
@@ -55,15 +45,6 @@ public class JdbcMovieDao implements MovieDao {
         movieEnrichmentService.enrichMovieByGenres(randomMovieList);
         movieEnrichmentService.enrichMovieByCountries(randomMovieList);
         return randomMovieList;
-    }
-
-    @Override
-    public List<Movie> getMoviesByGenreId(int genreId) {
-        log.info("Start getting movies by genre ");
-        long startTime = System.currentTimeMillis();
-        List<Movie> moviesByGenreList = jdbcTemplate.query(queryGetMoviesByGenreId, movieRowMapper, genreId);
-        log.info("Finish getting movies by genre. It took {} ms", System.currentTimeMillis() - startTime);
-        return moviesByGenreList;
     }
 
     @Override

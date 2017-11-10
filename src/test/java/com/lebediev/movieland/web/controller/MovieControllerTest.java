@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -69,19 +68,12 @@ public class MovieControllerTest {
         Map<String, String> map = new HashMap<>();
         map.put(null, "desc");
         List<Movie> aloneMovieList = Arrays.asList(movieOne);
-        when(movieService.getAllMovies(map)).thenReturn(movieList);
-        when(movieService.getMoviesByGenreId(anyInt(), anyMap())).thenReturn(aloneMovieList);
-        when(movieService.getAllMovies()).thenReturn(movieList);
+        when(movieService.getAllMovies(anyMap())).thenReturn(movieList);
+        when(movieService.getMoviesByGenreId(anyInt(), anyMap())).thenReturn(movieList);
         when(movieService.getRandomMovies()).thenReturn(movieList);
-
-
-        when(movieService.getMoviesByGenreId(12)).thenReturn(aloneMovieList);
-        when(movieService.getMoviesByGenreId(3)).thenReturn(movieList);
-
-
     }
 
-    // @Test
+     @Test
     public void testGetAllMovies() throws Exception {
 
         mockMvc.perform(get("/movie")).
@@ -125,10 +117,10 @@ public class MovieControllerTest {
                 andExpect(jsonPath("$[1].poster", is("testPosterTwo")));
     }
 
-    //@Test
+    @Test
     public void testGetMoviesByGenreId() throws Exception {
         mockMvc.perform(get("/movie/genre/12")).andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1))).
+                andExpect(jsonPath("$", hasSize(2))).
                 andExpect(jsonPath("$[0].movieId", is(44))).
                 andExpect(jsonPath("$[0].movieNameNative", is("testMovieNameNative"))).
                 andExpect(jsonPath("$[0].movieNameRus", is("testMovieNameRus"))).
@@ -155,7 +147,7 @@ public class MovieControllerTest {
                 andExpect(jsonPath("$[1].poster", is("testPosterTwo")));
     }
 
-    //@Test
+    @Test
     public void testGetAllMoviesOrderBy() throws Exception {
         mockMvc.perform(get("/movie").param("rating", "desc")).andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2)));
@@ -168,17 +160,19 @@ public class MovieControllerTest {
 
     }
 
-    //@Test
+    @Test
     public void testGetAllMoviesByGenreIdOrderBy() throws Exception {
         mockMvc.perform(get("/movie/genre/5").param("rating", "desc")).andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1)));
+                andExpect(jsonPath("$", hasSize(2)));
 
         mockMvc.perform(get("/movie/genre/5").param("price", "desc")).andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1)));
+                andExpect(jsonPath("$", hasSize(2)));
 
         mockMvc.perform(get("/movie/genre/5").param("price", "asc")).andExpect(status().isOk()).
-                andExpect(jsonPath("$", hasSize(1)));
+                andExpect(jsonPath("$", hasSize(2)));
 
+        mockMvc.perform(get("/movie/genre/5").param("prichhe", "asc")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(2)));
 
     }
 
