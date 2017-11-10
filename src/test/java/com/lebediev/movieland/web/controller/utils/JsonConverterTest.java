@@ -51,10 +51,10 @@ public class JsonConverterTest {
     }
 
     @Test
-    public void testToJsonGenre(){
+    public void testToJsonGenre() {
         String actual = toJson(genreList);
-        String expected ="[{\"genreId\":1,\"genreName\":\"криминал\"},{\"genreId\":2,\"genreName\":\"drama\"}]";
-        assertEquals(expected,actual);
+        String expected = "[{\"genreId\":1,\"genreName\":\"криминал\"},{\"genreId\":2,\"genreName\":\"drama\"}]";
+        assertEquals(expected, actual);
     }
 
 }

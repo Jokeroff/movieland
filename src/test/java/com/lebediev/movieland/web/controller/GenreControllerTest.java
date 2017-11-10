@@ -2,7 +2,6 @@ package com.lebediev.movieland.web.controller;
 
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.service.GenreService;
-import com.lebediev.movieland.web.controller.GenreController;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -45,7 +44,7 @@ public class GenreControllerTest {
 
     @Test
     public void testGetAllGenres() throws Exception {
-        mockMvc.perform(get("/v1/genre")).andExpect(status().isOk()).
+        mockMvc.perform(get("/genre")).andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2))).
                 andExpect(jsonPath("$[0].genreId", is(11))).
                 andExpect(jsonPath("$[0].genreName", is("testGenreOne"))).

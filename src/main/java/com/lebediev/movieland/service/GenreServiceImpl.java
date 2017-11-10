@@ -10,8 +10,8 @@ import java.util.List;
 
 @Service
 public class GenreServiceImpl implements GenreService {
+
     @Autowired
-    GenreCache genreCache;
 
     @Override
     public List<Genre> getAllGenres() {

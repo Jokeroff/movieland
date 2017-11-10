@@ -6,10 +6,10 @@ import org.junit.Test;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.any;
-import static org.junit.Assert.assertEquals;
 
 public class GenreRowMapperTest {
 
@@ -20,9 +20,9 @@ public class GenreRowMapperTest {
         when(resultSet.getString(any())).thenReturn("testGenre");
 
         GenreRowMapper genreRowMapper = new GenreRowMapper();
-        Genre actual = genreRowMapper.mapRow(resultSet,0);
+        Genre actual = genreRowMapper.mapRow(resultSet, 0);
         assertEquals(actual.getGenreId(), 33);
-        assertEquals(actual.getGenreName(),"testGenre");
+        assertEquals(actual.getGenreName(), "testGenre");
 
     }
 }

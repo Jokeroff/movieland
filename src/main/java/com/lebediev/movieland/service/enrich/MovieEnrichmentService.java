@@ -1,9 +1,9 @@
-package com.lebediev.movieland.dao.jdbc.enrich;
+package com.lebediev.movieland.service.enrich;
 
-import com.lebediev.movieland.dao.jdbc.entity.MovieToCountry;
-import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
 import com.lebediev.movieland.dao.jdbc.JdbcCountryDao;
 import com.lebediev.movieland.dao.jdbc.JdbcGenreDao;
+import com.lebediev.movieland.dao.jdbc.entity.MovieToCountry;
+import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
@@ -45,13 +45,13 @@ public class MovieEnrichmentService {
         log.info("Finish enriching movies by countries. It took {} ms", System.currentTimeMillis() - startTime);
     }
 
-    List<Genre> getGenresByMovieId(List<MovieToGenre> movieToGenreList, int movieId){
+    public List<Genre> getGenresByMovieId(List<MovieToGenre> movieToGenreList, int movieId) {
         log.info("Start getting genres by movieId ");
         long startTime = System.currentTimeMillis();
         List<Genre> genreList = new ArrayList<>();
 
-        for (MovieToGenre movieToGenre : movieToGenreList){
-            if (movieToGenre.getMovieId() == movieId){
+        for (MovieToGenre movieToGenre : movieToGenreList) {
+            if (movieToGenre.getMovieId() == movieId) {
                 genreList.add(new Genre(movieToGenre.getGenreId(), movieToGenre.getGenreName()));
             }
         }
@@ -59,13 +59,13 @@ public class MovieEnrichmentService {
         return genreList;
     }
 
-    List<Country> getCountriesByMovieId(List<MovieToCountry> movieToCountryList, int movieId){
+    public List<Country> getCountriesByMovieId(List<MovieToCountry> movieToCountryList, int movieId) {
         log.info("Start getting countries by movieId ");
         long startTime = System.currentTimeMillis();
-        List<Country> countryList = new ArrayList <>();
+        List<Country> countryList = new ArrayList<>();
 
-        for (MovieToCountry movieToCountry : movieToCountryList){
-            if (movieToCountry.getMovieId() == movieId){
+        for (MovieToCountry movieToCountry : movieToCountryList) {
+            if (movieToCountry.getMovieId() == movieId) {
                 countryList.add(new Country(movieToCountry.getCountryId(), movieToCountry.getCountryName()));
             }
         }

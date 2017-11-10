@@ -14,13 +14,13 @@ import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
 
 
 @Controller
-@RequestMapping(value = "/v1/genre", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/genre", produces = "text/plain;charset=UTF-8")
 public class GenreController {
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private GenreService genreService;
 
-    @RequestMapping( method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String getAllGenres() throws JsonProcessingException {
         log.info("Start getting Json AllGenres from controller (v1/genre)");
