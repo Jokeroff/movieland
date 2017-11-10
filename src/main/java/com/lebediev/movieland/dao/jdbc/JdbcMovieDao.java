@@ -1,9 +1,9 @@
 package com.lebediev.movieland.dao.jdbc;
 
 import com.lebediev.movieland.dao.MovieDao;
-import com.lebediev.movieland.dao.jdbc.enrich.MovieEnrichmentService;
 import com.lebediev.movieland.dao.jdbc.mapper.MovieRowMapper;
 import com.lebediev.movieland.entity.Movie;
+import com.lebediev.movieland.service.enrich.MovieEnrichmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Repository
 public class JdbcMovieDao implements MovieDao {
@@ -25,6 +27,9 @@ public class JdbcMovieDao implements MovieDao {
 
     private MovieRowMapper movieRowMapper = new MovieRowMapper();
 
+    private String orderBy;
+    private String orderDirection;
+
     @Value("${query.getAllMovies}")
     private String queryGetAllMovies;
     @Value("${query.getRandomMovies}")
@@ -33,19 +38,19 @@ public class JdbcMovieDao implements MovieDao {
     private String queryGetMoviesByGenreId;
 
     @Override
-    public List <Movie> getAllMovies() {
+    public List<Movie> getAllMovies() {
         log.info("Start query_get_all_movies for getting all movies");
         long startTime = System.currentTimeMillis();
-        List <Movie> allMoviesList = jdbcTemplate.query(queryGetAllMovies, movieRowMapper);
+        List<Movie> allMoviesList = jdbcTemplate.query(queryGetAllMovies, movieRowMapper);
         log.info("Finish query_get_all_movies for getting all movies. It took {} ms", System.currentTimeMillis() - startTime);
         return allMoviesList;
     }
 
     @Override
-    public List <Movie> getRandomMovies() {
+    public List<Movie> getRandomMovies() {
         log.info("Start getting random movies ");
         long startTime = System.currentTimeMillis();
-        List <Movie> randomMovieList = jdbcTemplate.query(queryGetRandomMovies, movieRowMapper);
+        List<Movie> randomMovieList = jdbcTemplate.query(queryGetRandomMovies, movieRowMapper);
         log.info("Finish getting random movies. It took {} ms", System.currentTimeMillis() - startTime);
         movieEnrichmentService.enrichMovieByGenres(randomMovieList);
         movieEnrichmentService.enrichMovieByCountries(randomMovieList);
@@ -53,7 +58,7 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public List<Movie> getMoviesByGenreId(int genreId){
+    public List<Movie> getMoviesByGenreId(int genreId) {
         log.info("Start getting movies by genre ");
         long startTime = System.currentTimeMillis();
         List<Movie> moviesByGenreList = jdbcTemplate.query(queryGetMoviesByGenreId, movieRowMapper, genreId);
@@ -62,22 +67,39 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public List <Movie> getAllMovies(String orderBy, String direction) {
-        log.info("Start query get all movies order by {} {}", orderBy, direction);
+    public List<Movie> getAllMovies(Map<String, String> params) {
+        Set<Map.Entry<String, String>> set = params.entrySet();
+        for (Map.Entry<String, String> entrySet : set) {
+            orderBy = entrySet.getKey();
+            orderDirection = entrySet.getValue();
+        }
+
+        log.info("Start query get all movies order by {} {}", orderBy, orderDirection);
         long startTime = System.currentTimeMillis();
-        String queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + orderBy + " " + direction;
-        List <Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
-        log.info("Finish query get all movies order by {} {}. It took {} ms", orderBy, direction, System.currentTimeMillis() - startTime);
+        String queryGetAllMoviesOrdered = queryGetAllMovies;
+        if (orderBy != null && orderDirection != null) {
+            queryGetAllMoviesOrdered = queryGetAllMoviesOrdered + " ORDER BY " + orderBy + " " + orderDirection;
+        }
+        List<Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
+        log.info("Finish query get all movies order by {} {}. It took {} ms", orderBy, orderDirection, System.currentTimeMillis() - startTime);
         return allMoviesOrderedList;
     }
 
     @Override
-    public List <Movie> getMoviesByGenreId(int genreId, String orderBy, String direction) {
-        log.info("Start getting movies by genreId = {} order by {} {}", genreId, orderBy, direction);
+    public List<Movie> getMoviesByGenreId(int genreId, Map<String, String> params) {
+        Set<Map.Entry<String, String>> set = params.entrySet();
+        for (Map.Entry<String, String> entrySet : set) {
+            orderBy = entrySet.getKey();
+            orderDirection = entrySet.getValue();
+        }
+        log.info("Start getting movies by genreId = {} order by {} {}", genreId, orderBy, orderDirection);
         long startTime = System.currentTimeMillis();
-        String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + orderBy + " " + direction;
+        String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId;
+        if (orderBy != null && orderDirection != null) {
+            queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreIdOrdered + " ORDER BY " + orderBy + " " + orderDirection;
+        }
         List<Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
-        log.info("Finish getting movies by genreId = {} order by {} {}. It took {} ms", genreId, orderBy, direction, System.currentTimeMillis() - startTime);
+        log.info("Finish getting movies by genreId = {} order by {} {}. It took {} ms", genreId, orderBy, orderDirection, System.currentTimeMillis() - startTime);
         return moviesByGenreOrderedList;
     }
 

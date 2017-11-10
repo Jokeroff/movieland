@@ -1,4 +1,4 @@
-package com.lebediev.movieland.dao.jdbc.enrich;
+package com.lebediev.movieland.service.enrich;
 
 import com.lebediev.movieland.dao.jdbc.JdbcCountryDao;
 import com.lebediev.movieland.dao.jdbc.JdbcGenreDao;
@@ -7,7 +7,6 @@ import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
-import com.lebediev.movieland.service.enrich.MovieEnrichmentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

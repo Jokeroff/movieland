@@ -8,7 +8,9 @@ public class Country {
         this.countryId = countryId;
         this.countryName = countryName;
     }
-    public Country(){}
+
+    public Country() {
+    }
 
     public int getCountryId() {
         return countryId;
@@ -29,8 +31,8 @@ public class Country {
     @Override
     public String toString() {
         return "Country{" +
-               "countryId=" + countryId +
-               ", countryName='" + countryName + '\'' +
-               '}';
+                "countryId=" + countryId +
+                ", countryName='" + countryName + '\'' +
+                '}';
     }
 }

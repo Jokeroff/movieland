@@ -1,7 +1,7 @@
 package com.lebediev.movieland.web.controller.utils;
 
-import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.entity.Movie;
+import com.lebediev.movieland.web.controller.dto.MovieDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 
 public class MovieDtoConverter {
 
-    public static List <MovieDto> toMovieDtoList(List <Movie> moviesList) {
-        List <MovieDto> movieDtoList = new ArrayList <>();
+    public static List<MovieDto> toMovieDtoList(List<Movie> moviesList) {
+        List<MovieDto> movieDtoList = new ArrayList<>();
         for (Movie movie : moviesList) {
             movieDtoList.add(toMovieDto(movie));
         }

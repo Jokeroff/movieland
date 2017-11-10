@@ -17,7 +17,7 @@ public class JsonConverter {
         EXTENDED
     }
 
-    public static String toJson(List <MovieDto> movieDtoList, JsonView jsonView) {
+    public static String toJson(List<MovieDto> movieDtoList, JsonView jsonView) {
         try {
             if (JsonView.BASE.equals(jsonView)) {
                 return objectMapper.writerWithView(MovieViews.BaseMovie.class).writeValueAsString(movieDtoList);
@@ -31,11 +31,10 @@ public class JsonConverter {
         }
     }
 
-    public static String toJson(List<Genre> genreList){
-        try{
+    public static String toJson(List<Genre> genreList) {
+        try {
             return objectMapper.writeValueAsString(genreList);
-        }
-        catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
