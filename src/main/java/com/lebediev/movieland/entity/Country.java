@@ -1,8 +1,8 @@
 package com.lebediev.movieland.entity;
 
 public class Country {
-    private final int countryId;
-    private final String countryName;
+    private int countryId;
+    private String countryName;
 
     public Country(int countryId, String countryName) {
         this.countryId = countryId;

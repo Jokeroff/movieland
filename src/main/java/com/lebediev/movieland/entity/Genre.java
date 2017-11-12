@@ -1,8 +1,8 @@
 package com.lebediev.movieland.entity;
 
 public class Genre {
-    private final int genreId;
-    private final String genreName;
+    private int genreId;
+    private String genreName;
 
     public Genre(int genreId, String genreName) {
         this.genreId = genreId;

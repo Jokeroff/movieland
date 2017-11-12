@@ -2,14 +2,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                  http://www.springframework.org/schema/beans/spring-beans.xsd
                  http://www.springframework.org/schema/context
                  http://www.springframework.org/schema/context/spring-context.xsd
+                 http://www.springframework.org/schema/task
+                 http://www.springframework.org/schema/task/spring-task.xsd
 ">
 
     <context:property-placeholder location="classpath:db.properties,
-                                            classpath:query.properties"/>
+                                            classpath:query.properties,
+                                            classpath:scheduler.properties"/>
 
 
     <context:component-scan base-package="com.lebediev.movieland">
@@ -28,6 +32,10 @@
           class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
+    <task:annotation-driven executor="executor" scheduler="scheduler"/>
+    <task:executor id="executor" pool-size="2"/>
+    <task:scheduler id="scheduler" pool-size="1"/>
 
 
 </beans>
