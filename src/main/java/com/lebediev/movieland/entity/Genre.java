@@ -1,15 +1,12 @@
 package com.lebediev.movieland.entity;
 
 public class Genre {
-    private int genreId;
-    private String genreName;
+    private final int genreId;
+    private final String genreName;
 
     public Genre(int genreId, String genreName) {
         this.genreId = genreId;
         this.genreName = genreName;
-    }
-
-    public Genre() {
     }
 
 
@@ -19,14 +16,6 @@ public class Genre {
 
     public String getGenreName() {
         return genreName;
-    }
-
-    public void setGenreName(String genreName) {
-        this.genreName = genreName;
-    }
-
-    public void setGenreId(int genreId) {
-        this.genreId = genreId;
     }
 
     @Override

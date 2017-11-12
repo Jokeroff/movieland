@@ -23,11 +23,10 @@ public class JsonConverter {
                 return objectMapper.writerWithView(MovieViews.BaseMovie.class).writeValueAsString(movieDtoList);
             } else if (JsonView.EXTENDED.equals(jsonView)) {
                 return objectMapper.writerWithView(MovieViews.ExtendedMovie.class).writeValueAsString(movieDtoList);
-            } else {
-                throw new IllegalArgumentException();
             }
+            throw new IllegalArgumentException("Wrong parameters list.size(" + movieDtoList.size() + "), jsonView = " + jsonView);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -35,7 +34,7 @@ public class JsonConverter {
         try {
             return objectMapper.writeValueAsString(genreList);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 }

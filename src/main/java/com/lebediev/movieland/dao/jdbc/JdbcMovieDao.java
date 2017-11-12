@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Repository
 public class JdbcMovieDao implements MovieDao {
@@ -24,10 +24,7 @@ public class JdbcMovieDao implements MovieDao {
     @Autowired
     private MovieEnrichmentService movieEnrichmentService;
 
-    private MovieRowMapper movieRowMapper = new MovieRowMapper();
-
-    private String orderBy;
-    private String orderDirection;
+    private final MovieRowMapper movieRowMapper = new MovieRowMapper();
 
     @Value("${query.getAllMovies}")
     private String queryGetAllMovies;
@@ -49,38 +46,31 @@ public class JdbcMovieDao implements MovieDao {
 
     @Override
     public List<Movie> getAllMovies(Map<String, String> params) {
-        Set<Map.Entry<String, String>> set = params.entrySet();
-        for (Map.Entry<String, String> entrySet : set) {
-            orderBy = entrySet.getKey();
-            orderDirection = entrySet.getValue();
-        }
-
-        log.info("Start query get all movies order by {} {}", orderBy, orderDirection);
+        log.info("Start query get all movies with params {}", params);
         long startTime = System.currentTimeMillis();
         String queryGetAllMoviesOrdered = queryGetAllMovies;
-        if (orderBy != null && orderDirection != null) {
-            queryGetAllMoviesOrdered = queryGetAllMoviesOrdered + " ORDER BY " + orderBy + " " + orderDirection;
+        if (!params.isEmpty()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + entry.getKey() + " " + entry.getValue();
+            }
         }
         List<Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
-        log.info("Finish query get all movies order by {} {}. It took {} ms", orderBy, orderDirection, System.currentTimeMillis() - startTime);
+        log.info("Finish query get all movies with params {}. It took {} ms", params, System.currentTimeMillis() - startTime);
         return allMoviesOrderedList;
     }
 
     @Override
     public List<Movie> getMoviesByGenreId(int genreId, Map<String, String> params) {
-        Set<Map.Entry<String, String>> set = params.entrySet();
-        for (Map.Entry<String, String> entrySet : set) {
-            orderBy = entrySet.getKey();
-            orderDirection = entrySet.getValue();
-        }
-        log.info("Start getting movies by genreId = {} order by {} {}", genreId, orderBy, orderDirection);
+        log.info("Start getting movies by genreId = {} with params {}", genreId, params);
         long startTime = System.currentTimeMillis();
         String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId;
-        if (orderBy != null && orderDirection != null) {
-            queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreIdOrdered + " ORDER BY " + orderBy + " " + orderDirection;
+        if (!params.isEmpty()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + entry.getKey() + " " + entry.getValue();
+            }
         }
         List<Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
-        log.info("Finish getting movies by genreId = {} order by {} {}. It took {} ms", genreId, orderBy, orderDirection, System.currentTimeMillis() - startTime);
+        log.info("Finish getting movies by genreId = {} with params {}. It took {} ms", genreId, params, System.currentTimeMillis() - startTime);
         return moviesByGenreOrderedList;
     }
 

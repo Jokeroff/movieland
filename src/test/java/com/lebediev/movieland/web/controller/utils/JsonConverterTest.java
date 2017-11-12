@@ -15,16 +15,13 @@ import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
 import static org.junit.Assert.assertEquals;
 
 public class JsonConverterTest {
-    private JsonConverter jsonConverter;
-    private List<MovieDto> MovieDtoList = new ArrayList<>();
-    private Genre genre;
-    private Genre genreTwo;
+    private final List<MovieDto> MovieDtoList = new ArrayList<>();
     private List<Genre> genreList;
 
     @Before
     public void setup() {
-        genre = new Genre(1, "криминал");
-        genreTwo = new Genre(2, "drama");
+        Genre genre = new Genre(1, "криминал");
+        Genre genreTwo = new Genre(2, "drama");
         genreList = Arrays.asList(genre, genreTwo);
     }
 

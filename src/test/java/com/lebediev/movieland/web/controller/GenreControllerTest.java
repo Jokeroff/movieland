@@ -32,12 +32,8 @@ public class GenreControllerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(genreController).build();
-        Genre genreOne = new Genre();
-        genreOne.setGenreId(11);
-        genreOne.setGenreName("testGenreOne");
-        Genre genreTwo = new Genre();
-        genreTwo.setGenreId(22);
-        genreTwo.setGenreName("testGenreTwo");
+        Genre genreOne = new Genre(11, "testGenreOne");
+        Genre genreTwo = new Genre(22, "testGenreTwo");
         List<Genre> genreList = Arrays.asList(genreOne, genreTwo);
         when(genreService.getAllGenres()).thenReturn(genreList);
     }

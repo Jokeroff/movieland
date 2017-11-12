@@ -1,5 +1,4 @@
 <configuration>
-
     <appender name="file"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>./logs/movieland.log</file>
@@ -18,5 +17,4 @@
     <root level="DEBUG">
         <appender-ref ref="file"/>
     </root>
-
 </configuration>

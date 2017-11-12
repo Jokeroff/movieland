@@ -19,7 +19,7 @@ public class JdbcCountryDao implements CountryDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MovieToCountryRowMapper movieToCountryRowMapper = new MovieToCountryRowMapper();
+    private final MovieToCountryRowMapper movieToCountryRowMapper = new MovieToCountryRowMapper();
 
     @Value("${query.getMovieToCountryMappings}")
     private String queryGetMovieToCountryMappings;

@@ -20,8 +20,8 @@ public class JdbcGenreDao implements GenreDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MovieToGenreRowMapper movieToGenreRowMapper = new MovieToGenreRowMapper();
-    private GenreRowMapper genreRowMapper = new GenreRowMapper();
+    private final MovieToGenreRowMapper movieToGenreRowMapper = new MovieToGenreRowMapper();
+    private final GenreRowMapper genreRowMapper = new GenreRowMapper();
 
     @Value("${query.getMovieToGenreMappings}")
     private String queryGetMovieToGenreMappings;

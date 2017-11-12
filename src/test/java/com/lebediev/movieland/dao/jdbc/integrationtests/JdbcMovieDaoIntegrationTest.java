@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,6 @@ public class JdbcMovieDaoIntegrationTest {
         assertEquals(movieList.get(0).getRating(), minRating, 0);
 
         params.clear();
-        params.put(null, null);
         movieList = jdbcMovieDao.getAllMovies(params);
         assertNotEquals(movieList.size(), 0);
     }
