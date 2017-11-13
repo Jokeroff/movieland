@@ -1,9 +1,9 @@
-package com.lebediev.movieland.dao.jdbc.enrich;
+package com.lebediev.movieland.service.enrich;
 
+import com.lebediev.movieland.dao.CountryDao;
+import com.lebediev.movieland.dao.GenreDao;
 import com.lebediev.movieland.dao.jdbc.entity.MovieToCountry;
 import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
-import com.lebediev.movieland.dao.jdbc.JdbcCountryDao;
-import com.lebediev.movieland.dao.jdbc.JdbcGenreDao;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
@@ -20,15 +20,15 @@ public class MovieEnrichmentService {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private JdbcCountryDao jdbcCountryDao;
+    private CountryDao countryDao;
 
     @Autowired
-    private JdbcGenreDao jdbcGenreDao;
+    private GenreDao jenreDao;
 
     public void enrichMovieByGenres(List<Movie> movieList) {
         log.info("Start enriching movies by genres ");
         long startTime = System.currentTimeMillis();
-        List<MovieToGenre> movieToGenreList = jdbcGenreDao.getMovieToGenreMappings();
+        List<MovieToGenre> movieToGenreList = jenreDao.getMovieToGenreMappings();
         for (Movie movie : movieList) {
             movie.setGenres(getGenresByMovieId(movieToGenreList, movie.getMovieId()));
         }
@@ -38,20 +38,20 @@ public class MovieEnrichmentService {
     public void enrichMovieByCountries(List<Movie> movieList) {
         log.info("Start enriching movies by countries ");
         long startTime = System.currentTimeMillis();
-        List<MovieToCountry> movieToCountryList = jdbcCountryDao.getMovieToCountryMappings();
+        List<MovieToCountry> movieToCountryList = countryDao.getMovieToCountryMappings();
         for (Movie movie : movieList) {
             movie.setCountries(getCountriesByMovieId(movieToCountryList, movie.getMovieId()));
         }
         log.info("Finish enriching movies by countries. It took {} ms", System.currentTimeMillis() - startTime);
     }
 
-    List<Genre> getGenresByMovieId(List<MovieToGenre> movieToGenreList, int movieId){
+    public List<Genre> getGenresByMovieId(List<MovieToGenre> movieToGenreList, int movieId) {
         log.info("Start getting genres by movieId ");
         long startTime = System.currentTimeMillis();
         List<Genre> genreList = new ArrayList<>();
 
-        for (MovieToGenre movieToGenre : movieToGenreList){
-            if (movieToGenre.getMovieId() == movieId){
+        for (MovieToGenre movieToGenre : movieToGenreList) {
+            if (movieToGenre.getMovieId() == movieId) {
                 genreList.add(new Genre(movieToGenre.getGenreId(), movieToGenre.getGenreName()));
             }
         }
@@ -59,13 +59,13 @@ public class MovieEnrichmentService {
         return genreList;
     }
 
-    List<Country> getCountriesByMovieId(List<MovieToCountry> movieToCountryList, int movieId){
+    public List<Country> getCountriesByMovieId(List<MovieToCountry> movieToCountryList, int movieId) {
         log.info("Start getting countries by movieId ");
         long startTime = System.currentTimeMillis();
-        List<Country> countryList = new ArrayList <>();
+        List<Country> countryList = new ArrayList<>();
 
-        for (MovieToCountry movieToCountry : movieToCountryList){
-            if (movieToCountry.getMovieId() == movieId){
+        for (MovieToCountry movieToCountry : movieToCountryList) {
+            if (movieToCountry.getMovieId() == movieId) {
                 countryList.add(new Country(movieToCountry.getCountryId(), movieToCountry.getCountryName()));
             }
         }

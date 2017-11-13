@@ -1,9 +1,9 @@
 package com.lebediev.movieland.web.controller.utils;
 
-import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
+import com.lebediev.movieland.web.controller.dto.MovieDto;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class MovieDtoConverterTest {
 
     @Test
     public void testToMovieDtoList() {
-        List <Movie> moviesList = new ArrayList <>();
+        List<Movie> moviesList = new ArrayList<>();
         Movie movieOne = mock(Movie.class);
         Movie movieTwo = mock(Movie.class);
         when(movieOne.getMovieId()).thenReturn(222);
@@ -60,7 +60,7 @@ public class MovieDtoConverterTest {
         moviesList.add(movieOne);
         moviesList.add(movieTwo);
 
-        List <MovieDto> actual = toMovieDtoList(moviesList);
+        List<MovieDto> actual = toMovieDtoList(moviesList);
         assertEquals(actual.get(0).movieId, 222);
         assertEquals(actual.get(1).movieId, 333);
     }

@@ -22,15 +22,15 @@ public class JdbcGenreDaoIntegrationTest {
     JdbcGenreDao jdbcGenreDao;
 
     @Test
-    public void testGetMovieToGenreMappings(){
+    public void testGetMovieToGenreMappings() {
         List<MovieToGenre> movieToGenreList = jdbcGenreDao.getMovieToGenreMappings();
         assertNotEquals(movieToGenreList.size(), 0);
     }
 
     @Test
-    public void testGetAllGenres(){
+    public void testGetAllGenres() {
         List<Genre> genreList = jdbcGenreDao.getAllGenres();
-        assertNotEquals(genreList.size(),0);
+        assertNotEquals(genreList.size(), 0);
     }
 
 }

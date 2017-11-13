@@ -10,7 +10,9 @@ public class MovieToCountry {
         this.countryId = countryId;
         this.countryName = countryName;
     }
-    public MovieToCountry(){}
+
+    public MovieToCountry() {
+    }
 
     public int getMovieId() {
         return movieId;

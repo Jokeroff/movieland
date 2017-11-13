@@ -9,9 +9,6 @@ public class Genre {
         this.genreName = genreName;
     }
 
-    public Genre() {
-    }
-
 
     public int getGenreId() {
         return genreId;
@@ -21,19 +18,11 @@ public class Genre {
         return genreName;
     }
 
-    public void setGenreName(String genreName) {
-        this.genreName = genreName;
-    }
-
-    public void setGenreId(int genreId) {
-        this.genreId = genreId;
-    }
-
     @Override
     public String toString() {
         return "Genre{" +
-               "genreId=" + genreId +
-               ", genreName='" + genreName + '\'' +
-               '}';
+                "genreId=" + genreId +
+                ", genreName='" + genreName + '\'' +
+                '}';
     }
 }

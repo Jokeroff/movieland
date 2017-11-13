@@ -2,7 +2,6 @@ package com.lebediev.movieland.dao.jdbc.mapper;
 
 import com.lebediev.movieland.dao.jdbc.entity.MovieToGenre;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

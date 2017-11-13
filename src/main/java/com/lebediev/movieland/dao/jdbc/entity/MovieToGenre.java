@@ -11,7 +11,9 @@ public class MovieToGenre {
         this.genreId = genreId;
         this.genreName = genreName;
     }
-    public  MovieToGenre(){}
+
+    public MovieToGenre() {
+    }
 
     public int getMovieId() {
         return movieId;

@@ -8,29 +8,21 @@ public class Country {
         this.countryId = countryId;
         this.countryName = countryName;
     }
-    public Country(){}
 
     public int getCountryId() {
         return countryId;
-    }
-
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
     }
 
     public String getCountryName() {
         return countryName;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
 
     @Override
     public String toString() {
         return "Country{" +
-               "countryId=" + countryId +
-               ", countryName='" + countryName + '\'' +
-               '}';
+                "countryId=" + countryId +
+                ", countryName='" + countryName + '\'' +
+                '}';
     }
 }

@@ -48,10 +48,10 @@ public class Review {
     @Override
     public String toString() {
         return "Review{" +
-               "reviewId=" + reviewId +
-               ", movieId=" + movieId +
-               ", userId=" + userId +
-               ", review='" + review + '\'' +
-               '}';
+                "reviewId=" + reviewId +
+                ", movieId=" + movieId +
+                ", userId=" + userId +
+                ", review='" + review + '\'' +
+                '}';
     }
 }

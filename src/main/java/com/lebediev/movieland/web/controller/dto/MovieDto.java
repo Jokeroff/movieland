@@ -22,13 +22,13 @@ public class MovieDto {
     @JsonView(MovieViews.BaseMovie.class)
     public double price;
     @JsonView(MovieViews.ExtendedMovie.class)
-    public List <Country> countries;
+    public List<Country> countries;
     @JsonView(MovieViews.ExtendedMovie.class)
-    public List <Genre> genres;
+    public List<Genre> genres;
     @JsonView(MovieViews.BaseMovie.class)
     public String poster;
 
-    public MovieDto(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List <Genre> genres, List <Country> countries, String poster) {
+    public MovieDto(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List<Genre> genres, List<Country> countries, String poster) {
         this.movieId = movieId;
         this.movieNameRus = movieNameRus;
         this.movieNameNative = movieNameNative;
