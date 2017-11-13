@@ -27,7 +27,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <url>http://localhost:8080/movieland</url>
+                    <url>http://localhost:8080/</url>
                 </configuration>
             </plugin>
         </plugins>

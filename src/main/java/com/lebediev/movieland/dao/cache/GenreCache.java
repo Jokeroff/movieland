@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,15 +34,13 @@ public class GenreCache implements GenreDao {
     public List <Genre> getAllGenres() {
         log.info("Genre cache. Start getting genres from cache");
         long startTime = System.currentTimeMillis();
-        if(genreListCached == null){
-            invalidateCache();
-        }
-        List <Genre> genreListCopy = new ArrayList<>(genreListCached);
+         List <Genre> genreListCopy = new ArrayList<>(genreListCached);
         log.info("Genre cache. Finish getting genres from cache. It took {} ms", System.currentTimeMillis() - startTime);
         return genreListCopy;
     }
 
     @Scheduled(fixedRateString="${genreCache.fixedRate.in.milliseconds}")
+    @PostConstruct
     private void invalidateCache() {
         log.info("Genre cache. Start getting genres from DB");
         long startTime = System.currentTimeMillis();
