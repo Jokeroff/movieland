@@ -26,25 +26,26 @@ public class GenreCache implements GenreDao {
     private JdbcGenreDao jdbcGenreDao;
 
     @Override
-    public List <MovieToGenre> getMovieToGenreMappings() {
-        return jdbcGenreDao.getMovieToGenreMappings();
+    public List <MovieToGenre> getMovieToGenreMappings(List <Integer> movieIds) {
+        return jdbcGenreDao.getMovieToGenreMappings(movieIds);
     }
 
     @Override
-    public List <Genre> getAllGenres() {
+    public List <Genre> getAll() {
         log.info("Genre cache. Start getting genres from cache");
         long startTime = System.currentTimeMillis();
-         List <Genre> genreListCopy = new ArrayList<>(genreListCached);
+
+        List <Genre> genreListCopy = new ArrayList <>(genreListCached);
         log.info("Genre cache. Finish getting genres from cache. It took {} ms", System.currentTimeMillis() - startTime);
         return genreListCopy;
     }
 
-    @Scheduled(fixedRateString="${genreCache.fixedRate.in.milliseconds}")
+    @Scheduled(fixedRateString = "${genreCache.fixedRate.in.milliseconds}", initialDelayString = "${genreCache.fixedRate.in.milliseconds}")
     @PostConstruct
     private void invalidateCache() {
         log.info("Genre cache. Start getting genres from DB");
         long startTime = System.currentTimeMillis();
-        genreListCached = jdbcGenreDao.getAllGenres();
+        genreListCached = jdbcGenreDao.getAll();
         log.info("Genre cache. Finish getting genres from DB. It took {} ms", System.currentTimeMillis() - startTime);
     }
 

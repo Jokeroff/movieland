@@ -31,7 +31,7 @@ public class JdbcMovieDaoIntegrationTest {
 
     @Test
     public void testGetRandomMovies() {
-        List<Movie> movieList = jdbcMovieDao.getRandomMovies();
+        List <Movie> movieList = jdbcMovieDao.getRandomMovies();
         assertEquals(movieList.size(), 3);
         assertNotNull(movieList.get(0).getGenres());
         assertNotNull(movieList.get(1).getCountries());
@@ -39,31 +39,31 @@ public class JdbcMovieDaoIntegrationTest {
 
     @Test
     public void testGetAllMoviesOrdered() {
-        Map<String, String> params = new HashMap<>();
+        Map <String, String> params = new HashMap <>();
         params.put("price", "desc");
-        List<Movie> movieList = jdbcMovieDao.getAllMovies(params);
+        List <Movie> movieList = jdbcMovieDao.getAll(params);
         assertNotEquals(movieList.size(), 0);
         Double maxPrice = jdbcTemplate.queryForObject("select max(price) from movie", Double.class);
         assertEquals(movieList.get(0).getPrice(), maxPrice, 0);
 
         params.clear();
         params.put("rating", "asc");
-        movieList = jdbcMovieDao.getAllMovies(params);
+        movieList = jdbcMovieDao.getAll(params);
         assertNotEquals(movieList.size(), 0);
         Double minRating = jdbcTemplate.queryForObject("select min(rating) from movie", Double.class);
         assertEquals(movieList.get(0).getRating(), minRating, 0);
 
         params.clear();
-        movieList = jdbcMovieDao.getAllMovies(params);
+        movieList = jdbcMovieDao.getAll(params);
         assertNotEquals(movieList.size(), 0);
     }
 
     @Test
     public void testGetMoviesByGenreIdOrdered() {
-        Map<String, String> params = new HashMap<>();
+        Map <String, String> params = new HashMap <>();
 
         int genreId = jdbcTemplate.queryForObject("select avg(genreId) from genre", int.class);
-        List<Movie> movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
+        List <Movie> movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
         assertNotEquals(movieList.size(), 0);
         params.put("price", "desc");
         movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
@@ -72,6 +72,15 @@ public class JdbcMovieDaoIntegrationTest {
         params.put("rating", "desc");
         movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
         assertNotEquals(movieList.size(), 0);
+    }
+
+    @Test
+    public void testGetMovieById() {
+        List <Movie> movieList = jdbcMovieDao.getAll(new HashMap <>());
+        assertNotEquals(movieList.size(), 0);
+        int movieId = movieList.get(0).getMovieId();
+        Movie actual = jdbcMovieDao.getMovieById(movieId);
+        assertNotEquals(actual, 0);
     }
 
 

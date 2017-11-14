@@ -34,7 +34,7 @@ public class GenreControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(genreController).build();
         Genre genreOne = new Genre(11, "testGenreOne");
         Genre genreTwo = new Genre(22, "testGenreTwo");
-        List<Genre> genreList = Arrays.asList(genreOne, genreTwo);
+        List <Genre> genreList = Arrays.asList(genreOne, genreTwo);
         when(genreService.getAllGenres()).thenReturn(genreList);
     }
 

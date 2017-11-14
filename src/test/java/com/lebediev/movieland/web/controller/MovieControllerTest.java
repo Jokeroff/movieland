@@ -63,7 +63,7 @@ public class MovieControllerTest {
         movieTwo.setGenres(Arrays.asList(genre));
         movieTwo.setCountries(Arrays.asList(country));
         movieTwo.setPoster("testPosterTwo");
-        List<Movie> movieList = Arrays.asList(movieOne, movieTwo);
+        List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
 
         when(movieService.getAllMovies(anyMap())).thenReturn(movieList);
         when(movieService.getMoviesByGenreId(anyInt(), anyMap())).thenReturn(movieList);

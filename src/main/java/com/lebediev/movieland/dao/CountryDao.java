@@ -5,5 +5,5 @@ import com.lebediev.movieland.dao.jdbc.entity.MovieToCountry;
 import java.util.List;
 
 public interface CountryDao {
-    List<MovieToCountry> getMovieToCountryMappings();
+    List <MovieToCountry> getMovieToCountryMappings(List <Integer> movieIds);
 }

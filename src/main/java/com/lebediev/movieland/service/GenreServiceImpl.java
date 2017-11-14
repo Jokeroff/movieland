@@ -11,10 +11,10 @@ import java.util.List;
 public class GenreServiceImpl implements GenreService {
 
     @Autowired
-    GenreDao genreDao;
+    private GenreDao genreDao;
 
     @Override
-    public List<Genre> getAllGenres() {
-        return genreDao.getAllGenres();
+    public List <Genre> getAllGenres() {
+        return genreDao.getAll();
     }
 }

@@ -22,7 +22,7 @@ public class GenreController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getAllGenres() throws JsonProcessingException {
+    public String getAllGenres() {
         log.info("Start getting Json AllGenres from controller (v1/genre)");
         long startTime = System.currentTimeMillis();
         String allGenres = toJson(genreService.getAllGenres());

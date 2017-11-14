@@ -10,16 +10,13 @@ public class Movie {
     private String description;
     private double rating;
     private double price;
-    private List<Genre> genres;
-    private List<Country> countries;
+    private List <Genre> genres;
+    private List <Country> countries;
     private String poster;
+    private List <Review> reviews;
 
     public String getPoster() {
         return poster;
-    }
-
-    public void setPoster(String poster) {
-        this.poster = poster;
     }
 
     public int getMovieId() {
@@ -50,12 +47,20 @@ public class Movie {
         return price;
     }
 
-    public List<Genre> getGenres() {
+    public List <Genre> getGenres() {
         return genres;
     }
 
-    public List<Country> getCountries() {
+    public List <Country> getCountries() {
         return countries;
+    }
+
+    public List <Review> getReviews() {
+        return reviews;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
     }
 
     public void setMovieNameRus(String movieNameRus) {
@@ -82,11 +87,11 @@ public class Movie {
         this.price = price;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List <Genre> genres) {
         this.genres = genres;
     }
 
-    public void setCountries(List<Country> countries) {
+    public void setCountries(List <Country> countries) {
         this.countries = countries;
     }
 
@@ -94,7 +99,11 @@ public class Movie {
         this.movieId = movieId;
     }
 
-    public Movie(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List<Genre> genres, List<Country> countries, String poster) {
+    public void setReviews(List <Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Movie(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List <Genre> genres, List <Country> countries, String poster, List <Review> reviews) {
         this.movieId = movieId;
         this.movieNameRus = movieNameRus;
         this.movieNameNative = movieNameNative;
@@ -105,9 +114,26 @@ public class Movie {
         this.genres = genres;
         this.countries = countries;
         this.poster = poster;
+        this.reviews = reviews;
     }
 
     public Movie() {
     }
 
+    @Override
+    public String toString() {
+        return "Movie{" +
+               "movieId=" + movieId +
+               ", movieNameRus='" + movieNameRus + '\'' +
+               ", movieNameNative='" + movieNameNative + '\'' +
+               ", date=" + date +
+               ", description='" + description + '\'' +
+               ", rating=" + rating +
+               ", price=" + price +
+               ", genres=" + genres +
+               ", countries=" + countries +
+               ", poster='" + poster + '\'' +
+               ", reviews=" + reviews +
+               '}';
+    }
 }

@@ -7,4 +7,7 @@ public class MovieViews {
 
     public static class ExtendedMovie extends BaseMovie {
     }
+
+    public static class MovieWithReview extends ExtendedMovie {
+    }
 }
