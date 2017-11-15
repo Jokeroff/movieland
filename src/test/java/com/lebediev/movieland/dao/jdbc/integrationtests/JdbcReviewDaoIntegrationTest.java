@@ -2,6 +2,7 @@ package com.lebediev.movieland.dao.jdbc.integrationtests;
 
 import com.lebediev.movieland.dao.jdbc.JdbcMovieDao;
 import com.lebediev.movieland.dao.jdbc.JdbcReviewDao;
+import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.Review;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class JdbcReviewDaoIntegrationTest {
 
     @Test
     public void testGetReviewByMovieId() {
-        List <Movie> movieList = jdbcMovieDao.getAll(new HashMap <>());
+        List <Movie> movieList = jdbcMovieDao.getAll(new SortParams());
         assertNotEquals(movieList.size(), 0);
         int movieId = movieList.get(0).getMovieId();
         List <Review> actual = jdbcReviewDao.getReviewByMovieId(movieId);

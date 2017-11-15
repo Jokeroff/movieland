@@ -1,5 +1,6 @@
 package com.lebediev.movieland.web.controller;
 
+import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
@@ -18,8 +19,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,8 +66,8 @@ public class MovieControllerTest {
         movieTwo.setPoster("testPosterTwo");
         List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
 
-        when(movieService.getAllMovies(anyMap())).thenReturn(movieList);
-        when(movieService.getMoviesByGenreId(anyInt(), anyMap())).thenReturn(movieList);
+        when(movieService.getAllMovies(any(SortParams.class))).thenReturn(movieList);
+        when(movieService.getMoviesByGenreId(anyInt(), any(SortParams.class))).thenReturn(movieList);
         when(movieService.getRandomMovies()).thenReturn(movieList);
     }
 
@@ -151,18 +152,18 @@ public class MovieControllerTest {
 
         // with various params (order by)
 
-        mockMvc.perform(get("/movie/genre/5").param("rating", "desc")).andExpect(status().isOk()).
+        mockMvc.perform(get("/movie/genre/3").param("rating", "desc")).andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2)));
 
-        mockMvc.perform(get("/movie/genre/2").param("price", "desc")).andExpect(status().isOk()).
+        mockMvc.perform(get("/movie/genre/4").param("price", "desc")).andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2)));
 
         mockMvc.perform(get("/movie/genre/5").param("price", "asc")).andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2)));
 
-        mockMvc.perform(get("/movie/genre/5").param("wrong", "param")).andExpect(status().isBadRequest());
+        mockMvc.perform(get("/movie/genre/3").param("wrong", "param")).andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/movie/genre/5").param("rating", "asc").
+        mockMvc.perform(get("/movie/genre/3").param("rating", "asc").
                 param("price", "asc")).andExpect(status().isBadRequest());
     }
 

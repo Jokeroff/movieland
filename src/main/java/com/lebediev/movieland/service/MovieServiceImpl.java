@@ -1,12 +1,12 @@
 package com.lebediev.movieland.service;
 
 import com.lebediev.movieland.dao.MovieDao;
+import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.entity.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -20,12 +20,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List <Movie> getAllMovies(Map <String, String> params) {
+    public List <Movie> getAllMovies(SortParams params) {
         return movieDao.getAll(params);
     }
 
     @Override
-    public List <Movie> getMoviesByGenreId(int genreId, Map <String, String> params) {
+    public List <Movie> getMoviesByGenreId(int genreId, SortParams params) {
         return movieDao.getMoviesByGenreId(genreId, params);
     }
 

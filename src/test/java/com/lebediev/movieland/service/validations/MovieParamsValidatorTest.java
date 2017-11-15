@@ -1,5 +1,8 @@
 package com.lebediev.movieland.service.validations;
 
+import com.lebediev.movieland.dao.jdbc.entity.OrderBy;
+import com.lebediev.movieland.dao.jdbc.entity.SortDirection;
+import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -19,20 +22,30 @@ public class MovieParamsValidatorTest {
     public void testIsValidParams() {
         Map <String, String> params = new HashMap <>();
 
-        params.put("rating", "DESC");
-        assertEquals(isValidParams(params), params);
+        SortParams expected = new SortParams(OrderBy.PRICE, SortDirection.ASC);
+
+        params.put("price", "asc");
+        assertEquals(isValidParams(params).getOrderBy(), expected.getOrderBy());
+        assertEquals(isValidParams(params).getSortDirection(), expected.getSortDirection());
+
+        expected = new SortParams(OrderBy.PRICE, SortDirection.DESC);
 
         params.clear();
         params.put("pRice", "desC");
-        assertEquals(isValidParams(params), params);
+        assertEquals(isValidParams(params).getOrderBy(), expected.getOrderBy());
+        assertEquals(isValidParams(params).getSortDirection(), expected.getSortDirection());
+
+        expected = new SortParams(OrderBy.RATING, SortDirection.DESC);
 
         params.clear();
-        params.put("price", "asc");
-        assertEquals(isValidParams(params), params);
+        params.put("rating", "DESC");
+        assertEquals(isValidParams(params).getOrderBy(), expected.getOrderBy());
+        assertEquals(isValidParams(params).getSortDirection(), expected.getSortDirection());
 
+        expected = new SortParams();
         params.clear();
-        assertEquals(isValidParams(params), params);
-
+        assertEquals(isValidParams(params).getOrderBy(), expected.getOrderBy());
+        assertEquals(isValidParams(params).getSortDirection(), expected.getSortDirection());
     }
 
     @Test
