@@ -13,7 +13,8 @@
 
     <context:property-placeholder location="classpath:db.properties,
                                             classpath:query.properties,
-                                            classpath:scheduler.properties"/>
+                                            classpath:scheduler.properties,
+                                            classpath:currency.properties"/>
 
 
     <context:component-scan base-package="com.lebediev.movieland">

@@ -1,6 +1,9 @@
 package com.lebediev.movieland.web.controller;
 
+import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.MovieService;
+import com.lebediev.movieland.service.conversion.Currency;
+import com.lebediev.movieland.service.conversion.CurrencyConverter;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.web.controller.utils.JsonConverter;
 import org.slf4j.Logger;
@@ -26,6 +29,8 @@ public class MovieController {
 
     @Autowired
     private MovieService movieService;
+    @Autowired
+    CurrencyConverter currencyConverter;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -64,10 +69,20 @@ public class MovieController {
 
     @RequestMapping(value = "/{movieId}", method = RequestMethod.GET)
     @ResponseBody
-    public String getMovieById(@PathVariable int movieId) {
+    public String getMovieById(@PathVariable int movieId,
+                               @RequestParam(value = "currency", required = false) String currency) {
         log.info("Start getting Json movie by movieId ={} /movie/{movieId}: ", movieId);
         long startTime = System.currentTimeMillis();
-        MovieDto movie = toMovieDto(movieService.getMovieById(movieId));
+       // MovieDto movie = toMovieDto(movieService.getMovieById(movieId));
+        Movie movie2 = movieService.getMovieById(movieId);
+        if(currency != null) {
+            Currency currency1 = Currency.getCurrency(currency);
+            System.out.println(" price in UAH = " + movie2.getPrice());
+            movie2 = currencyConverter.convertPrice(movie2, currency1);
+            System.out.println(" price in USD = " + movie2.getPrice());
+        }
+
+        MovieDto movie = toMovieDto(movie2);
         String movieById = toJson(movie, JsonConverter.JsonView.REVIEW);
         log.info("Finish getting Json movie by movieId ={} /movie/{movieId}. It took {} ms", movieId, System.currentTimeMillis() - startTime);
         return movieById;
