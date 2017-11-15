@@ -50,11 +50,9 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start query get all movies with params {}", params);
         long startTime = System.currentTimeMillis();
         String queryGetAllMoviesOrdered = queryGetAllMovies;
-        if (!params.isEmpty()) {
             for (Map.Entry <String, String> entry : params.entrySet()) {
                 queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + entry.getKey() + " " + entry.getValue();
             }
-        }
         List <Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
         log.info("Finish query get all movies with params {}. It took {} ms", params, System.currentTimeMillis() - startTime);
         return allMoviesOrderedList;
@@ -65,11 +63,9 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start getting movies by genreId = {} with params {}", genreId, params);
         long startTime = System.currentTimeMillis();
         String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId;
-        if (!params.isEmpty()) {
             for (Map.Entry <String, String> entry : params.entrySet()) {
                 queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + entry.getKey() + " " + entry.getValue();
             }
-        }
         List <Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
         log.info("Finish getting movies by genreId = {} with params {}. It took {} ms", genreId, params, System.currentTimeMillis() - startTime);
         return moviesByGenreOrderedList;

@@ -6,14 +6,13 @@ import com.lebediev.movieland.web.controller.dto.ReviewDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lebediev.movieland.web.controller.utils.UserDtoConverter.toUserDto;
 
 public class ReviewDtoConverter {
     static ReviewDto toReviewDto(Review review) {
         ReviewDto reviewDto = new ReviewDto();
         reviewDto.reviewId = review.getReviewId();
         reviewDto.review = review.getReview();
-        reviewDto.user = toUserDto(review.getUser());
+        reviewDto.user = review.getUser();
         return reviewDto;
     }
 
