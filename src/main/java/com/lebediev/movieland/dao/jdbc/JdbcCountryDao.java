@@ -7,27 +7,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 
 @Repository
 public class JdbcCountryDao implements CountryDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
     private final MovieToCountryRowMapper movieToCountryRowMapper = new MovieToCountryRowMapper();
 
     @Value("${query.getMovieToCountryMappings}")
     private String queryGetMovieToCountryMappings;
 
-    public List<MovieToCountry> getMovieToCountryMappings() {
+    public List <MovieToCountry> getMovieToCountryMappings(List <Integer> movieIds) {
         log.info("Start getting MovieToCountry mappings ");
         long startTime = System.currentTimeMillis();
-        List<MovieToCountry> movieToCountryList = jdbcTemplate.query(queryGetMovieToCountryMappings, movieToCountryRowMapper);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("movieIds", movieIds);
+        List <MovieToCountry> movieToCountryList = jdbcTemplate.query(queryGetMovieToCountryMappings, params, movieToCountryRowMapper);
         log.info("Finish getting MovieToCountry mappings. It took {} ms", System.currentTimeMillis() - startTime);
         return movieToCountryList;
     }

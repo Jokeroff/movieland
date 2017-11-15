@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MovieToGenreRowMapper implements RowMapper<MovieToGenre> {
+public class MovieToGenreRowMapper implements RowMapper <MovieToGenre> {
 
     @Override
     public MovieToGenre mapRow(ResultSet resultSet, int i) throws SQLException {

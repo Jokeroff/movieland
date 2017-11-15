@@ -17,7 +17,7 @@ public class MovieParamsValidatorTest {
 
     @Test
     public void testIsValidParams() {
-        Map<String, String> params = new HashMap<>();
+        Map <String, String> params = new HashMap <>();
 
         params.put("rating", "DESC");
         assertEquals(isValidParams(params), params);
@@ -37,7 +37,7 @@ public class MovieParamsValidatorTest {
 
     @Test
     public void testIsValidParamsWithWrongParams() {
-        Map<String, String> params = new HashMap<>();
+        Map <String, String> params = new HashMap <>();
         thrown.expect(IllegalArgumentException.class);
         params.put("wrong", "params");
         isValidParams(params);
@@ -45,7 +45,7 @@ public class MovieParamsValidatorTest {
 
     @Test
     public void testIsValidParamsWithMultiParams() {
-        Map<String, String> params = new HashMap<>();
+        Map <String, String> params = new HashMap <>();
         thrown.expect(IllegalArgumentException.class);
         params.put("some", "params");
         params.put("another", "param");

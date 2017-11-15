@@ -6,18 +6,20 @@ import com.lebediev.movieland.web.controller.dto.MovieDto;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.lebediev.movieland.web.controller.utils.ReviewDtoConverter.toReviewDtoList;
+
 
 public class MovieDtoConverter {
 
-    public static List<MovieDto> toMovieDtoList(List<Movie> moviesList) {
-        List<MovieDto> movieDtoList = new ArrayList<>();
+    public static List <MovieDto> toMovieDtoList(List <Movie> moviesList) {
+        List <MovieDto> movieDtoList = new ArrayList <>();
         for (Movie movie : moviesList) {
             movieDtoList.add(toMovieDto(movie));
         }
         return movieDtoList;
     }
 
-    static MovieDto toMovieDto(Movie movie) {
+    public static MovieDto toMovieDto(Movie movie) {
         MovieDto movieDto = new MovieDto();
         movieDto.movieId = movie.getMovieId();
         movieDto.movieNameRus = movie.getMovieNameRus();
@@ -29,6 +31,9 @@ public class MovieDtoConverter {
         movieDto.genres = movie.getGenres();
         movieDto.countries = movie.getCountries();
         movieDto.poster = movie.getPoster();
+        if (movie.getReviews() != null) {
+            movieDto.reviews = toReviewDtoList(movie.getReviews());
+        }
         return movieDto;
     }
 }

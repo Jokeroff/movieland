@@ -10,22 +10,29 @@ import java.util.Map;
 
 @Service
 public class MovieServiceImpl implements MovieService {
+
     @Autowired
     private MovieDao movieDao;
 
     @Override
-    public List<Movie> getRandomMovies() {
+    public List <Movie> getRandomMovies() {
         return movieDao.getRandomMovies();
     }
 
     @Override
-    public List<Movie> getAllMovies(Map<String, String> params) {
-        return movieDao.getAllMovies(params);
+    public List <Movie> getAllMovies(Map <String, String> params) {
+        return movieDao.getAll(params);
     }
 
     @Override
-    public List<Movie> getMoviesByGenreId(int genreId, Map<String, String> params) {
+    public List <Movie> getMoviesByGenreId(int genreId, Map <String, String> params) {
         return movieDao.getMoviesByGenreId(genreId, params);
     }
+
+    @Override
+    public Movie getMovieById(int movieId) {
+        return movieDao.getMovieById(movieId);
+    }
+
 
 }
