@@ -27,7 +27,7 @@ public class CachedCurrency {
     private volatile List<CurrencyEntity> currencyList;
     private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     @Value("${currency.url}")
-    private String url;// = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
+    private String url; //= "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
 
     public CurrencyEntity getCurrencyEntity(Currency currency){
         log.info("Start getting currency from cache");
@@ -42,64 +42,52 @@ public class CachedCurrency {
         throw new RuntimeException("Could not get cached currency " + currency);
     }
 
-    public static String getCurrenciesFromUrl(String url){
+
+    public static List<CurrencyEntity> getCurrenciesFromUrl(String url){
+        log.info("Start getting currency list from url = {}", url);
+        long startTime = System.currentTimeMillis();
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<CurrencyEntity> currencyEntityList = new ArrayList<>();
+
         try{
-            log.info("Start getting currency from url = {}", url);
-            long startTime = System.currentTimeMillis();
             Security.insertProviderAt(new BouncyCastleProvider(), 1);
 
             URL urlReady = new URL(url);
             URLConnection connection = urlReady.openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-            String inputString;
-            StringBuilder builder = new StringBuilder();
-
-            while((inputString = reader.readLine()) != null){
-                builder.append(inputString);
-            }
-            String json = builder.toString();
-            reader.close();
-            log.info("Finish getting currency from url = {}. It took {} ms", url, System.currentTimeMillis() - startTime);
-            return json;
-
-            }  catch (IOException e) {
-            throw new RuntimeException("Error in connection for url = " + url + " : " + e);
-        }
-    }
-    public static List<CurrencyEntity> getCurrencyList(String json) {
-        log.info("Start getting currency list from json");
-        long startTime = System.currentTimeMillis();
-        List<CurrencyEntity> currencyEntityList = new ArrayList<>();
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(json);
+            JsonNode rootNode = objectMapper.readTree(reader);
             for (JsonNode node : rootNode) {
                 String currencyName = node.get("cc").asText();
                 if (Currency.isValid(currencyName)) {
                     LocalDate date = LocalDate.parse(node.get("exchangedate").asText(), formatter);
                     CurrencyEntity currencyEntity = new CurrencyEntity(Currency.getCurrency(currencyName), node.get("rate").asDouble(), date);
                     currencyEntityList.add(currencyEntity);
-                 }
+                }
             }
             if(currencyEntityList.size() == 0){
-                log.error("Could not get currency list from json: " + json);
+                log.error("Could not get currency list from url: " + url);
                 throw new RuntimeException("Nothing to return - list is empty");
             }
-            log.info("Finish getting currency list from json. It took {} ms", System.currentTimeMillis() - startTime);
+            reader.close();
+            log.info("Finish getting currency list from url: {}. It took {} ms",url, System.currentTimeMillis() - startTime);
             return currencyEntityList;
-        } catch (IOException e){
-            throw new RuntimeException("Error during read from json: " + e);
+
+        }  catch (IOException e) {
+            throw new RuntimeException("Error in connection for url = " + url + " : " + e);
         }
     }
+
+    public static boolean isExpired(CurrencyEntity currencyEntity){
+        return  currencyEntity.getExchangeDate().isBefore(LocalDate.now());
+   }
 
     @Scheduled(cron = "${currency.cache.cron.start.at}")
     @PostConstruct
     private void invalidateCache() {
         log.info("Start invalidating currency cache");
         long startTime = System.currentTimeMillis();
-        currencyList = getCurrencyList(getCurrenciesFromUrl(url));
+        currencyList = getCurrenciesFromUrl(url);
         log.info("Finish invalidating currency cache. It took {} ms", System.currentTimeMillis() - startTime);
     }
-
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
 import static com.lebediev.movieland.web.controller.utils.MovieDtoConverter.toMovieDto;

@@ -3,9 +3,9 @@ package com.lebediev.movieland.service.conversion;
 import java.time.LocalDate;
 
 public class CurrencyEntity {
-    private Currency currency;
+    private final Currency currency;
     private double rate;
-    private LocalDate exchangeDate;
+    private final LocalDate exchangeDate;
 
     public CurrencyEntity(Currency currency, double rate, LocalDate exchangeDate) {
         this.currency = currency;
