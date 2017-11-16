@@ -23,21 +23,26 @@ import java.util.List;
 
 @Service
 public class CachedCurrency {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final static Logger log = LoggerFactory.getLogger(CachedCurrency.class);
     private volatile List<CurrencyEntity> currencyList;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     @Value("${currency.url}")
     private String url;// = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
 
-    public List<CurrencyEntity> getAll(){
+    public CurrencyEntity getCurrencyEntity(Currency currency){
         log.info("Start getting currency from cache");
         long startTime = System.currentTimeMillis();
         List<CurrencyEntity> currencyEntityListCached = new ArrayList<>(currencyList);
-        log.info("Finish getting currency from cache. It took {} ms", System.currentTimeMillis() - startTime);
-        return currencyEntityListCached;
+        for(CurrencyEntity currencyEntity : currencyEntityListCached){
+            if(currencyEntity.getCurrency() == currency){
+                log.info("Finish getting currency from cache. It took {} ms", System.currentTimeMillis() - startTime);
+                return currencyEntity;
+            }
+        }
+        throw new RuntimeException("Could not get cached currency " + currency);
     }
 
-    public String getCurrenciesFromUrl(){
+    public static String getCurrenciesFromUrl(String url){
         try{
             log.info("Start getting currency from url = {}", url);
             long startTime = System.currentTimeMillis();
@@ -54,7 +59,6 @@ public class CachedCurrency {
                 builder.append(inputString);
             }
             String json = builder.toString();
-            System.out.println(json);
             reader.close();
             log.info("Finish getting currency from url = {}. It took {} ms", url, System.currentTimeMillis() - startTime);
             return json;
@@ -63,7 +67,7 @@ public class CachedCurrency {
             throw new RuntimeException("Error in connection for url = " + url + " : " + e);
         }
     }
-    public List<CurrencyEntity> getCurrencyList(String json) {
+    public static List<CurrencyEntity> getCurrencyList(String json) {
         log.info("Start getting currency list from json");
         long startTime = System.currentTimeMillis();
         List<CurrencyEntity> currencyEntityList = new ArrayList<>();
@@ -73,7 +77,6 @@ public class CachedCurrency {
             for (JsonNode node : rootNode) {
                 String currencyName = node.get("cc").asText();
                 if (Currency.isValid(currencyName)) {
-                    System.out.println(node);
                     LocalDate date = LocalDate.parse(node.get("exchangedate").asText(), formatter);
                     CurrencyEntity currencyEntity = new CurrencyEntity(Currency.getCurrency(currencyName), node.get("rate").asDouble(), date);
                     currencyEntityList.add(currencyEntity);
@@ -85,7 +88,6 @@ public class CachedCurrency {
             }
             log.info("Finish getting currency list from json. It took {} ms", System.currentTimeMillis() - startTime);
             return currencyEntityList;
-
         } catch (IOException e){
             throw new RuntimeException("Error during read from json: " + e);
         }
@@ -96,17 +98,8 @@ public class CachedCurrency {
     private void invalidateCache() {
         log.info("Start invalidating currency cache");
         long startTime = System.currentTimeMillis();
-        currencyList = getCurrencyList(getCurrenciesFromUrl());
+        currencyList = getCurrencyList(getCurrenciesFromUrl(url));
         log.info("Finish invalidating currency cache. It took {} ms", System.currentTimeMillis() - startTime);
     }
-
-/*    public static void main(String[] args) {
-        CachedCurrency cachedCurrency = new CachedCurrency();
-        String json = cachedCurrency.getCurrenciesFromUrl();
-        System.out.println(json);
-        System.out.println(cachedCurrency.getCurrencyList(json));
-        cachedCurrency.invalidateCache();
-        System.out.println(cachedCurrency.getAll());
-    }*/
 
 }
