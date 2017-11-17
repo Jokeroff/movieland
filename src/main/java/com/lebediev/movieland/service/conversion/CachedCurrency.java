@@ -23,19 +23,19 @@ import java.util.List;
 
 @Service
 public class CachedCurrency {
-    private final static Logger log = LoggerFactory.getLogger(CachedCurrency.class);
+    private final static Logger LOG = LoggerFactory.getLogger(CachedCurrency.class);
     private volatile List<CurrencyEntity> currencyList;
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     @Value("${currency.url}")
     private String url; //= "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
 
     public CurrencyEntity getCurrencyEntity(Currency currency){
-        log.info("Start getting currency from cache");
+        LOG.info("Start getting currency from cache");
         long startTime = System.currentTimeMillis();
         List<CurrencyEntity> currencyEntityListCached = new ArrayList<>(currencyList);
         for(CurrencyEntity currencyEntity : currencyEntityListCached){
             if(currencyEntity.getCurrency() == currency){
-                log.info("Finish getting currency from cache. It took {} ms", System.currentTimeMillis() - startTime);
+                LOG.info("Finish getting currency from cache. It took {} ms", System.currentTimeMillis() - startTime);
                 return currencyEntity;
             }
         }
@@ -44,7 +44,7 @@ public class CachedCurrency {
 
 
     public static List<CurrencyEntity> getCurrenciesFromUrl(String url){
-        log.info("Start getting currency list from url = {}", url);
+        LOG.info("Start getting currency list from url = {}", url);
         long startTime = System.currentTimeMillis();
         ObjectMapper objectMapper = new ObjectMapper();
         List<CurrencyEntity> currencyEntityList = new ArrayList<>();
@@ -60,17 +60,17 @@ public class CachedCurrency {
             for (JsonNode node : rootNode) {
                 String currencyName = node.get("cc").asText();
                 if (Currency.isValid(currencyName)) {
-                    LocalDate date = LocalDate.parse(node.get("exchangedate").asText(), formatter);
+                    LocalDate date = LocalDate.parse(node.get("exchangedate").asText(), FORMATTER);
                     CurrencyEntity currencyEntity = new CurrencyEntity(Currency.getCurrency(currencyName), node.get("rate").asDouble(), date);
                     currencyEntityList.add(currencyEntity);
                 }
             }
             if(currencyEntityList.size() == 0){
-                log.error("Could not get currency list from url: " + url);
+                LOG.error("Could not get currency list from url: " + url);
                 throw new RuntimeException("Nothing to return - list is empty");
             }
             reader.close();
-            log.info("Finish getting currency list from url: {}. It took {} ms",url, System.currentTimeMillis() - startTime);
+            LOG.info("Finish getting currency list from url: {}. It took {} ms",url, System.currentTimeMillis() - startTime);
             return currencyEntityList;
 
         }  catch (IOException e) {
@@ -85,9 +85,9 @@ public class CachedCurrency {
     @Scheduled(cron = "${currency.cache.cron.start.at}")
     @PostConstruct
     private void invalidateCache() {
-        log.info("Start invalidating currency cache");
+        LOG.info("Start invalidating currency cache");
         long startTime = System.currentTimeMillis();
         currencyList = getCurrenciesFromUrl(url);
-        log.info("Finish invalidating currency cache. It took {} ms", System.currentTimeMillis() - startTime);
+        LOG.info("Finish invalidating currency cache. It took {} ms", System.currentTimeMillis() - startTime);
     }
 }
