@@ -2,6 +2,9 @@ package com.lebediev.movieland.dao.jdbc.integrationtests;
 
 import com.lebediev.movieland.dao.jdbc.JdbcGenreDao;
 import com.lebediev.movieland.dao.jdbc.JdbcMovieDao;
+import com.lebediev.movieland.dao.jdbc.entity.OrderBy;
+import com.lebediev.movieland.dao.jdbc.entity.SortDirection;
+import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.entity.Movie;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,9 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 import static org.junit.Assert.*;
 
@@ -39,44 +41,44 @@ public class JdbcMovieDaoIntegrationTest {
 
     @Test
     public void testGetAllMoviesOrdered() {
-        Map <String, String> params = new HashMap <>();
-        params.put("price", "desc");
+        SortParams params = new SortParams(OrderBy.PRICE, SortDirection.ASC);
         List <Movie> movieList = jdbcMovieDao.getAll(params);
         assertNotEquals(movieList.size(), 0);
-        Double maxPrice = jdbcTemplate.queryForObject("select max(price) from movie", Double.class);
+        Double maxPrice = jdbcTemplate.queryForObject("select min(price) from movie", Double.class);
         assertEquals(movieList.get(0).getPrice(), maxPrice, 0);
 
-        params.clear();
-        params.put("rating", "asc");
+
+        params = new SortParams(OrderBy.RATING, SortDirection.DESC);
         movieList = jdbcMovieDao.getAll(params);
         assertNotEquals(movieList.size(), 0);
-        Double minRating = jdbcTemplate.queryForObject("select min(rating) from movie", Double.class);
+        Double minRating = jdbcTemplate.queryForObject("select max(rating) from movie", Double.class);
         assertEquals(movieList.get(0).getRating(), minRating, 0);
 
-        params.clear();
+        params = new SortParams();
         movieList = jdbcMovieDao.getAll(params);
         assertNotEquals(movieList.size(), 0);
     }
 
     @Test
     public void testGetMoviesByGenreIdOrdered() {
-        Map <String, String> params = new HashMap <>();
+        SortParams params = new SortParams();
 
         int genreId = jdbcTemplate.queryForObject("select avg(genreId) from genre", int.class);
         List <Movie> movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
         assertNotEquals(movieList.size(), 0);
-        params.put("price", "desc");
+
+        params = new SortParams(OrderBy.PRICE, SortDirection.DESC);
         movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
         assertNotEquals(movieList.size(), 0);
-        params.clear();
-        params.put("rating", "desc");
+
+        params = new SortParams(OrderBy.RATING, SortDirection.DESC);
         movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
         assertNotEquals(movieList.size(), 0);
     }
 
     @Test
     public void testGetMovieById() {
-        List <Movie> movieList = jdbcMovieDao.getAll(new HashMap <>());
+        List <Movie> movieList = jdbcMovieDao.getAll(new SortParams());
         assertNotEquals(movieList.size(), 0);
         int movieId = movieList.get(0).getMovieId();
         Movie actual = jdbcMovieDao.getMovieById(movieId);

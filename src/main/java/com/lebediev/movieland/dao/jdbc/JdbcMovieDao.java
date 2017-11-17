@@ -1,6 +1,7 @@
 package com.lebediev.movieland.dao.jdbc;
 
 import com.lebediev.movieland.dao.MovieDao;
+import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.dao.jdbc.mapper.MovieRowMapper;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.enrich.MovieEnrichmentService;
@@ -10,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-import java.util.Map;
+
 
 @Repository
 public class JdbcMovieDao implements MovieDao {
@@ -46,12 +46,12 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public List <Movie> getAll(Map <String, String> params) {
+    public List <Movie> getAll(SortParams params) {
         log.info("Start query get all movies with params {}", params);
         long startTime = System.currentTimeMillis();
         String queryGetAllMoviesOrdered = queryGetAllMovies;
-            for (Map.Entry <String, String> entry : params.entrySet()) {
-                queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + entry.getKey() + " " + entry.getValue();
+            if(params.getOrderBy() != null) {
+               queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " +  params.getOrderBy() + " " + params.getSortDirection();
             }
         List <Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
         log.info("Finish query get all movies with params {}. It took {} ms", params, System.currentTimeMillis() - startTime);
@@ -59,12 +59,12 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public List <Movie> getMoviesByGenreId(int genreId, Map <String, String> params) {
+    public List <Movie> getMoviesByGenreId(int genreId, SortParams params) {
         log.info("Start getting movies by genreId = {} with params {}", genreId, params);
         long startTime = System.currentTimeMillis();
         String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId;
-            for (Map.Entry <String, String> entry : params.entrySet()) {
-                queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + entry.getKey() + " " + entry.getValue();
+            if(params.getOrderBy() != null) {
+                queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
             }
         List <Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
         log.info("Finish getting movies by genreId = {} with params {}. It took {} ms", genreId, params, System.currentTimeMillis() - startTime);

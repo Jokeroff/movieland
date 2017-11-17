@@ -37,7 +37,7 @@ public class JsonConverter {
         try {
             return objectMapper.writeValueAsString(genreList);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException("Error in genre list");
         }
     }
 
