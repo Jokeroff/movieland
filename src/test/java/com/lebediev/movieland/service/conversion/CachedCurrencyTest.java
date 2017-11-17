@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import java.time.LocalDate;
 
-import static com.lebediev.movieland.service.conversion.CachedCurrency.getCurrenciesFromUrl;
 import static org.junit.Assert.*;
 import static com.lebediev.movieland.service.conversion.CachedCurrency.isExpired;
 
@@ -13,12 +12,6 @@ public class CachedCurrencyTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void testGetCurrenciesFromUrl(){
-        thrown.expect(RuntimeException.class);
-        getCurrenciesFromUrl("wrong url");
-    }
 
     @Test
     public void testIsExpired(){

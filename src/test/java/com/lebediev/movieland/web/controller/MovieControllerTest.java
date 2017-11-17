@@ -5,21 +5,15 @@ import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.MovieService;
-import com.lebediev.movieland.service.conversion.CachedCurrency;
-import com.lebediev.movieland.service.conversion.Currency;
-import com.lebediev.movieland.service.conversion.CurrencyConverter;
-import com.lebediev.movieland.service.conversion.CurrencyEntity;
 import com.lebediev.movieland.web.controller.utils.GlobalExceptionHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +21,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,10 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MovieControllerTest {
     @Mock
     private MovieService movieService;
-    @Spy
-    private CachedCurrency cachedCurrency;
-    @Spy
-    private CurrencyConverter currencyConverter;
     @InjectMocks
     private MovieController movieController;
 
@@ -81,9 +70,6 @@ public class MovieControllerTest {
         when(movieService.getMoviesByGenreId(anyInt(), any(SortParams.class))).thenReturn(movieList);
         when(movieService.getRandomMovies()).thenReturn(movieList);
         when(movieService.getMovieById(anyInt())).thenReturn(movieOne);
-        CurrencyEntity currencyEntity = new CurrencyEntity(Currency.EUR, 30.44, LocalDate.now());
-        doReturn(currencyEntity).when(cachedCurrency).getCurrencyEntity(Currency.EUR);
-       // when(cachedCurrency.getCurrencyEntity(Currency.EUR)).thenReturn(currencyEntity);
 
     }
 
