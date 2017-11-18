@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,11 +25,11 @@ public class JdbcReviewDaoIntegrationTest {
     JdbcMovieDao jdbcMovieDao;
 
     @Test
-    public void testGetReviewByMovieId() {
+    public void testGetReviewById() {
         List <Movie> movieList = jdbcMovieDao.getAll(new SortParams());
         assertNotEquals(movieList.size(), 0);
-        int movieId = movieList.get(0).getMovieId();
-        List <Review> actual = jdbcReviewDao.getReviewByMovieId(movieId);
+        int id = movieList.get(0).getId();
+        List <Review> actual = jdbcReviewDao.getReviewById(id);
         assertNotEquals(actual.size(), 0);
     }
 }

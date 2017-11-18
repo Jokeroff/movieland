@@ -30,9 +30,9 @@ public class JdbcCountryDaoIntegrationTest {
     @Test
     public void getMovieToCountryMappings() {
         List <Movie> movieList = jdbcMovieDao.getAll(new SortParams());
-        List <Integer> params = Arrays.asList(movieList.get(0).getMovieId(),
-                                              movieList.get(1).getMovieId(),
-                                              movieList.get(2).getMovieId());
+        List <Integer> params = Arrays.asList(movieList.get(0).getId(),
+                                              movieList.get(1).getId(),
+                                              movieList.get(2).getId());
         List <MovieToCountry> movieToCountries = jdbcCountryDao.getMovieToCountryMappings(params);
         assertNotEquals(movieToCountries.size(), 0);
     }

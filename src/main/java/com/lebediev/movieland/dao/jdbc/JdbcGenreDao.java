@@ -31,11 +31,11 @@ public class JdbcGenreDao implements GenreDao {
     @Value("${query.getAllGenres}")
     private String queryGetAllGenres;
 
-    public List <MovieToGenre> getMovieToGenreMappings(List <Integer> movieIds) {
+    public List <MovieToGenre> getMovieToGenreMappings(List <Integer> ids) {
         log.info("Start getting MovieToGenre mappings ");
         long startTime = System.currentTimeMillis();
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("movieIds", movieIds);
+        params.addValue("ids", ids);
         List <MovieToGenre> movieToGenreList = jdbcTemplate.query(queryGetMovieToGenreMappings, params, movieToGenreRowMapper);
         log.info("Finish getting MovieToGenre mappings. It took {} ms", System.currentTimeMillis() - startTime);
         return movieToGenreList;

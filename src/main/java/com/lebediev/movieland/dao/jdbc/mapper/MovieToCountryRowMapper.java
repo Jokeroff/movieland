@@ -11,8 +11,8 @@ public class MovieToCountryRowMapper implements RowMapper <MovieToCountry> {
     public MovieToCountry mapRow(ResultSet resultSet, int i) throws SQLException {
         MovieToCountry movieToCountry = new MovieToCountry();
         movieToCountry.setMovieId(resultSet.getInt("movieId"));
-        movieToCountry.setCountryId(resultSet.getInt("countryId"));
-        movieToCountry.setCountryName(resultSet.getString("countryName"));
+        movieToCountry.setCountryId(resultSet.getInt("id"));
+        movieToCountry.setName(resultSet.getString("name"));
         return movieToCountry;
     }
 }

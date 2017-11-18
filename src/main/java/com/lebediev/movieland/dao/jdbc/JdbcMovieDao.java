@@ -72,14 +72,14 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public Movie getMovieById(int movieId) {
-        log.info("Start getting movies by id = {} ", movieId);
+    public Movie getMovieById(int id) {
+        log.info("Start getting movies by id = {} ", id);
         long startTime = System.currentTimeMillis();
-        Movie movie = jdbcTemplate.queryForObject(queryGetMoviesById, movieRowMapper, movieId);
+        Movie movie = jdbcTemplate.queryForObject(queryGetMoviesById, movieRowMapper, id);
         movieEnrichmentService.enrichMovieByReviews(movie);
         movieEnrichmentService.enrichMovieByCountries(movie);
         movieEnrichmentService.enrichMovieByGenres(movie);
-        log.info("Finish getting movies by id = {}. It took {} ms", movieId, System.currentTimeMillis() - startTime);
+        log.info("Finish getting movies by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return movie;
     }
 

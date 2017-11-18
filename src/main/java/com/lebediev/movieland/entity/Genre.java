@@ -1,28 +1,28 @@
 package com.lebediev.movieland.entity;
 
 public class Genre {
-    private int genreId;
-    private String genreName;
+    private int id;
+    private String name;
 
-    public Genre(int genreId, String genreName) {
-        this.genreId = genreId;
-        this.genreName = genreName;
+    public Genre(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
 
-    public int getGenreId() {
-        return genreId;
+    public int getId() {
+        return id;
     }
 
-    public String getGenreName() {
-        return genreName;
+    public String getName() {
+        return name;
     }
 
     @Override
     public String toString() {
         return "Genre{" +
-               "genreId=" + genreId +
-               ", genreName='" + genreName + '\'' +
+               "id=" + id +
+               ", name='" + name + '\'' +
                '}';
     }
 }

@@ -80,7 +80,7 @@ public class CachedCurrency {
     }
 
     @Scheduled(cron = "${currency.cache.cron.start.at}")
-    @PostConstruct
+    //@PostConstruct
     private void invalidateCache() {
         LOG.info("Start invalidating currency cache");
         Security.insertProviderAt(new BouncyCastleProvider(), 1);

@@ -3,12 +3,12 @@ package com.lebediev.movieland.dao.jdbc.entity;
 public class MovieToCountry {
     private int movieId;
     private int countryId;
-    private String countryName;
+    private String name;
 
-    public MovieToCountry(int movieId, int countryId, String countryName) {
+    public MovieToCountry(int movieId, int countryId, String name) {
         this.movieId = movieId;
         this.countryId = countryId;
-        this.countryName = countryName;
+        this.name = name;
     }
 
     public MovieToCountry() {
@@ -22,8 +22,8 @@ public class MovieToCountry {
         return countryId;
     }
 
-    public String getCountryName() {
-        return countryName;
+    public String getName() {
+        return name;
     }
 
     public void setMovieId(int movieId) {
@@ -34,7 +34,7 @@ public class MovieToCountry {
         this.countryId = countryId;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

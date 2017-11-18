@@ -21,16 +21,16 @@ public class MovieDtoConverter {
 
     public static MovieDto toMovieDto(Movie movie) {
         MovieDto movieDto = new MovieDto();
-        movieDto.movieId = movie.getMovieId();
-        movieDto.movieNameRus = movie.getMovieNameRus();
-        movieDto.movieNameNative = movie.getMovieNameNative();
-        movieDto.date = movie.getDate();
+        movieDto.id = movie.getId();
+        movieDto.nameRussian = movie.getNameRussian();
+        movieDto.nameNative = movie.getNameNative();
+        movieDto.yearOfRelease = movie.getYearOfRelease();
         movieDto.description = movie.getDescription();
         movieDto.rating = movie.getRating();
         movieDto.price = movie.getPrice();
         movieDto.genres = movie.getGenres();
         movieDto.countries = movie.getCountries();
-        movieDto.poster = movie.getPoster();
+        movieDto.picturePath = movie.getPicturePath();
         if (movie.getReviews() != null) {
             movieDto.reviews = toReviewDtoList(movie.getReviews());
         }

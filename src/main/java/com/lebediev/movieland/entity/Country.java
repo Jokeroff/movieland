@@ -1,28 +1,28 @@
 package com.lebediev.movieland.entity;
 
 public class Country {
-    private int countryId;
-    private String countryName;
+    private int id;
+    private String name;
 
-    public Country(int countryId, String countryName) {
-        this.countryId = countryId;
-        this.countryName = countryName;
+    public Country(int id, String countryName) {
+        this.id = id;
+        this.name = countryName;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public int getId() {
+        return id;
     }
 
-    public String getCountryName() {
-        return countryName;
+    public String getName() {
+        return name;
     }
 
 
     @Override
     public String toString() {
         return "Country{" +
-               "countryId=" + countryId +
-               ", countryName='" + countryName + '\'' +
+               "id=" + id +
+               ", name='" + name + '\'' +
                '}';
     }
 }

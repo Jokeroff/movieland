@@ -10,8 +10,8 @@ public class UserRowMapper implements RowMapper <User> {
     @Override
     public User mapRow(ResultSet resultSet, int i) throws SQLException {
 
-        return new User(resultSet.getInt("userId"),
-                        resultSet.getString("userName"));
+        return new User(resultSet.getInt("id"),
+                        resultSet.getString("nickname"));
 
     }
 }

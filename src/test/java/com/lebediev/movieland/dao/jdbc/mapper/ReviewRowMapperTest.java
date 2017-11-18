@@ -22,9 +22,9 @@ public class ReviewRowMapperTest {
 
         ReviewRowMapper reviewRowMapper = new ReviewRowMapper();
         Review actual = reviewRowMapper.mapRow(resultSet, 0);
-        assertEquals(actual.getReviewId(), 2);
+        assertEquals(actual.getId(), 2);
         assertEquals(actual.getMovieId(), 4);
         assertEquals(actual.getUserId(), 6);
-        assertEquals(actual.getReview(), "testReview");
+        assertEquals(actual.getText(), "testReview");
     }
 }

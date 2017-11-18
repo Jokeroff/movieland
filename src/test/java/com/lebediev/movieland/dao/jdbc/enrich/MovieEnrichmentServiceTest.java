@@ -43,8 +43,8 @@ public class MovieEnrichmentServiceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        movieOne.setMovieId(1);
-        movieTwo.setMovieId(88);
+        movieOne.setId(1);
+        movieTwo.setId(88);
         movieList = Arrays.asList(movieOne, movieTwo);
         movieToGenreList = Arrays.asList(new MovieToGenre(1, 1, "criminal"),
                                          new MovieToGenre(1, 2, "drama"));
@@ -57,8 +57,8 @@ public class MovieEnrichmentServiceTest {
         assertNotEquals(movieList.size(), 0);
         doReturn(movieToGenreList).when(jdbcGenreDao).getMovieToGenreMappings(anyList());
         movieEnrichmentService.enrichMovieByGenres(movieList);
-        assertEquals(movieList.get(0).getGenres().get(0).getGenreName(), "criminal");
-        assertEquals(movieList.get(0).getGenres().get(1).getGenreName(), "drama");
+        assertEquals(movieList.get(0).getGenres().get(0).getName(), "criminal");
+        assertEquals(movieList.get(0).getGenres().get(1).getName(), "drama");
     }
 
     @Test
@@ -66,23 +66,23 @@ public class MovieEnrichmentServiceTest {
         assertNotEquals(movieList.size(), 0);
         doReturn(movieToCountryList).when(jdbcCountryDao).getMovieToCountryMappings(anyList());
         movieEnrichmentService.enrichMovieByCountries(movieList);
-        assertEquals(movieList.get(0).getCountries().get(0).getCountryName(), "Poland");
-        assertEquals(movieList.get(0).getCountries().get(1).getCountryName(), "Belgium");
+        assertEquals(movieList.get(0).getCountries().get(0).getName(), "Poland");
+        assertEquals(movieList.get(0).getCountries().get(1).getName(), "Belgium");
     }
 
     @Test
-    public void testGetGenresByMovieId() {
-        List <Genre> genreList = movieEnrichmentService.getGenresByMovieId(movieToGenreList, 1);
+    public void testGetGenresById() {
+        List <Genre> genreList = movieEnrichmentService.getGenresById(movieToGenreList, 1);
         assertNotEquals(genreList, 0);
-        assertEquals(genreList.get(0).getGenreName(), "criminal");
-        assertEquals(genreList.get(1).getGenreName(), "drama");
+        assertEquals(genreList.get(0).getName(), "criminal");
+        assertEquals(genreList.get(1).getName(), "drama");
     }
 
     @Test
-    public void testGetCountriesByMovieId() {
-        List <Country> countryList = movieEnrichmentService.getCountriesByMovieId(movieToCountryList, 1);
+    public void testGetCountriesById() {
+        List <Country> countryList = movieEnrichmentService.getCountriesById(movieToCountryList, 1);
         assertNotEquals(countryList, 0);
-        assertEquals(countryList.get(0).getCountryName(), "Poland");
-        assertEquals(countryList.get(1).getCountryName(), "Belgium");
+        assertEquals(countryList.get(0).getName(), "Poland");
+        assertEquals(countryList.get(1).getName(), "Belgium");
     }
 }

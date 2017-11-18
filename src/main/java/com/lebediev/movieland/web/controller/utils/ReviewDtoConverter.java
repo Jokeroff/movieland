@@ -10,8 +10,8 @@ import java.util.List;
 public class ReviewDtoConverter {
     static ReviewDto toReviewDto(Review review) {
         ReviewDto reviewDto = new ReviewDto();
-        reviewDto.reviewId = review.getReviewId();
-        reviewDto.review = review.getReview();
+        reviewDto.id = review.getId();
+        reviewDto.text = review.getText();
         reviewDto.user = review.getUser();
         return reviewDto;
     }

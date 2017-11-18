@@ -42,9 +42,9 @@ public class GenreControllerTest {
     public void testGetAllGenres() throws Exception {
         mockMvc.perform(get("/genre")).andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2))).
-                andExpect(jsonPath("$[0].genreId", is(11))).
-                andExpect(jsonPath("$[0].genreName", is("testGenreOne"))).
-                andExpect(jsonPath("$[1].genreId", is(22))).
-                andExpect(jsonPath("$[1].genreName", is("testGenreTwo")));
+                andExpect(jsonPath("$[0].id", is(11))).
+                andExpect(jsonPath("$[0].name", is("testGenreOne"))).
+                andExpect(jsonPath("$[1].id", is(22))).
+                andExpect(jsonPath("$[1].name", is("testGenreTwo")));
     }
 }

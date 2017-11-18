@@ -30,8 +30,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie getMovieById(int movieId) {
-        return movieDao.getMovieById(movieId);
+    public Movie getMovieById(int id) {
+        return movieDao.getMovieById(id);
     }
 
 

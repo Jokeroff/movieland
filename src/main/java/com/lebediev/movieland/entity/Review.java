@@ -1,25 +1,17 @@
 package com.lebediev.movieland.entity;
 
 public class Review {
-    private int reviewId;
+    private int id;
     private int movieId;
     private int userId;
     private User user;
-    private String review;
+    private String text;
 
     public Review() {
     }
 
-    public Review(int reviewId, int movieId, int userId, User user, String review) {
-        this.reviewId = reviewId;
-        this.movieId = movieId;
-        this.userId = userId;
-        this.user = user;
-        this.review = review;
-    }
-
-    public int getReviewId() {
-        return reviewId;
+    public int getId() {
+        return id;
     }
 
     public int getMovieId() {
@@ -34,12 +26,12 @@ public class Review {
         return user;
     }
 
-    public String getReview() {
-        return review;
+    public String getText() {
+        return text;
     }
 
-    public void setReviewId(int reviewId) {
-        this.reviewId = reviewId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setMovieId(int movieId) {
@@ -54,18 +46,18 @@ public class Review {
         this.user = user;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
     public String toString() {
         return "Review{" +
-               "reviewId=" + reviewId +
+               "id=" + id +
                ", movieId=" + movieId +
                ", userId=" + userId +
                ", user=" + user +
-               ", review='" + review + '\'' +
+               ", text='" + text + '\'' +
                '}';
     }
 }

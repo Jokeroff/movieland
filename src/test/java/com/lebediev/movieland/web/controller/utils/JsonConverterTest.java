@@ -24,20 +24,20 @@ public class JsonConverterTest {
     public void testToJsonMovie() throws JsonProcessingException {
 
         Country country = new Country(2, "someCountry");
-        MovieDto movieDto = new MovieDto(44, "testMovieNameRus", "testMovieNameNative",
+        MovieDto movieDto = new MovieDto(44, "testnameRussian", "testnameNative",
                                          1999, "testDescription", 0.1, 2.2, genreList,
-                                         Arrays.asList(country), "testPoster", Arrays.asList(new ReviewDto()));
+                                         Arrays.asList(country), "testpicturePath", Arrays.asList(new ReviewDto()));
         MovieDtoList.add(movieDto);
 
         String actual = toJson(MovieDtoList, JsonConverter.JsonView.BASE);
-        String expected = "[{\"movieId\":44,\"movieNameRus\":\"testMovieNameRus\",\"movieNameNative\":\"testMovieNameNative\"," +
-                          "\"date\":1999,\"rating\":0.1,\"price\":2.2,\"poster\":\"testPoster\"}]";
+        String expected = "[{\"id\":44,\"nameRussian\":\"testnameRussian\",\"nameNative\":\"testnameNative\"," +
+                          "\"yearOfRelease\":1999,\"rating\":0.1,\"price\":2.2,\"picturePath\":\"testpicturePath\"}]";
         assertEquals(expected, actual);
 
-        expected = "[{\"movieId\":44,\"movieNameRus\":\"testMovieNameRus\",\"movieNameNative\":\"testMovieNameNative\"," +
-                   "\"date\":1999,\"description\":\"testDescription\",\"rating\":0.1,\"price\":2.2," +
-                   "\"countries\":[{\"countryId\":2,\"countryName\":\"someCountry\"}],\"genres\":[{\"genreId\":1," +
-                   "\"genreName\":\"криминал\"},{\"genreId\":2,\"genreName\":\"drama\"}],\"poster\":\"testPoster\"}]";
+        expected = "[{\"id\":44,\"nameRussian\":\"testnameRussian\",\"nameNative\":\"testnameNative\"," +
+                   "\"yearOfRelease\":1999,\"description\":\"testDescription\",\"rating\":0.1,\"price\":2.2," +
+                   "\"countries\":[{\"id\":2,\"name\":\"someCountry\"}],\"genres\":[{\"id\":1," +
+                   "\"name\":\"криминал\"},{\"id\":2,\"name\":\"drama\"}],\"picturePath\":\"testpicturePath\"}]";
         actual = toJson(MovieDtoList, JsonConverter.JsonView.EXTENDED);
         assertEquals(expected, actual);
     }
@@ -52,7 +52,7 @@ public class JsonConverterTest {
     @Test
     public void testToJsonGenre() {
         String actual = toJson(genreList);
-        String expected = "[{\"genreId\":1,\"genreName\":\"криминал\"},{\"genreId\":2,\"genreName\":\"drama\"}]";
+        String expected = "[{\"id\":1,\"name\":\"криминал\"},{\"id\":2,\"name\":\"drama\"}]";
         assertEquals(expected, actual);
     }
 
