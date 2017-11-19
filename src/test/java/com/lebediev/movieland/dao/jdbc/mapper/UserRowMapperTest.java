@@ -19,12 +19,15 @@ public class UserRowMapperTest {
     public void testRowMap() throws SQLException {
         ResultSet resultSet = mock(ResultSet.class);
         when(resultSet.getInt(any())).thenReturn(18);
-        when(resultSet.getString(any())).thenReturn("testUserName");
+        when(resultSet.getString(any())).thenReturn("testNickname").thenReturn("testEmail").thenReturn("testPassword");
 
         UserRowMapper userRowMapper = new UserRowMapper();
         User actual = userRowMapper.mapRow(resultSet, 0);
         assertEquals(actual.getUserId(), 18);
-        assertEquals(actual.getUserName(), "testUserName");
+        assertEquals(actual.getNickName(), "testNickname");
+        assertEquals(actual.getEmail(),"testEmail");
+        assertEquals(actual.getPassword(),"testPassword");
+
 
     }
 }
