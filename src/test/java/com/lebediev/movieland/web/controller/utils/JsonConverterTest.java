@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Review;
+import com.lebediev.movieland.service.authentication.AuthRequest;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.web.controller.dto.ReviewDto;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.lebediev.movieland.web.controller.utils.JsonConverter.getAuthFromJson;
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
 import static org.junit.Assert.assertEquals;
 
@@ -54,6 +56,16 @@ public class JsonConverterTest {
         String actual = toJson(genreList);
         String expected = "[{\"id\":1,\"name\":\"криминал\"},{\"id\":2,\"name\":\"drama\"}]";
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetAuthFromJson(){
+        String value = "{ \"email\" : \"ronald.reynolds66@example.com\",\"password\" : \"paco\" }";
+        AuthRequest expected = getAuthFromJson(value);
+        assertEquals(expected.getEmail(),"ronald.reynolds66@example.com" );
+        assertEquals(expected.getPassword(),"paco");
+
+
     }
 
 }

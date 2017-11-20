@@ -16,8 +16,8 @@ public class ReviewDtoConverter {
         return reviewDto;
     }
 
-    static List <ReviewDto> toReviewDtoList(List <Review> reviewList) {
-        List <ReviewDto> reviewDtoList = new ArrayList <>();
+    static List<ReviewDto> toReviewDtoList(List<Review> reviewList) {
+        List<ReviewDto> reviewDtoList = new ArrayList<>();
         for (Review review : reviewList) {
             reviewDtoList.add(toReviewDto(review));
         }
