@@ -11,39 +11,70 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import static org.junit.Assert.assertEquals;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class AuthServiceTest {
 
     @Spy
-    UserDao userDao;
+    private UserDao userDao;
     @InjectMocks
-    AuthService authService;
+    private AuthService authService;
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
+    private User user;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        String password = BCrypt.hashpw("testPassword", BCrypt.gensalt());
+        user = new User(1, "testNickname", "testEmail", password);
+        when(userDao.getUserByEmail(anyString())).thenReturn(user);
     }
 
 
     @Test
-    public void testCheckPassword() {
-        String password = BCrypt.hashpw("testPassword", BCrypt.gensalt());
-        User user = new User(1, "testNickname", "testEmail", password);
-        when(userDao.getUserByEmail(anyString())).thenReturn(user);
+    public void testAuthenticate() {
 
-      /*  assertEquals(user, authService.checkPassword("dummyEmail", "testPassword"));
+        UserToken userToken = authService.authenticate("testEmail", "testPassword");
+        assertTrue(userToken.getUser().equals(user));
 
+        UserToken userTokenFromCache = authService.authenticate("testEmail", "testPassword");
+        assertTrue(userToken.equals(userTokenFromCache));
 
-        thrown.expect(IllegalArgumentException.class);
-
-        user = authService.checkPassword("dummyEmail", "wrongPassword");*/
+        thrown.expect(SecurityException.class);
+        authService.authenticate("testEmail", "wrongPassword");
     }
+
+    @Test
+    public void testDeleteToken() {
+        UserToken userToken = authService.authenticate("testEmail", "testPassword");
+
+        UUID uuid = userToken.getUuid();
+        assertTrue(authService.deleteToken(uuid));
+
+        UserToken userTokenNew = authService.authenticate("testEmail", "testPassword");
+        assertNotEquals(userToken, userTokenNew);
+
+        assertFalse(authService.deleteToken(UUID.randomUUID()));
+    }
+
+    @Test
+    public void testAuthorize() {
+        UserToken userToken = authService.authenticate("testEmail", "testPassword");
+
+        UUID uuid = userToken.getUuid();
+        assertEquals(userToken, authService.authorize(uuid));
+
+        thrown.expect(SecurityException.class);
+        authService.authorize(UUID.randomUUID());
+    }
+
 }
 

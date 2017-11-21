@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-config.xml"})
-public class JdbcCountryDaoIntegrationTest {
+public class JdbcCountryDaoITest {
 
     @Autowired
     private JdbcCountryDao jdbcCountryDao;

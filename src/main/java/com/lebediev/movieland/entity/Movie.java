@@ -15,6 +15,8 @@ public class Movie {
     private String picturePath;
     private List <Review> reviews;
 
+    public Movie() {    }
+
     public String getPicturePath() {
         return picturePath;
     }
@@ -101,23 +103,6 @@ public class Movie {
 
     public void setReviews(List <Review> reviews) {
         this.reviews = reviews;
-    }
-
-    public Movie(int id, String nameRussian, String nameNative, int yearOfRelease, String description, double rating, double price, List <Genre> genres, List <Country> countries, String picturePath, List <Review> reviews) {
-        this.id = id;
-        this.nameRussian = nameRussian;
-        this.nameNative = nameNative;
-        this.yearOfRelease = yearOfRelease;
-        this.description = description;
-        this.rating = rating;
-        this.price = price;
-        this.genres = genres;
-        this.countries = countries;
-        this.picturePath = picturePath;
-        this.reviews = reviews;
-    }
-
-    public Movie() {
     }
 
     @Override

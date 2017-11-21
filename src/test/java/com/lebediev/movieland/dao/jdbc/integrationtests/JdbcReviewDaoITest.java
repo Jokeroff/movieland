@@ -17,7 +17,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-config.xml"})
-public class JdbcReviewDaoIntegrationTest {
+public class JdbcReviewDaoITest {
 
     @Autowired
     JdbcReviewDao jdbcReviewDao;

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-config.xml"})
-public class JdbcUserDaoIntegrationTest {
+public class JdbcUserDaoITest {
     @Autowired
     private JdbcUserDao jdbcUserDao;
 

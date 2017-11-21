@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-config.xml"})
 
-public class JdbcMovieDaoIntegrationTest {
+public class JdbcMovieDaoITest {
 
     @Autowired
     private JdbcMovieDao jdbcMovieDao;
