@@ -18,6 +18,7 @@ import java.security.Security;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -71,12 +72,19 @@ public class CachedCurrency {
                 reader.close();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error in connection for url = " + url + " : " + e);
+            LOG.warn("Getting currency list from url: {} failed. Dummy currency list returned", url);
+            return  getDummyCurrencyList();
         }
     }
 
     public static boolean isExpired(CurrencyEntity currencyEntity) {
         return currencyEntity.getExchangeDate().isBefore(LocalDate.now());
+    }
+
+    private static List<CurrencyEntity> getDummyCurrencyList(){
+        CurrencyEntity dummyUsd = new CurrencyEntity(Currency.USD, 1, LocalDate.of(1900,1,1));
+        CurrencyEntity dummyEur = new CurrencyEntity(Currency.EUR, 1, LocalDate.of(1900,1,1));
+         return Arrays.asList(dummyUsd, dummyEur);
     }
 
     @Scheduled(cron = "${currency.cache.cron.start.at}")

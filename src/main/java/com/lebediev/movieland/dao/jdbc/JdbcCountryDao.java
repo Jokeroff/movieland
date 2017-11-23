@@ -21,7 +21,7 @@ public class JdbcCountryDao implements CountryDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private final MovieToCountryRowMapper movieToCountryRowMapper = new MovieToCountryRowMapper();
+    private static final MovieToCountryRowMapper MOVIE_TO_COUNTRY_ROW_MAPPER = new MovieToCountryRowMapper();
 
     @Value("${query.getMovieToCountryMappings}")
     private String queryGetMovieToCountryMappings;
@@ -31,8 +31,9 @@ public class JdbcCountryDao implements CountryDao {
         long startTime = System.currentTimeMillis();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("ids", ids);
-        List <MovieToCountry> movieToCountryList = jdbcTemplate.query(queryGetMovieToCountryMappings, params, movieToCountryRowMapper);
+        List <MovieToCountry> movieToCountryList = jdbcTemplate.query(queryGetMovieToCountryMappings, params, MOVIE_TO_COUNTRY_ROW_MAPPER);
         log.info("Finish getting MovieToCountry mappings. It took {} ms", System.currentTimeMillis() - startTime);
         return movieToCountryList;
     }
+
 }

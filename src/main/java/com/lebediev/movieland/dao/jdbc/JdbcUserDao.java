@@ -18,24 +18,24 @@ public class JdbcUserDao implements UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Value("${query.getUserById}")
-    private String queryGetUserById;
+    private String queryGetById;
     @Value("${query.getUserByEmail}")
-    private  String queryGetUserByEmail;
+    private  String queryGetByEmail;
 
     @Override
-    public User getUserById(int userId) {
+    public User getById(int userId) {
         log.info("Start getting user by id = {}", userId);
         long startTime = System.currentTimeMillis();
-        User user = jdbcTemplate.queryForObject(queryGetUserById, USER_ROW_MAPPER, userId);
+        User user = jdbcTemplate.queryForObject(queryGetById, USER_ROW_MAPPER, userId);
         log.info("Finish getting user by id = {}. It took {} ms", userId, System.currentTimeMillis() - startTime);
         return user;
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public User getByEmail(String email) {
         log.info("Start getting user by email = {}", email);
         long startTime = System.currentTimeMillis();
-        User user = jdbcTemplate.queryForObject(queryGetUserByEmail, USER_ROW_MAPPER, email);
+        User user = jdbcTemplate.queryForObject(queryGetByEmail, USER_ROW_MAPPER, email);
         log.info("Finish getting user by email = {}. It took {} ms", email, System.currentTimeMillis() - startTime);
         return user;
     }

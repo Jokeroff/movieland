@@ -8,6 +8,7 @@ import com.lebediev.movieland.entity.Review;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,9 +21,9 @@ import java.util.List;
 public class JdbcReviewDaoITest {
 
     @Autowired
-    JdbcReviewDao jdbcReviewDao;
+    private JdbcReviewDao jdbcReviewDao;
     @Autowired
-    JdbcMovieDao jdbcMovieDao;
+    private JdbcMovieDao jdbcMovieDao;
 
     @Test
     public void testGetReviewById() {
@@ -32,4 +33,5 @@ public class JdbcReviewDaoITest {
         List <Review> actual = jdbcReviewDao.getReviewById(id);
         assertNotEquals(actual.size(), 0);
     }
+
 }

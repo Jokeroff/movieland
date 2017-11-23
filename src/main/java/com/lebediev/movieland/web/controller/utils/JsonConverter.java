@@ -74,4 +74,12 @@ public class JsonConverter {
             throw new RuntimeException("Failed to create AuthRequest from json " + e);
         }
     }
+
+    public static String toJson(String value) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Could not create json from string: " + value);
+        }
+    }
 }
