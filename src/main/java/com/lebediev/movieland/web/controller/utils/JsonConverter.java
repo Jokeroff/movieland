@@ -3,6 +3,7 @@ package com.lebediev.movieland.web.controller.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lebediev.movieland.entity.Genre;
+import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.service.authentication.AuthRequest;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.web.controller.dto.MovieViews;
@@ -74,6 +75,15 @@ public class JsonConverter {
             throw new RuntimeException("Failed to create AuthRequest from json " + e);
         }
     }
+
+    public static Review toReview(String json) {
+        try {
+            return OBJECT_MAPPER.readValue(json, Review.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create Review from json: " + json);
+        }
+    }
+
 
     public static String toJson(String value) {
         try {

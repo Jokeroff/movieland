@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ReviewDao {
     List <Review> getReviewById(int id);
+    void add(Review review);
 }
