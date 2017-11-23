@@ -2,7 +2,6 @@ package com.lebediev.movieland.web.controller.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.service.authentication.AuthRequest;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
@@ -37,11 +36,11 @@ public class JsonConverter {
         }
     }
 
-    public static String toJson(List<Genre> genreList) {
+    public static String toJson(List<?> list) {
         try {
-            return OBJECT_MAPPER.writeValueAsString(genreList);
+            return OBJECT_MAPPER.writeValueAsString(list);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Error in genre list");
+            throw new IllegalArgumentException("Error in list");
         }
     }
 
@@ -92,4 +91,12 @@ public class JsonConverter {
             throw new IllegalArgumentException("Could not create json from string: " + value);
         }
     }
+
+ /*   public static String toJson(List<?> countryList) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(countryList);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Error in country list");
+        }
+    }*/
 }
