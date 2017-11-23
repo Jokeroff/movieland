@@ -91,12 +91,4 @@ public class JsonConverter {
             throw new IllegalArgumentException("Could not create json from string: " + value);
         }
     }
-
- /*   public static String toJson(List<?> countryList) {
-        try {
-            return OBJECT_MAPPER.writeValueAsString(countryList);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Error in country list");
-        }
-    }*/
 }
