@@ -27,7 +27,7 @@ public class AuthService {
 
     public UserToken authenticate(String email, String password) {
         LOG.info("Start authentication for email: {}", email);
-        User user = userDao.getUserByEmail(email);
+        User user = userDao.getByEmail(email);
 
         if (BCrypt.checkpw(password, user.getPassword())) {
             for (Map.Entry <UUID, UserToken> entry : userTokenCache.entrySet()) {

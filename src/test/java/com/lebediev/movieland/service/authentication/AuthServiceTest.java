@@ -1,6 +1,7 @@
 package com.lebediev.movieland.service.authentication;
 
 import com.lebediev.movieland.dao.UserDao;
+import com.lebediev.movieland.dao.jdbc.entity.Role;
 import com.lebediev.movieland.entity.User;
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -34,8 +36,8 @@ public class AuthServiceTest {
         MockitoAnnotations.initMocks(this);
 
         String password = BCrypt.hashpw("testPassword", BCrypt.gensalt());
-        user = new User(1, "testNickname", "testEmail", password);
-        when(userDao.getUserByEmail(anyString())).thenReturn(user);
+        user = new User(1, "testNickname", "testEmail", password, Arrays.asList(Role.USER));
+        when(userDao.getByEmail(anyString())).thenReturn(user);
     }
 
 

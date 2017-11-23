@@ -1,5 +1,6 @@
 package com.lebediev.movieland.service.authentication;
 
+import com.lebediev.movieland.dao.jdbc.entity.Role;
 import com.lebediev.movieland.entity.User;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,24 @@ public class UserToken {
 
     public User getUser() {
         return user;
+    }
+
+    public boolean isUser(){
+        for(Role role : user.getRoles()){
+            if(role == Role.USER){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAdmin(){
+        for(Role role : user.getRoles()){
+            if(role == Role.ADMIN){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

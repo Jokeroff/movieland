@@ -1,9 +1,8 @@
-package com.lebediev.movieland.dao.jdbc.enrich;
+package com.lebediev.movieland.service.enrich;
 
 import com.lebediev.movieland.dao.jdbc.JdbcUserDao;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.entity.User;
-import com.lebediev.movieland.service.enrich.ReviewEnrichmentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +29,7 @@ public class ReviewEnrichmentServiceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         User user = new User();
-        doReturn(user).when(jdbcUserDao).getUserById(anyInt());
+        doReturn(user).when(jdbcUserDao).getById(anyInt());
     }
 
     @Test

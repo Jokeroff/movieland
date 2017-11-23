@@ -31,7 +31,7 @@ public class MovieEnrichmentService {
     @Autowired
     private ReviewDao reviewDao;
 
-    public void enrichMovieByGenres(Movie movie) {
+    public void enrichByGenres(Movie movie) {
         log.info("Start enriching movie by genres ");
         long startTime = System.currentTimeMillis();
         List <Integer> params = Arrays.asList(movie.getId());
@@ -40,7 +40,7 @@ public class MovieEnrichmentService {
         log.info("Finish enriching movie by genres for id = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
     }
 
-    public void enrichMovieByGenres(List <Movie> movieList) {
+    public void enrichByGenres(List <Movie> movieList) {
         log.info("Start enriching list of movies by genres ");
         long startTime = System.currentTimeMillis();
         List <Integer> params = getIds(movieList);
@@ -51,7 +51,7 @@ public class MovieEnrichmentService {
         log.info("Finish enriching list of movies by genres for movie id's = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
     }
 
-    public void enrichMovieByCountries(Movie movie) {
+    public void enrichByCountries(Movie movie) {
         log.info("Start enriching movie by countries ");
         long startTime = System.currentTimeMillis();
         List <Integer> params = Arrays.asList(movie.getId());
@@ -60,7 +60,7 @@ public class MovieEnrichmentService {
         log.info("Finish enriching movie by countries for id = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
     }
 
-    public void enrichMovieByCountries(List <Movie> movieList) {
+    public void enrichByCountries(List <Movie> movieList) {
         log.info("Start enriching list of movies by countries ");
         long startTime = System.currentTimeMillis();
         List <Integer> params = getIds(movieList);
@@ -99,7 +99,7 @@ public class MovieEnrichmentService {
         return countryList;
     }
 
-    public void enrichMovieByReviews(Movie movie) {
+    public void enrichByReviews(Movie movie) {
         log.info("Start enriching movie by reviews ");
         long startTime = System.currentTimeMillis();
         List <Review> reviewList = reviewDao.getReviewById(movie.getId());

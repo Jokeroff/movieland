@@ -56,7 +56,7 @@ public class MovieEnrichmentServiceTest {
     public void testEnrichMovieByGenres() {
         assertNotEquals(movieList.size(), 0);
         doReturn(movieToGenreList).when(jdbcGenreDao).getMovieToGenreMappings(anyList());
-        movieEnrichmentService.enrichMovieByGenres(movieList);
+        movieEnrichmentService.enrichByGenres(movieList);
         assertEquals(movieList.get(0).getGenres().get(0).getName(), "criminal");
         assertEquals(movieList.get(0).getGenres().get(1).getName(), "drama");
     }
@@ -65,7 +65,7 @@ public class MovieEnrichmentServiceTest {
     public void testEnrichMovieByCountries() {
         assertNotEquals(movieList.size(), 0);
         doReturn(movieToCountryList).when(jdbcCountryDao).getMovieToCountryMappings(anyList());
-        movieEnrichmentService.enrichMovieByCountries(movieList);
+        movieEnrichmentService.enrichByCountries(movieList);
         assertEquals(movieList.get(0).getCountries().get(0).getName(), "Poland");
         assertEquals(movieList.get(0).getCountries().get(1).getName(), "Belgium");
     }
