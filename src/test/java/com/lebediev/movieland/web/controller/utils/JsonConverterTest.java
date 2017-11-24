@@ -3,6 +3,7 @@ package com.lebediev.movieland.web.controller.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
+import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.service.authentication.AuthRequest;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
@@ -14,10 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.lebediev.movieland.web.controller.utils.JsonConverter.getAuthFromJson;
-import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
-import static com.lebediev.movieland.web.controller.utils.JsonConverter.toReview;
+import static com.lebediev.movieland.web.controller.utils.JsonConverter.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class JsonConverterTest {
     private final List <MovieDto> MovieDtoList = new ArrayList <>();
@@ -60,21 +60,39 @@ public class JsonConverterTest {
     }
 
     @Test
-    public void testGetAuthFromJson(){
+    public void testGetAuthFromJson() {
         String value = "{ \"email\" : \"ronald.reynolds66@example.com\",\"password\" : \"paco\" }";
         AuthRequest expected = getAuthFromJson(value);
-        assertEquals(expected.getEmail(),"ronald.reynolds66@example.com" );
-        assertEquals(expected.getPassword(),"paco");
+        assertEquals(expected.getEmail(), "ronald.reynolds66@example.com");
+        assertEquals(expected.getPassword(), "paco");
 
 
     }
 
     @Test
-    public void testToReview(){
+    public void testToReview() {
         String json = "{ \"movieId\" : 1,\"text\" : \"some review\" }";
         Review expected = toReview(json);
         assertEquals(expected.getMovieId(), 1);
         assertEquals(expected.getText(), "some review");
-          }
+    }
+
+    @Test
+    public void testToMovie() {
+        String json = "{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
+                      "\"description\" : \"some description\"," +
+                      "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }";
+        Movie actual = toMovie(json);
+        assertEquals(actual.getNameRussian(),"название");
+        assertEquals(actual.getNameNative(),"testName");
+        assertEquals(actual.getYearOfRelease(),2000);
+        assertEquals(actual.getDescription(),"some description");
+        assertEquals(actual.getRating(),10.0, 0);
+        assertEquals(actual.getPrice(),330.0, 0);
+        assertEquals(actual.getPicturePath(),"http:somepath");
+        assertNull(actual.getGenres());
+        assertNull(actual.getCountries());
+        assertNull(actual.getReviews());
+    }
 
 }

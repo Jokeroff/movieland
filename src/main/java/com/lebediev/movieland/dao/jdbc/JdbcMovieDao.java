@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 
@@ -33,6 +34,10 @@ public class JdbcMovieDao implements MovieDao {
     private String queryGetMoviesByGenreId;
     @Value("${query.getMoviesById}")
     private String queryGetMoviesById;
+    @Value("${query.addMovie}")
+    private String queryAdd;
+    @Value("${query.updateMovie}")
+    private String queryUpdate;
 
     @Override
     public List <Movie> getRandomMovies() {
@@ -50,9 +55,9 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start query get all movies with params {}", params);
         long startTime = System.currentTimeMillis();
         String queryGetAllMoviesOrdered = queryGetAllMovies;
-            if(params.getOrderBy() != null) {
-               queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " +  params.getOrderBy() + " " + params.getSortDirection();
-            }
+        if (params.getOrderBy() != null) {
+            queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
+        }
         List <Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
         log.info("Finish query get all movies with params {}. It took {} ms", params, System.currentTimeMillis() - startTime);
         return allMoviesOrderedList;
@@ -63,9 +68,9 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start getting movies by genreId = {} with params {}", genreId, params);
         long startTime = System.currentTimeMillis();
         String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId;
-            if(params.getOrderBy() != null) {
-                queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
-            }
+        if (params.getOrderBy() != null) {
+            queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
+        }
         List <Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
         log.info("Finish getting movies by genreId = {} with params {}. It took {} ms", genreId, params, System.currentTimeMillis() - startTime);
         return moviesByGenreOrderedList;
@@ -81,6 +86,42 @@ public class JdbcMovieDao implements MovieDao {
         movieEnrichmentService.enrichByGenres(movie);
         log.info("Finish getting movies by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return movie;
+    }
+
+    @Override
+    public void add(Movie movie) {
+        log.info("Start adding movie to db");
+        long startTime = System.currentTimeMillis();
+        Object[] params = {
+                movie.getNameRussian(),
+                movie.getNameNative(),
+                movie.getYearOfRelease(),
+                movie.getDescription(),
+                movie.getRating(),
+                movie.getPrice(),
+                movie.getPicturePath()
+        };
+        int rows = jdbcTemplate.update(queryAdd, params);
+        log.info("Finish adding movie to db. {} row inserted. It took {} ms", rows, System.currentTimeMillis() - startTime);
+    }
+
+    @Override
+    public void update(Movie movie) {
+        log.info("Start updating movie with id = {}", movie.getId());
+        long startTime = System.currentTimeMillis();
+        Object[] params = {
+                movie.getNameRussian(),
+                movie.getNameNative(),
+                movie.getYearOfRelease(),
+                movie.getDescription(),
+                movie.getRating(),
+                movie.getPrice(),
+                movie.getPicturePath(),
+                movie.getId()
+        };
+        int rows = jdbcTemplate.update(queryUpdate, params);
+        log.info("Finish updating movie with id = {}. {} row updated. It took {} ms", movie.getId(), rows, System.currentTimeMillis() - startTime);
+
     }
 
 

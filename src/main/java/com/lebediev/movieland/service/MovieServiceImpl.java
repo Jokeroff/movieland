@@ -34,5 +34,13 @@ public class MovieServiceImpl implements MovieService {
         return movieDao.getMovieById(id);
     }
 
+    @Override
+    public void add(Movie movie) {
+        movieDao.add(movie);
+    }
 
+    @Override
+    public void update(Movie movie) {
+        movieDao.update(movie);
+    }
 }

@@ -85,5 +85,42 @@ public class JdbcMovieDaoITest {
         assertNotEquals(actual, 0);
     }
 
+    @Test
+    public void testAdd(){
+        Movie movie = new Movie();
+        movie.setNameNative("ITest movie");
+        movie.setYearOfRelease(1900);
+        jdbcMovieDao.add(movie);
+        int result = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM movie WHERE nameNative = 'ITest movie' AND yearOfRelease = 1900", Integer.class);
+        assertEquals(result, 1);
+        jdbcTemplate.update("DELETE FROM movie WHERE nameNative = 'ITest movie' AND yearOfRelease = 1900");
+    }
+
+    @Test
+    public void testUpdate(){
+        Movie actual = new Movie();
+        actual.setNameNative("before update");
+        actual.setYearOfRelease(2000);
+        jdbcMovieDao.add(actual);
+        int id = jdbcTemplate.queryForObject("SELECT id FROM movie WHERE nameNative = 'before update' AND yearOfRelease = 2000", Integer.class);
+        assertNotEquals(id, null);
+
+        Movie expected = new Movie();
+        expected.setId(id);
+        expected.setNameNative("after update");
+        expected.setNameRussian("название");
+        expected.setYearOfRelease(1900);
+        expected.setDescription("desc");
+        expected.setPrice(100);
+        expected.setRating(10);
+        expected.setPicturePath("path");
+
+        jdbcMovieDao.update(expected);
+        int oldMovie = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM movie WHERE nameNative = 'before update' AND yearOfRelease = 2000", Integer.class);
+        assertEquals(oldMovie, 0);
+        int updatedMovie = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM movie WHERE nameNative = 'after update' AND yearOfRelease = 1900", Integer.class);
+        assertEquals(updatedMovie, 1);
+        jdbcTemplate.update("DELETE FROM movie WHERE nameNative = 'after update' AND yearOfRelease = 1900");
+    }
 
 }

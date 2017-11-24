@@ -2,6 +2,7 @@ package com.lebediev.movieland.web.controller.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.service.authentication.AuthRequest;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
@@ -89,6 +90,14 @@ public class JsonConverter {
             return OBJECT_MAPPER.writeValueAsString(value);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Could not create json from string: " + value);
+        }
+    }
+
+    public static Movie toMovie(String json) {
+        try {
+            return OBJECT_MAPPER.readValue(json, Movie.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create Movie from json: " + json);
         }
     }
 }

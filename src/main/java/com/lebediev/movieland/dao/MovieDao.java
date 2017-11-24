@@ -16,4 +16,8 @@ public interface MovieDao {
     List <Movie> getMoviesByGenreId(int genreId, SortParams params);
 
     Movie getMovieById(int id);
+
+    void add(Movie movie);
+
+    void update(Movie movie);
 }
