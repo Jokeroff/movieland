@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.getAuthFromJson;
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
+import static com.lebediev.movieland.web.controller.utils.JsonConverter.toReview;
 import static org.junit.Assert.assertEquals;
 
 public class JsonConverterTest {
@@ -67,5 +68,13 @@ public class JsonConverterTest {
 
 
     }
+
+    @Test
+    public void testToReview(){
+        String json = "{ \"movieId\" : 1,\"text\" : \"some review\" }";
+        Review expected = toReview(json);
+        assertEquals(expected.getMovieId(), 1);
+        assertEquals(expected.getText(), "some review");
+          }
 
 }

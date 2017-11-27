@@ -24,6 +24,8 @@ public class JdbcReviewDaoITest {
     private JdbcReviewDao jdbcReviewDao;
     @Autowired
     private JdbcMovieDao jdbcMovieDao;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     public void testGetReviewById() {
@@ -34,4 +36,18 @@ public class JdbcReviewDaoITest {
         assertNotEquals(actual.size(), 0);
     }
 
+    @Test
+    public void testAddReview(){
+        Review review = new Review();
+        review.setUserId(-1);
+        review.setMovieId(-1);
+        review.setText("some text");
+
+        int countBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM review WHERE movieId = -1", Integer.class);
+        assertEquals(0, countBefore);
+        jdbcReviewDao.add(review);
+        int countAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM review WHERE movieId = -1", Integer.class);
+        assertEquals(1, countAfter);
+        jdbcTemplate.update("DELETE FROM review WHERE movieId = -1");
+    }
 }

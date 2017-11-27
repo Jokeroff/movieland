@@ -24,6 +24,8 @@ public class JdbcReviewDao implements ReviewDao {
     private static final ReviewRowMapper reviewRowMapper = new ReviewRowMapper();
     @Autowired
     private ReviewEnrichmentService reviewEnrichmentService;
+    @Value("${query.addReview}")
+    private String queryAdd;
 
 
     @Override
@@ -34,6 +36,15 @@ public class JdbcReviewDao implements ReviewDao {
         reviewEnrichmentService.enrichReviewByUser(reviewList);
         log.info("Finish getting review by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return reviewList;
+
+    }
+
+    @Override
+    public void add(Review review) {
+        log.info("Start save review into db: {}", review);
+        long startTime = System.currentTimeMillis();
+        jdbcTemplate.update(queryAdd, review.getMovieId(), review.getUserId(), review.getText());
+        log.info("Finish ave review into db: {}. It took {} ms", review, System.currentTimeMillis() - startTime);
 
     }
 
