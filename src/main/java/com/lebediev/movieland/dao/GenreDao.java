@@ -9,5 +9,5 @@ public interface GenreDao {
 
     List <Genre> getAll();
 
-    List <MovieToGenre> getMovieToGenreMappings(List <Integer> movieIds);
+    List <MovieToGenre> getMovieToGenreMappings(List <Integer> iDs);
 }

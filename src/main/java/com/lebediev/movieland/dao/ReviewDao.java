@@ -5,5 +5,5 @@ import com.lebediev.movieland.entity.Review;
 import java.util.List;
 
 public interface ReviewDao {
-    List <Review> getReviewByMovieId(int movieId);
+    List <Review> getReviewById(int id);
 }

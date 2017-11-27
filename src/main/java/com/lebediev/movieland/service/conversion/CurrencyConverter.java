@@ -19,19 +19,19 @@ public class CurrencyConverter {
     private CachedCurrency cachedCurrency;
 
     public Movie convertPrice(Movie movie, Currency currency){
-        LOG.info("Start converting price for movie with id: {} for currency: {}", movie.getMovieId(), currency);
+        LOG.info("Start converting price for movie with id: {} for currency: {}", movie.getId(), currency);
         long startTime = System.currentTimeMillis();
         CurrencyEntity currencyEntity = cachedCurrency.getCurrencyEntity(currency);
         if(isExpired(currencyEntity)){
             movie.setPrice(0);
-            LOG.info("Finish converting price for movie with id: {} for currency: {}. Currency exchange date is expired: price set to 0. It took {} ms",movie.getMovieId(), currency, System.currentTimeMillis() - startTime);
+            LOG.info("Finish converting price for movie with id: {} for currency: {}. Currency exchange date is expired: price set to 0. It took {} ms", movie.getId(), currency, System.currentTimeMillis() - startTime);
         return movie;
         }
         double price = movie.getPrice()/currencyEntity.getRate();
         BigDecimal priceRounded  = new BigDecimal(Double.toString(price));
         priceRounded = priceRounded.setScale(2, RoundingMode.HALF_UP);
         movie.setPrice(priceRounded.doubleValue());
-        LOG.info("Finish converting price for movie with id: {} for currency: {}. It took {} ms",movie.getMovieId(), currency, System.currentTimeMillis() - startTime);
+        LOG.info("Finish converting price for movie with id: {} for currency: {}. It took {} ms", movie.getId(), currency, System.currentTimeMillis() - startTime);
         return movie;
     }
 }

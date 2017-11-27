@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-config.xml"})
 
-public class JdbcMovieDaoIntegrationTest {
+public class JdbcMovieDaoITest {
 
     @Autowired
     private JdbcMovieDao jdbcMovieDao;
@@ -63,7 +63,7 @@ public class JdbcMovieDaoIntegrationTest {
     public void testGetMoviesByGenreIdOrdered() {
         SortParams params = new SortParams();
 
-        int genreId = jdbcTemplate.queryForObject("select avg(genreId) from genre", int.class);
+        int genreId = jdbcTemplate.queryForObject("select avg(id) from genre", int.class);
         List <Movie> movieList = jdbcMovieDao.getMoviesByGenreId(genreId, params);
         assertNotEquals(movieList.size(), 0);
 
@@ -80,8 +80,8 @@ public class JdbcMovieDaoIntegrationTest {
     public void testGetMovieById() {
         List <Movie> movieList = jdbcMovieDao.getAll(new SortParams());
         assertNotEquals(movieList.size(), 0);
-        int movieId = movieList.get(0).getMovieId();
-        Movie actual = jdbcMovieDao.getMovieById(movieId);
+        int id = movieList.get(0).getId();
+        Movie actual = jdbcMovieDao.getMovieById(id);
         assertNotEquals(actual, 0);
     }
 

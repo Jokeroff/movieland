@@ -8,13 +8,13 @@ import java.util.List;
 
 public class MovieDto {
     @JsonView(MovieViews.BaseMovie.class)
-    public int movieId;
+    public int id;
     @JsonView(MovieViews.BaseMovie.class)
-    public String movieNameRus;
+    public String nameRussian;
     @JsonView(MovieViews.BaseMovie.class)
-    public String movieNameNative;
+    public String nameNative;
     @JsonView(MovieViews.BaseMovie.class)
-    public int date;
+    public int yearOfRelease;
     @JsonView(MovieViews.ExtendedMovie.class)
     public String description;
     @JsonView(MovieViews.BaseMovie.class)
@@ -26,21 +26,21 @@ public class MovieDto {
     @JsonView(MovieViews.ExtendedMovie.class)
     public List <Genre> genres;
     @JsonView(MovieViews.BaseMovie.class)
-    public String poster;
+    public String picturePath;
     @JsonView(MovieViews.MovieWithReview.class)
     public List <ReviewDto> reviews;
 
-    public MovieDto(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List <Genre> genres, List <Country> countries, String poster, List <ReviewDto> reviews) {
-        this.movieId = movieId;
-        this.movieNameRus = movieNameRus;
-        this.movieNameNative = movieNameNative;
-        this.date = date;
+    public MovieDto(int id, String nameRussian, String nameNative, int yearOfRelease, String description, double rating, double price, List <Genre> genres, List <Country> countries, String picturePath, List <ReviewDto> reviews) {
+        this.id = id;
+        this.nameRussian = nameRussian;
+        this.nameNative = nameNative;
+        this.yearOfRelease = yearOfRelease;
         this.description = description;
         this.rating = rating;
         this.price = price;
         this.genres = genres;
         this.countries = countries;
-        this.poster = poster;
+        this.picturePath = picturePath;
         this.reviews = reviews;
 
     }

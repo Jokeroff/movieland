@@ -24,7 +24,7 @@ public class MovieToCountryRowMapperTest {
 
         assertEquals(actual.getMovieId(), -5);
         assertEquals(actual.getCountryId(), 18);
-        assertEquals(actual.getCountryName(), "testCountryName");
+        assertEquals(actual.getName(), "testCountryName");
 
 
     }

@@ -31,88 +31,88 @@ public class MovieEnrichmentService {
     @Autowired
     private ReviewDao reviewDao;
 
-    public void enrichMovieByGenres(Movie movie) {
+    public void enrichByGenres(Movie movie) {
         log.info("Start enriching movie by genres ");
         long startTime = System.currentTimeMillis();
-        List <Integer> params = Arrays.asList(movie.getMovieId());
+        List <Integer> params = Arrays.asList(movie.getId());
         List <MovieToGenre> movieToGenreList = jenreDao.getMovieToGenreMappings(params);
-        movie.setGenres(getGenresByMovieId(movieToGenreList, movie.getMovieId()));
-        log.info("Finish enriching movie by genres for movieId = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
+        movie.setGenres(getGenresById(movieToGenreList, movie.getId()));
+        log.info("Finish enriching movie by genres for id = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
     }
 
-    public void enrichMovieByGenres(List <Movie> movieList) {
+    public void enrichByGenres(List <Movie> movieList) {
         log.info("Start enriching list of movies by genres ");
         long startTime = System.currentTimeMillis();
-        List <Integer> params = getMovieIds(movieList);
+        List <Integer> params = getIds(movieList);
         List <MovieToGenre> movieToGenreList = jenreDao.getMovieToGenreMappings(params);
         for (Movie movie : movieList) {
-            movie.setGenres(getGenresByMovieId(movieToGenreList, movie.getMovieId()));
+            movie.setGenres(getGenresById(movieToGenreList, movie.getId()));
         }
         log.info("Finish enriching list of movies by genres for movie id's = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
     }
 
-    public void enrichMovieByCountries(Movie movie) {
+    public void enrichByCountries(Movie movie) {
         log.info("Start enriching movie by countries ");
         long startTime = System.currentTimeMillis();
-        List <Integer> params = Arrays.asList(movie.getMovieId());
+        List <Integer> params = Arrays.asList(movie.getId());
         List <MovieToCountry> movieToCountryList = countryDao.getMovieToCountryMappings(params);
-        movie.setCountries(getCountriesByMovieId(movieToCountryList, movie.getMovieId()));
-        log.info("Finish enriching movie by countries for movieId = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
+        movie.setCountries(getCountriesById(movieToCountryList, movie.getId()));
+        log.info("Finish enriching movie by countries for id = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
     }
 
-    public void enrichMovieByCountries(List <Movie> movieList) {
+    public void enrichByCountries(List <Movie> movieList) {
         log.info("Start enriching list of movies by countries ");
         long startTime = System.currentTimeMillis();
-        List <Integer> params = getMovieIds(movieList);
+        List <Integer> params = getIds(movieList);
         List <MovieToCountry> movieToCountryList = countryDao.getMovieToCountryMappings(params);
         for (Movie movie : movieList) {
-            movie.setCountries(getCountriesByMovieId(movieToCountryList, movie.getMovieId()));
+            movie.setCountries(getCountriesById(movieToCountryList, movie.getId()));
         }
-        log.info("Finish enriching list of movies by countries for movieId's = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
+        log.info("Finish enriching list of movies by countries for id's = {}. It took {} ms", params, System.currentTimeMillis() - startTime);
     }
 
-    public List <Genre> getGenresByMovieId(List <MovieToGenre> movieToGenreList, int movieId) {
-        log.info("Start getting genres by movieId = {}", movieId);
+    public List <Genre> getGenresById(List <MovieToGenre> movieToGenreList, int id) {
+        log.info("Start getting genres by id = {}", id);
         long startTime = System.currentTimeMillis();
         List <Genre> genreList = new ArrayList <>();
 
         for (MovieToGenre movieToGenre : movieToGenreList) {
-            if (movieToGenre.getMovieId() == movieId) {
+            if (movieToGenre.getMovieId() == id) {
                 genreList.add(new Genre(movieToGenre.getGenreId(), movieToGenre.getGenreName()));
             }
         }
-        log.info("Finish getting genres by movieId = {}. It took {} ms", movieId, System.currentTimeMillis() - startTime);
+        log.info("Finish getting genres by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return genreList;
     }
 
-    public List <Country> getCountriesByMovieId(List <MovieToCountry> movieToCountryList, int movieId) {
-        log.info("Start getting countries by movieId = {}", movieId);
+    public List <Country> getCountriesById(List <MovieToCountry> movieToCountryList, int id) {
+        log.info("Start getting countries by id = {}", id);
         long startTime = System.currentTimeMillis();
         List <Country> countryList = new ArrayList <>();
 
         for (MovieToCountry movieToCountry : movieToCountryList) {
-            if (movieToCountry.getMovieId() == movieId) {
-                countryList.add(new Country(movieToCountry.getCountryId(), movieToCountry.getCountryName()));
+            if (movieToCountry.getMovieId() == id) {
+                countryList.add(new Country(movieToCountry.getCountryId(), movieToCountry.getName()));
             }
         }
-        log.info("Finish getting countries by movieId = {}. It took {} ms", movieId, System.currentTimeMillis() - startTime);
+        log.info("Finish getting countries by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return countryList;
     }
 
-    public void enrichMovieByReviews(Movie movie) {
+    public void enrichByReviews(Movie movie) {
         log.info("Start enriching movie by reviews ");
         long startTime = System.currentTimeMillis();
-        List <Review> reviewList = reviewDao.getReviewByMovieId(movie.getMovieId());
+        List <Review> reviewList = reviewDao.getReviewById(movie.getId());
         movie.setReviews(reviewList);
         log.info("Finish enriching movie by reviews. It took {} ms", System.currentTimeMillis() - startTime);
     }
 
-    private List <Integer> getMovieIds(List <Movie> movieList) {
-        List <Integer> movieIds = new ArrayList <>();
+    private List <Integer> getIds(List <Movie> movieList) {
+        List <Integer> ids = new ArrayList <>();
         for (Movie movie : movieList) {
-            movieIds.add(movie.getMovieId());
+            ids.add(movie.getId());
         }
-        return movieIds;
+        return ids;
     }
 
 

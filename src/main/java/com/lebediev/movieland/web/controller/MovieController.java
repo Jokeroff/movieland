@@ -66,18 +66,18 @@ public class MovieController {
     }
 
 
-    @RequestMapping(value = "/{movieId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String getMovieById(@PathVariable int movieId,
+    public String getMovieById(@PathVariable int id,
                                @RequestParam(value = "currency", required = false) String currency) {
-        log.info("Start getting Json movie by movieId ={} /movie/{movieId}: ", movieId);
+        log.info("Start getting Json movie by id ={} /movie/{id}: ", id);
         long startTime = System.currentTimeMillis();
-        Movie movie = movieService.getMovieById(movieId);
+        Movie movie = movieService.getMovieById(id);
             if(currency != null){
                 movie = currencyConverter.convertPrice(movie, isValidParams(currency));
             }
         String movieById = toJson(toMovieDto(movie), JsonConverter.JsonView.REVIEW);
-        log.info("Finish getting Json movie by movieId ={} /movie/{movieId}. It took {} ms", movieId, System.currentTimeMillis() - startTime);
+        log.info("Finish getting Json movie by id ={} /movie/{id}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return movieById;
     }
 

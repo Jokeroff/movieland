@@ -15,7 +15,7 @@ public class ReviewEnrichmentService {
     private JdbcUserDao jdbcUserDao;
 
     public void enrichReviewByUser(Review review) {
-        User user = jdbcUserDao.getUserById(review.getUserId());
+        User user = jdbcUserDao.getById(review.getUserId());
         review.setUser(user);
     }
 

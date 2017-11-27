@@ -13,7 +13,7 @@ public class MovieToGenreRowMapper implements RowMapper <MovieToGenre> {
         MovieToGenre movieToGenre = new MovieToGenre();
         movieToGenre.setMovieId(resultSet.getInt("movieId"));
         movieToGenre.setGenreId(resultSet.getInt("genreId"));
-        movieToGenre.setGenreName(resultSet.getString("genreName"));
+        movieToGenre.setGenreName(resultSet.getString("name"));
         return movieToGenre;
     }
 }

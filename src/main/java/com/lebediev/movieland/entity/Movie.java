@@ -3,36 +3,38 @@ package com.lebediev.movieland.entity;
 import java.util.List;
 
 public class Movie {
-    private int movieId;
-    private String movieNameRus;
-    private String movieNameNative;
-    private int date;
+    private int id;
+    private String nameRussian;
+    private String nameNative;
+    private int yearOfRelease;
     private String description;
     private double rating;
     private double price;
     private List <Genre> genres;
     private List <Country> countries;
-    private String poster;
+    private String picturePath;
     private List <Review> reviews;
 
-    public String getPoster() {
-        return poster;
+    public Movie() {    }
+
+    public String getPicturePath() {
+        return picturePath;
     }
 
-    public int getMovieId() {
-        return movieId;
+    public int getId() {
+        return id;
     }
 
-    public String getMovieNameRus() {
-        return movieNameRus;
+    public String getNameRussian() {
+        return nameRussian;
     }
 
-    public String getMovieNameNative() {
-        return movieNameNative;
+    public String getNameNative() {
+        return nameNative;
     }
 
-    public int getDate() {
-        return date;
+    public int getYearOfRelease() {
+        return yearOfRelease;
     }
 
     public String getDescription() {
@@ -59,20 +61,20 @@ public class Movie {
         return reviews;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
+    public void setPicturePath(String picturePath) {
+        this.picturePath = picturePath;
     }
 
-    public void setMovieNameRus(String movieNameRus) {
-        this.movieNameRus = movieNameRus;
+    public void setNameRussian(String nameRussian) {
+        this.nameRussian = nameRussian;
     }
 
-    public void setMovieNameNative(String movieNameNative) {
-        this.movieNameNative = movieNameNative;
+    public void setNameNative(String nameNative) {
+        this.nameNative = nameNative;
     }
 
-    public void setDate(int date) {
-        this.date = date;
+    public void setYearOfRelease(int yearOfRelease) {
+        this.yearOfRelease = yearOfRelease;
     }
 
     public void setDescription(String description) {
@@ -95,44 +97,27 @@ public class Movie {
         this.countries = countries;
     }
 
-    public void setMovieId(int movieId) {
-        this.movieId = movieId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setReviews(List <Review> reviews) {
         this.reviews = reviews;
     }
 
-    public Movie(int movieId, String movieNameRus, String movieNameNative, int date, String description, double rating, double price, List <Genre> genres, List <Country> countries, String poster, List <Review> reviews) {
-        this.movieId = movieId;
-        this.movieNameRus = movieNameRus;
-        this.movieNameNative = movieNameNative;
-        this.date = date;
-        this.description = description;
-        this.rating = rating;
-        this.price = price;
-        this.genres = genres;
-        this.countries = countries;
-        this.poster = poster;
-        this.reviews = reviews;
-    }
-
-    public Movie() {
-    }
-
     @Override
     public String toString() {
         return "Movie{" +
-               "movieId=" + movieId +
-               ", movieNameRus='" + movieNameRus + '\'' +
-               ", movieNameNative='" + movieNameNative + '\'' +
-               ", date=" + date +
+               "id=" + id +
+               ", nameRussian='" + nameRussian + '\'' +
+               ", nameNative='" + nameNative + '\'' +
+               ", yearOfRelease=" + yearOfRelease +
                ", description='" + description + '\'' +
                ", rating=" + rating +
                ", price=" + price +
                ", genres=" + genres +
                ", countries=" + countries +
-               ", poster='" + poster + '\'' +
+               ", picturePath='" + picturePath + '\'' +
                ", reviews=" + reviews +
                '}';
     }

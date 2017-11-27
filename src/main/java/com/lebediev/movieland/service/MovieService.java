@@ -13,6 +13,6 @@ public interface MovieService {
 
     List <Movie> getMoviesByGenreId(int genreId, SortParams params);
 
-    Movie getMovieById(int movieId);
+    Movie getMovieById(int id);
 
 }

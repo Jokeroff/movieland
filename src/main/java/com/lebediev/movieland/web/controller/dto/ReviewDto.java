@@ -4,14 +4,14 @@ package com.lebediev.movieland.web.controller.dto;
 import com.lebediev.movieland.entity.User;
 
 public class ReviewDto {
-    public int reviewId;
+    public int id;
     public User user;
-    public String review;
+    public String text;
 
-    public ReviewDto(int reviewId, User user, String review) {
-        this.reviewId = reviewId;
+    public ReviewDto(int id, User user, String text) {
+        this.id = id;
         this.user = user;
-        this.review = review;
+        this.text = text;
     }
 
     public ReviewDto() {

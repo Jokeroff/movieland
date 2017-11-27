@@ -26,8 +26,8 @@ public class GenreCache implements GenreDao {
     private JdbcGenreDao jdbcGenreDao;
 
     @Override
-    public List <MovieToGenre> getMovieToGenreMappings(List <Integer> movieIds) {
-        return jdbcGenreDao.getMovieToGenreMappings(movieIds);
+    public List <MovieToGenre> getMovieToGenreMappings(List <Integer> ids) {
+        return jdbcGenreDao.getMovieToGenreMappings(ids);
     }
 
     @Override

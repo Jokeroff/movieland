@@ -40,8 +40,8 @@ public class JdbcMovieDao implements MovieDao {
         long startTime = System.currentTimeMillis();
         List <Movie> randomMovieList = jdbcTemplate.query(queryGetRandomMovies, movieRowMapper);
         log.info("Finish getting random movies. It took {} ms", System.currentTimeMillis() - startTime);
-        movieEnrichmentService.enrichMovieByGenres(randomMovieList);
-        movieEnrichmentService.enrichMovieByCountries(randomMovieList);
+        movieEnrichmentService.enrichByGenres(randomMovieList);
+        movieEnrichmentService.enrichByCountries(randomMovieList);
         return randomMovieList;
     }
 
@@ -72,14 +72,14 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public Movie getMovieById(int movieId) {
-        log.info("Start getting movies by id = {} ", movieId);
+    public Movie getMovieById(int id) {
+        log.info("Start getting movies by id = {} ", id);
         long startTime = System.currentTimeMillis();
-        Movie movie = jdbcTemplate.queryForObject(queryGetMoviesById, movieRowMapper, movieId);
-        movieEnrichmentService.enrichMovieByReviews(movie);
-        movieEnrichmentService.enrichMovieByCountries(movie);
-        movieEnrichmentService.enrichMovieByGenres(movie);
-        log.info("Finish getting movies by id = {}. It took {} ms", movieId, System.currentTimeMillis() - startTime);
+        Movie movie = jdbcTemplate.queryForObject(queryGetMoviesById, movieRowMapper, id);
+        movieEnrichmentService.enrichByReviews(movie);
+        movieEnrichmentService.enrichByCountries(movie);
+        movieEnrichmentService.enrichByGenres(movie);
+        log.info("Finish getting movies by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return movie;
     }
 

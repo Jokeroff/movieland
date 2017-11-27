@@ -21,8 +21,8 @@ public class GenreRowMapperTest {
 
         GenreRowMapper genreRowMapper = new GenreRowMapper();
         Genre actual = genreRowMapper.mapRow(resultSet, 0);
-        assertEquals(actual.getGenreId(), 33);
-        assertEquals(actual.getGenreName(), "testGenre");
+        assertEquals(actual.getId(), 33);
+        assertEquals(actual.getName(), "testGenre");
 
     }
 }
