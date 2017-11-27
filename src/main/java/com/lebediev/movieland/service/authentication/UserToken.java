@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class UserToken {
-    private UUID uuid;
-    private LocalDateTime expirationTime;
-    private User user;
+    private final UUID uuid;
+    private final LocalDateTime expirationTime;
+    private final User user;
 
     public UserToken(UUID uuid, LocalDateTime expirationTime, User user) {
         this.uuid = uuid;

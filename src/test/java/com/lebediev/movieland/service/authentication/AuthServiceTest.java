@@ -57,14 +57,11 @@ public class AuthServiceTest {
     @Test
     public void testDeleteToken() {
         UserToken userToken = authService.authenticate("testEmail", "testPassword");
-
         UUID uuid = userToken.getUuid();
-        assertTrue(authService.deleteToken(uuid));
+        authService.deleteToken(uuid);
 
         UserToken userTokenNew = authService.authenticate("testEmail", "testPassword");
         assertNotEquals(userToken, userTokenNew);
-
-        assertFalse(authService.deleteToken(UUID.randomUUID()));
     }
 
     @Test

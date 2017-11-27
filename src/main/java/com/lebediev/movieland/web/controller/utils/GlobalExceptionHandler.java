@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         String json = toJson(e.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.add("JsonHeader", MediaType.APPLICATION_JSON_UTF8_VALUE);
-        return new ResponseEntity(json, headers, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(json, headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(JsonProcessingException.class)
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
         String json = toJson(e.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.add("JsonHeader", MediaType.APPLICATION_JSON_UTF8_VALUE);
-        return new ResponseEntity(json, headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(json, headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(SecurityException.class)
@@ -44,6 +44,6 @@ public class GlobalExceptionHandler {
         String json = toJson(e.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.add("JsonHeader", MediaType.APPLICATION_JSON_UTF8_VALUE);
-        return new ResponseEntity(json, headers, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(json, headers, HttpStatus.BAD_REQUEST);
     }
 }

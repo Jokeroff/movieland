@@ -28,18 +28,20 @@ public class ReviewController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void add(@RequestHeader String uuid, @RequestBody String json){
+    public Review add(@RequestHeader String uuid, @RequestBody String json){
         LOG.info("Start saving review for /review for uuid: {}", uuid);
         UserToken userToken = authService.authorize(UUID.fromString(uuid));
+        Review review;
         if( userToken.isUser()){
-            Review review = toReview(json);
+            review = toReview(json);
             review.setUserId(userToken.getUser().getUserId());
-            reviewService.add(review);
-            LOG.info("Finish saving review for /review for uuid: {}", uuid);
+            review = reviewService.add(review);
         }
         else {
             LOG.info("Saving review failed. 'USER' role not assigned for user with uuid: {}. ", uuid);
             throw new SecurityException("You must have USER role to add review!");
         }
+        LOG.info("Finish saving review for /review for uuid: {}", uuid);
+        return review;
     }
 }

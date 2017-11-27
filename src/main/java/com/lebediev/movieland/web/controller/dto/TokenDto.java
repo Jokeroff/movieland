@@ -3,7 +3,7 @@ package com.lebediev.movieland.web.controller.dto;
 import java.util.UUID;
 
 public class TokenDto {
-    private UUID uuid;
+    private final UUID uuid;
     private String nickname;
 
     public TokenDto(UUID uuid, String nickname) {

@@ -45,7 +45,8 @@ public class JdbcReviewDaoITest {
 
         int countBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM review WHERE movieId = -1", Integer.class);
         assertEquals(0, countBefore);
-        jdbcReviewDao.add(review);
+        Review addedReview = jdbcReviewDao.add(review);
+        assertNotNull(addedReview.getId());
         int countAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM review WHERE movieId = -1", Integer.class);
         assertEquals(1, countAfter);
         jdbcTemplate.update("DELETE FROM review WHERE movieId = -1");
