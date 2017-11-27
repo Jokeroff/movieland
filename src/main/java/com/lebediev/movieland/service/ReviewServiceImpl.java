@@ -10,7 +10,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private ReviewDao reviewDao;
     @Override
-    public void add(Review review) {
-        reviewDao.add(review);
+    public Review add(Review review) {
+        return reviewDao.add(review);
     }
 }

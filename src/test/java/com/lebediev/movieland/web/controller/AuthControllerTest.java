@@ -36,7 +36,6 @@ public class AuthControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(authController).setControllerAdvice(new GlobalExceptionHandler()).build();
         when(authService.authenticate("ronald.reynolds66@example.com", "paco")).thenReturn(userToken);
         when(authService.authenticate("ronald.reynolds66@example.com", "wrong")).thenThrow(IllegalArgumentException.class);
-        when(authService.deleteToken(UUID.fromString("096f33e2-a224-3aed-9f93-a82fc74549fe"))).thenReturn(true);
     }
 
 

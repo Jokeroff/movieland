@@ -5,14 +5,18 @@ import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.dao.jdbc.mapper.MovieRowMapper;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.enrich.MovieEnrichmentService;
+import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.ArrayList;import java.util.List;
 
 
 @Repository
@@ -38,7 +42,10 @@ public class JdbcMovieDao implements MovieDao {
     private String queryAdd;
     @Value("${query.updateMovie}")
     private String queryUpdate;
-
+    @Value("${query.addMovieCountry}")
+    private String queryAddMovieCountry;
+    @Value("${query.addMovieGenre}")
+    private String queryAddMovieGenre;
     @Override
     public List <Movie> getRandomMovies() {
         log.info("Start getting random movies ");
@@ -89,25 +96,63 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public void add(Movie movie) {
+    public void add(MovieDtoForUpdate movie) {
         log.info("Start adding movie to db");
         long startTime = System.currentTimeMillis();
-        Object[] params = {
-                movie.getNameRussian(),
-                movie.getNameNative(),
-                movie.getYearOfRelease(),
-                movie.getDescription(),
-                movie.getRating(),
-                movie.getPrice(),
-                movie.getPicturePath()
-        };
-        int rows = jdbcTemplate.update(queryAdd, params);
-        log.info("Finish adding movie to db. {} row inserted. It took {} ms", rows, System.currentTimeMillis() - startTime);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(queryAdd, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, movie.getNameRussian());
+            statement.setString(2, movie.getNameNative());
+            statement.setInt(3, movie.getYearOfRelease());
+            statement.setString(4, movie.getDescription());
+            statement.setDouble(5, movie.getRating());
+            statement.setDouble(6, movie.getPrice());
+            statement.setString(7, movie.getPicturePath());
+            return statement;
+        }, keyHolder);
+        movie.setId(keyHolder.getKey().intValue());
+        addMovieCountries(movie);
+        addMovieGenres(movie);
+        log.info("Finish adding movie to db. It took {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    private void addMovieCountries(MovieDtoForUpdate movie) {
+        log.info("Start adding mappings movieToCountry to db");
+        int[] countries = movie.getCountries();
+        int movieId = movie.getId();
+        List <Object[]> batch = new ArrayList <>();
+        for (int countryId : countries) {
+            Object[] values = new Object[]{
+                    movieId,
+                    countryId
+            };
+            batch.add(values);
+        }
+        jdbcTemplate.batchUpdate(queryAddMovieCountry, batch);
+        log.info("Finish adding mappings movieToCountry to db");
+    }
+
+    private void addMovieGenres(MovieDtoForUpdate movie) {
+        log.info("Start adding mappings movieToGenre to db");
+        int[] genres = movie.getGenres();
+        int movieId = movie.getId();
+        List <Object[]> batch = new ArrayList <>();
+        for (int genreId : genres) {
+            Object[] values = new Object[]{
+                    movieId,
+                    genreId
+            };
+            batch.add(values);
+        }
+        jdbcTemplate.batchUpdate(queryAddMovieGenre, batch);
+        log.info("Finish adding mappings movieToGenre to db");
     }
 
     @Override
-    public void update(Movie movie) {
-        log.info("Start updating movie with id = {}", movie.getId());
+    public void update(MovieDtoForUpdate movie) {
+        int id = movie.getId();
+        log.info("Start updating movie with id = {}", id);
         long startTime = System.currentTimeMillis();
         Object[] params = {
                 movie.getNameRussian(),
@@ -117,13 +162,16 @@ public class JdbcMovieDao implements MovieDao {
                 movie.getRating(),
                 movie.getPrice(),
                 movie.getPicturePath(),
-                movie.getId()
+                id
         };
-        int rows = jdbcTemplate.update(queryUpdate, params);
-        log.info("Finish updating movie with id = {}. {} row updated. It took {} ms", movie.getId(), rows, System.currentTimeMillis() - startTime);
+        jdbcTemplate.update(queryUpdate, params);
+        jdbcTemplate.update("DELETE FROM movie2country WHERE movieId = ?", id);
+        addMovieCountries(movie);
+        jdbcTemplate.update("DELETE FROM movie2genre WHERE movieId = ?", id);
+        addMovieGenres(movie);
+        log.info("Finish updating movie with id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
 
     }
-
 
 }
 

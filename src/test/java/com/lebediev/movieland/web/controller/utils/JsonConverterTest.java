@@ -7,6 +7,7 @@ import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.service.authentication.AuthRequest;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
+import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import com.lebediev.movieland.web.controller.dto.ReviewDto;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class JsonConverterTest {
     @Test
     public void testGetAuthFromJson() {
         String value = "{ \"email\" : \"ronald.reynolds66@example.com\",\"password\" : \"paco\" }";
-        AuthRequest expected = getAuthFromJson(value);
+        assertEquals(expected.getEmail(), "ronald.reynolds66@example.com");
         assertEquals(expected.getEmail(), "ronald.reynolds66@example.com");
         assertEquals(expected.getPassword(), "paco");
 
@@ -83,16 +84,30 @@ public class JsonConverterTest {
                       "\"description\" : \"some description\"," +
                       "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }";
         Movie actual = toMovie(json);
-        assertEquals(actual.getNameRussian(),"название");
-        assertEquals(actual.getNameNative(),"testName");
-        assertEquals(actual.getYearOfRelease(),2000);
-        assertEquals(actual.getDescription(),"some description");
-        assertEquals(actual.getRating(),10.0, 0);
-        assertEquals(actual.getPrice(),330.0, 0);
-        assertEquals(actual.getPicturePath(),"http:somepath");
+        assertEquals(actual.getNameRussian(), "название");
+        assertEquals(actual.getNameNative(), "testName");
+        assertEquals(actual.getYearOfRelease(), 2000);
+        assertEquals(actual.getDescription(), "some description");
+        assertEquals(actual.getRating(), 10.0, 0);
+        assertEquals(actual.getPrice(), 330.0, 0);
+        assertEquals(actual.getPicturePath(), "http:somepath");
         assertNull(actual.getGenres());
         assertNull(actual.getCountries());
         assertNull(actual.getReviews());
     }
 
-}
+    @Test
+    public void testToMovieDtoForUpdate() {
+        String json = "{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
+                      "\"description\" : \"some description\"," +
+                      "\"rating\" : 10.0, \"price\" : 330," +
+                      "\"countries\" : [1,2,3]," +
+                      "\"genres\" : [4,5,6,7]," +
+                      "\"picturePath\" : \"http:somepath\" }";
+
+        MovieDtoForUpdate actual = toMovieDtoForUpdate(json);
+        assertEquals(actual.getCountries().length, 3);
+        assertEquals(actual.getGenres().length, 4);
+    }
+
+}}
