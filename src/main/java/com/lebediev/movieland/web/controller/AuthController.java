@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.lebediev.movieland.web.controller.utils.JsonConverter.getAuthFromJson;
+import static com.lebediev.movieland.web.controller.utils.JsonConverter.toAuth;
 import static com.lebediev.movieland.web.controller.utils.TokenDtoConverter.toTokenDto;
 
 @Controller
@@ -26,7 +26,7 @@ public class AuthController {
     @ResponseBody
     public TokenDto login(@RequestBody String value) {
         LOG.info("Start getting json for /login with request body: {}", value);
-        AuthRequest authRequest = getAuthFromJson(value);
+        AuthRequest authRequest = toAuth(value);
         LOG.info("Finish getting json for /login with request body: {}", value);
         return toTokenDto(authService.authenticate(authRequest.getEmail(), authRequest.getPassword()));
     }

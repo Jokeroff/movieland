@@ -31,10 +31,11 @@ public class AuthService {
 
         if (BCrypt.checkpw(password, user.getPassword())) {
             for (Map.Entry <UUID, UserToken> entry : userTokenCache.entrySet()) {
-                if (entry.getValue().getUser().getEmail().equals(email) &&
-                    entry.getValue().getExpirationTime().isAfter(LocalDateTime.now())) {
+                UserToken userToken = entry.getValue();
+                if (userToken.getUser().getEmail().equals(email) &&
+                    userToken.getExpirationTime().isAfter(LocalDateTime.now())) {
                     LOG.info("Finish authentication for email: {}. Token returned from cache ", email);
-                    return entry.getValue();
+                    return userToken;
                 }
             }
 
@@ -64,18 +65,12 @@ public class AuthService {
         throw new SecurityException("Session expired. You need login to proceed ");
     }
 
-    public boolean deleteToken(UUID uuid) {
+    public void deleteToken(UUID uuid) {
         LOG.info("Start deleting token for uuid {}", uuid);
-        Iterator <Map.Entry <UUID, UserToken>> iterator = userTokenCache.entrySet().iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().getKey().equals(uuid)) {
-                iterator.remove();
-                LOG.info("Auth cache. Finish deleting token for uuid {}", uuid);
-                return true;
-            }
-        }
-        LOG.warn("Token for uuid {} was not found in cache", uuid);
-        return false;
+
+        userTokenCache.remove(uuid);
+
+        LOG.info("Auth cache. Finish deleting token for uuid {}", uuid);
     }
 
     private UUID getUserUUID(String email, String password) {
@@ -89,10 +84,11 @@ public class AuthService {
     @Scheduled(fixedRateString = "${token.cache.fixedDelay.in.milliseconds}", initialDelayString = "${token.cache.fixedDelay.in.milliseconds}")
     private void invalidateCache() {
         LOG.info("Auth cache. Start invalidating token cache");
-        Iterator <Map.Entry <UUID, UserToken>> iterator = userTokenCache.entrySet().iterator();
+        Iterator <UserToken> iterator = userTokenCache.values().iterator();
         while (iterator.hasNext()) {
-            LocalDateTime expirationTime = iterator.next().getValue().getExpirationTime();
-            if (expirationTime.isAfter(LocalDateTime.now())) {
+            UserToken userToken = iterator.next();
+            LocalDateTime expirationTime = userToken.getExpirationTime();
+            if (expirationTime.isBefore(LocalDateTime.now())) {
                 iterator.remove();
             }
         }

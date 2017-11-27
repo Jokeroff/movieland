@@ -5,12 +5,19 @@ import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.dao.jdbc.mapper.MovieRowMapper;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.enrich.MovieEnrichmentService;
+import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,6 +40,14 @@ public class JdbcMovieDao implements MovieDao {
     private String queryGetMoviesByGenreId;
     @Value("${query.getMoviesById}")
     private String queryGetMoviesById;
+    @Value("${query.addMovie}")
+    private String queryAdd;
+    @Value("${query.updateMovie}")
+    private String queryUpdate;
+    @Value("${query.addMovieCountry}")
+    private String queryAddMovieCountry;
+    @Value("${query.addMovieGenre}")
+    private String queryAddMovieGenre;
 
     @Override
     public List <Movie> getRandomMovies() {
@@ -50,9 +65,9 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start query get all movies with params {}", params);
         long startTime = System.currentTimeMillis();
         String queryGetAllMoviesOrdered = queryGetAllMovies;
-            if(params.getOrderBy() != null) {
-               queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " +  params.getOrderBy() + " " + params.getSortDirection();
-            }
+        if (params.getOrderBy() != null) {
+            queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
+        }
         List <Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
         log.info("Finish query get all movies with params {}. It took {} ms", params, System.currentTimeMillis() - startTime);
         return allMoviesOrderedList;
@@ -63,9 +78,9 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start getting movies by genreId = {} with params {}", genreId, params);
         long startTime = System.currentTimeMillis();
         String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId;
-            if(params.getOrderBy() != null) {
-                queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
-            }
+        if (params.getOrderBy() != null) {
+            queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
+        }
         List <Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
         log.info("Finish getting movies by genreId = {} with params {}. It took {} ms", genreId, params, System.currentTimeMillis() - startTime);
         return moviesByGenreOrderedList;
@@ -81,6 +96,84 @@ public class JdbcMovieDao implements MovieDao {
         movieEnrichmentService.enrichByGenres(movie);
         log.info("Finish getting movies by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return movie;
+    }
+
+    @Override
+    public void add(MovieDtoForUpdate movie) {
+        log.info("Start adding movie to db");
+        long startTime = System.currentTimeMillis();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(queryAdd, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, movie.getNameRussian());
+            statement.setString(2, movie.getNameNative());
+            statement.setInt(3, movie.getYearOfRelease());
+            statement.setString(4, movie.getDescription());
+            statement.setDouble(5, movie.getRating());
+            statement.setDouble(6, movie.getPrice());
+            statement.setString(7, movie.getPicturePath());
+            return statement;
+        }, keyHolder);
+        movie.setId(keyHolder.getKey().intValue());
+        addMovieCountries(movie);
+        addMovieGenres(movie);
+        log.info("Finish adding movie to db. It took {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    private void addMovieCountries(MovieDtoForUpdate movie) {
+        log.info("Start adding mappings movieToCountry to db");
+        int[] countries = movie.getCountries();
+        int movieId = movie.getId();
+        List <Object[]> batch = new ArrayList <>();
+        for (int countryId : countries) {
+            Object[] values = new Object[]{
+                    movieId,
+                    countryId
+            };
+            batch.add(values);
+        }
+        jdbcTemplate.batchUpdate(queryAddMovieCountry, batch);
+        log.info("Finish adding mappings movieToCountry to db");
+    }
+
+    private void addMovieGenres(MovieDtoForUpdate movie) {
+        log.info("Start adding mappings movieToGenre to db");
+        int[] genres = movie.getGenres();
+        int movieId = movie.getId();
+        List <Object[]> batch = new ArrayList <>();
+        for (int genreId : genres) {
+            Object[] values = new Object[]{
+                    movieId,
+                    genreId
+            };
+            batch.add(values);
+        }
+        jdbcTemplate.batchUpdate(queryAddMovieGenre, batch);
+        log.info("Finish adding mappings movieToGenre to db");
+    }
+
+    @Override
+    public void update(MovieDtoForUpdate movie) {
+        int id = movie.getId();
+        log.info("Start updating movie with id = {}", id);
+        long startTime = System.currentTimeMillis();
+        Object[] params = {
+                movie.getNameRussian(),
+                movie.getNameNative(),
+                movie.getYearOfRelease(),
+                movie.getDescription(),
+                movie.getRating(),
+                movie.getPrice(),
+                movie.getPicturePath(),
+                id
+        };
+        jdbcTemplate.update(queryUpdate, params);
+        jdbcTemplate.update("DELETE FROM movie2country WHERE movieId = ?", id);
+        addMovieCountries(movie);
+        jdbcTemplate.update("DELETE FROM movie2genre WHERE movieId = ?", id);
+        addMovieGenres(movie);
+        log.info("Finish updating movie with id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
+
     }
 
 
