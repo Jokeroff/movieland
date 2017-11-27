@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static com.lebediev.movieland.service.authentication.AuthService.getUserThreadLocal;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -85,8 +86,8 @@ public class MovieControllerTest {
         User admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
         UserToken userTokenUser = new UserToken(UUID.randomUUID(), LocalDateTime.now(), user);
         UserToken userTokenAdmin = new UserToken(UUID.randomUUID(), LocalDateTime.now(), admin);
-        when(authService.authorize(UUID.fromString("096f33e2-a224-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenUser);
-        when(authService.authorize(UUID.fromString("096f33e2-a335-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenAdmin);
+        when(getUserThreadLocal()).thenReturn(admin);
+
     }
 
     @Test
@@ -201,7 +202,8 @@ public class MovieControllerTest {
 
         mockMvc.perform(post("/movie").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
                                                "\"description\" : \"some description\"," +
-                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                                               "\"rating\" : 10.0, \"price\" : 330," +
+                "\"countries\" : [1,2,3], \"genres\" : [4,5,6,7], \"picturePath\" : \"http:somepath\" }").
                 header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
     }
 

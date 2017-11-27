@@ -14,7 +14,8 @@
     <mvc:annotation-driven/>
     
     <mvc:interceptors>
-        <bean class="com.lebediev.movieland.web.controller.interceptor.Interceptor"/>
+        <bean class="com.lebediev.movieland.web.controller.interceptor.AuthInterceptor"/>
+        <bean class="com.lebediev.movieland.web.controller.interceptor.LoggingInterceptor"/>
     </mvc:interceptors>
 
 </beans>

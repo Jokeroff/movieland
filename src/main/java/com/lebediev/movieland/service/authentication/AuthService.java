@@ -24,6 +24,18 @@ public class AuthService {
     @Autowired
     private UserDao userDao;
     private final Map <UUID, UserToken> userTokenCache = new ConcurrentHashMap <>();
+    private static final ThreadLocal<User> USER_THREAD_LOCAL = new ThreadLocal<>();
+
+    public static final User getUserThreadLocal(){
+        return USER_THREAD_LOCAL.get();
+    }
+
+    public static final void setUserThreadLocal(User user){
+        USER_THREAD_LOCAL.set(user);
+    }
+    public static final void clearUserThreadLocal(){
+        USER_THREAD_LOCAL.remove();
+    }
 
     public UserToken authenticate(String email, String password) {
         LOG.info("Start authentication for email: {}", email);
