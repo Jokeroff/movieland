@@ -6,6 +6,7 @@ import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.service.authentication.AuthRequest;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
+import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import com.lebediev.movieland.web.controller.dto.MovieViews;
 import com.lebediev.movieland.web.controller.dto.TokenDto;
 
@@ -17,46 +18,42 @@ public class JsonConverter {
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public enum JsonView {
-        BASE,
-        EXTENDED,
-        REVIEW
-    }
+        BASE(MovieViews.BaseMovie.class),
+        EXTENDED(MovieViews.ExtendedMovie.class),
+        REVIEW(MovieViews.MovieWithReview.class);
 
-    public static String toJson(List<MovieDto> movieDtoList, JsonView jsonView) {
-        try {
-            if (JsonView.BASE.equals(jsonView)) {
-                return OBJECT_MAPPER.writerWithView(MovieViews.BaseMovie.class).writeValueAsString(movieDtoList);
-            } else if (JsonView.EXTENDED.equals(jsonView)) {
-                return OBJECT_MAPPER.writerWithView(MovieViews.ExtendedMovie.class).writeValueAsString(movieDtoList);
-            } else if (JsonView.REVIEW.equals(jsonView)) {
-                return OBJECT_MAPPER.writerWithView(MovieViews.MovieWithReview.class).writeValueAsString(movieDtoList);
-            }
-            throw new IllegalArgumentException("Wrong parameters list.size(" + movieDtoList.size() + "), jsonView = " + jsonView);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(e);
+        private final Class clazz;
+
+        JsonView(Class clazz) {
+            this.clazz = clazz;
+        }
+
+        public Class getClazz() {
+            return clazz;
         }
     }
 
-    public static String toJson(List<?> list) {
+    public static String toJson(List <MovieDto> movieDtoList, JsonView jsonView) {
+        try {
+            return OBJECT_MAPPER.writerWithView(jsonView.getClazz()).writeValueAsString(movieDtoList);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Error in json ", e);
+        }
+    }
+
+    public static String toJson(List <?> list) {
         try {
             return OBJECT_MAPPER.writeValueAsString(list);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Error in list");
+            throw new IllegalArgumentException("Error in list", e);
         }
     }
 
     public static String toJson(MovieDto movieDto, JsonView jsonView) {
         try {
-            if (JsonView.BASE.equals(jsonView)) {
-                return OBJECT_MAPPER.writerWithView(MovieViews.BaseMovie.class).writeValueAsString(movieDto);
-            } else if (JsonView.EXTENDED.equals(jsonView)) {
-                return OBJECT_MAPPER.writerWithView(MovieViews.ExtendedMovie.class).writeValueAsString(movieDto);
-            } else if (JsonView.REVIEW.equals(jsonView)) {
-                return OBJECT_MAPPER.writerWithView(MovieViews.MovieWithReview.class).writeValueAsString(movieDto);
-            }
-            throw new IllegalArgumentException("Wrong parameters (" + movieDto + "), jsonView = " + jsonView);
+            return OBJECT_MAPPER.writerWithView(jsonView.getClazz()).writeValueAsString(movieDto);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException("Error in json ", e);
         }
     }
 
@@ -68,7 +65,7 @@ public class JsonConverter {
         }
     }
 
-    public static AuthRequest getAuthFromJson(String json) {
+    public static AuthRequest toAuth(String json) {
         try {
             return OBJECT_MAPPER.readValue(json, AuthRequest.class);
         } catch (IOException e) {
@@ -98,6 +95,14 @@ public class JsonConverter {
             return OBJECT_MAPPER.readValue(json, Movie.class);
         } catch (IOException e) {
             throw new RuntimeException("Failed to create Movie from json: " + json);
+        }
+    }
+
+    public static MovieDtoForUpdate toMovieDtoForUpdate(String json) {
+        try {
+            return OBJECT_MAPPER.readValue(json, MovieDtoForUpdate.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create MovieDtoForUpdate from json: " + json);
         }
     }
 }

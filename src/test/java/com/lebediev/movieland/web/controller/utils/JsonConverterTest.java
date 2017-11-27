@@ -63,7 +63,7 @@ public class JsonConverterTest {
     @Test
     public void testGetAuthFromJson() {
         String value = "{ \"email\" : \"ronald.reynolds66@example.com\",\"password\" : \"paco\" }";
-        assertEquals(expected.getEmail(), "ronald.reynolds66@example.com");
+        AuthRequest expected = toAuth(value);
         assertEquals(expected.getEmail(), "ronald.reynolds66@example.com");
         assertEquals(expected.getPassword(), "paco");
 
@@ -110,4 +110,4 @@ public class JsonConverterTest {
         assertEquals(actual.getGenres().length, 4);
     }
 
-}}
+}

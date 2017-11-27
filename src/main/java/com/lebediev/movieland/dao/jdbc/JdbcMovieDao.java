@@ -14,9 +14,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Repository
@@ -46,6 +48,7 @@ public class JdbcMovieDao implements MovieDao {
     private String queryAddMovieCountry;
     @Value("${query.addMovieGenre}")
     private String queryAddMovieGenre;
+
     @Override
     public List <Movie> getRandomMovies() {
         log.info("Start getting random movies ");
@@ -172,6 +175,7 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Finish updating movie with id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
 
     }
+
 
 }
 

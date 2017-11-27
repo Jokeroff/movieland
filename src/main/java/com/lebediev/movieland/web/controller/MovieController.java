@@ -6,6 +6,7 @@ import com.lebediev.movieland.service.authentication.AuthService;
 import com.lebediev.movieland.service.authentication.UserToken;
 import com.lebediev.movieland.service.conversion.CurrencyConverter;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
+import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import com.lebediev.movieland.web.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
-import static com.lebediev.movieland.web.controller.utils.JsonConverter.toMovie;
+import static com.lebediev.movieland.web.controller.utils.JsonConverter.toMovieDtoForUpdate;
 import static com.lebediev.movieland.web.controller.utils.MovieDtoConverter.toMovieDto;
 import static com.lebediev.movieland.service.validations.MovieParamsValidator.isValidParams;
 import static com.lebediev.movieland.web.controller.utils.MovieDtoConverter.toMovieDtoList;
@@ -79,9 +80,9 @@ public class MovieController {
         LOG.info("Start getting Json movie by id ={} /movie/{id}: ", id);
         long startTime = System.currentTimeMillis();
         Movie movie = movieService.getMovieById(id);
-            if(currency != null){
-                movie = currencyConverter.convertPrice(movie, isValidParams(currency));
-            }
+        if (currency != null) {
+            movie = currencyConverter.convertPrice(movie, isValidParams(currency));
+        }
         String movieById = toJson(toMovieDto(movie), JsonConverter.JsonView.REVIEW);
         LOG.info("Finish getting Json movie by id ={} /movie/{id}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return movieById;
@@ -90,15 +91,16 @@ public class MovieController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public void add(@RequestHeader String uuid,
-                    @RequestBody String json){
+                    @RequestBody String json) {
         LOG.info("Start saving movie from /movie for uuid: {}", uuid);
         UserToken userToken = authService.authorize(UUID.fromString(uuid));
-        if( userToken.isAdmin()){
-            Movie movie = toMovie(json);
+        if (userToken.isAdmin()) {
+
+            MovieDtoForUpdate movie = toMovieDtoForUpdate(json);
             movieService.add(movie);
+
             LOG.info("Finish saving movie from /movie for uuid: {}", uuid);
-        }
-        else {
+        } else {
             LOG.info("Saving movie failed. 'ADMIN' role not assigned for user with uuid: {}. ", uuid);
             throw new SecurityException("You must have ADMIN role to add movie!");
         }
@@ -109,16 +111,16 @@ public class MovieController {
     @ResponseBody
     public void update(@PathVariable int id,
                        @RequestHeader String uuid,
-                       @RequestBody String json){
+                       @RequestBody String json) {
         LOG.info("Start updating movie from /movie/{} for uuid: {}", id, uuid);
         UserToken userToken = authService.authorize(UUID.fromString(uuid));
-        if( userToken.isAdmin()){
-            Movie movie = toMovie(json);
+        if (userToken.isAdmin()) {
+            MovieDtoForUpdate movie = toMovieDtoForUpdate(json);
             movie.setId(id);
             movieService.update(movie);
+
             LOG.info("Finish updating movie from /movie/{} for uuid: {}", id, uuid);
-        }
-        else {
+        } else {
             LOG.info("Updating movie failed. 'ADMIN' role not assigned for user with uuid: {}. ", uuid);
             throw new SecurityException("You must have ADMIN role to add movie!");
         }

@@ -3,6 +3,7 @@ package com.lebediev.movieland.service;
 import com.lebediev.movieland.dao.MovieDao;
 import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.entity.Movie;
+import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void add(Movie movie) {
+    public void add(MovieDtoForUpdate movie) {
         movieDao.add(movie);
     }
 
     @Override
-    public void update(Movie movie) {
+    public void update(MovieDtoForUpdate movie) {
         movieDao.update(movie);
     }
 }
