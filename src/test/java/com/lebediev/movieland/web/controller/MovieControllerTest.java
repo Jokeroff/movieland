@@ -8,22 +8,20 @@ import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.User;
 import com.lebediev.movieland.service.MovieService;
 import com.lebediev.movieland.service.authentication.AuthService;
-import com.lebediev.movieland.service.authentication.UserToken;
+import com.lebediev.movieland.web.controller.interceptor.AuthInterceptor;
 import com.lebediev.movieland.web.controller.utils.GlobalExceptionHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
-import static com.lebediev.movieland.service.authentication.AuthService.getUserThreadLocal;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,15 +39,19 @@ public class MovieControllerTest {
     private MovieService movieService;
     @Mock
     private AuthService authService;
+    @Spy
+    private AuthInterceptor authInterceptor;
     @InjectMocks
     private MovieController movieController;
 
     private MockMvc mockMvc;
+    private User user;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(movieController).setControllerAdvice(new GlobalExceptionHandler()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(movieController).setControllerAdvice(new GlobalExceptionHandler()).
+                addInterceptors(authInterceptor).build();
         Genre genre = new Genre(3, "testGenre");
         Country country = new Country(55, "testCountry");
         Movie movieOne = new Movie();
@@ -82,11 +84,8 @@ public class MovieControllerTest {
         when(movieService.getRandomMovies()).thenReturn(movieList);
         when(movieService.getMovieById(anyInt())).thenReturn(movieOne);
 
-        User user = new User(1, "nickname", "email", "password", Arrays.asList(Role.USER));
+        user = new User(1, "nickname", "email", "password", Arrays.asList(Role.USER));
         User admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
-        UserToken userTokenUser = new UserToken(UUID.randomUUID(), LocalDateTime.now(), user);
-        UserToken userTokenAdmin = new UserToken(UUID.randomUUID(), LocalDateTime.now(), admin);
-        when(getUserThreadLocal()).thenReturn(admin);
 
     }
 

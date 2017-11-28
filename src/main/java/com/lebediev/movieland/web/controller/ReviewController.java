@@ -4,6 +4,7 @@ import com.lebediev.movieland.dao.jdbc.entity.Role;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.entity.User;
 import com.lebediev.movieland.service.ReviewService;
+import com.lebediev.movieland.web.controller.utils.RoleRequired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,20 +26,16 @@ public class ReviewController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public Review add(@RequestHeader String uuid, @RequestBody String json){
-        LOG.info("Start saving review for /review for uuid: {}", uuid);
+    @RoleRequired(role = Role.USER)
+    public Review add(@RequestBody String json) {
+        LOG.info("Start saving review ");
+
         User user = getUserThreadLocal();
-        Review review;
-        if (user.getRoles().contains(Role.USER)) {
-            review = toReview(json);
-            review.setUserId(user.getUserId());
-            review = reviewService.add(review);
-        }
-        else {
-            LOG.info("Saving review failed. 'USER' role not assigned for user with uuid: {}. ", uuid);
-            throw new SecurityException("You must have USER role to add review!");
-        }
-        LOG.info("Finish saving review for /review for uuid: {}", uuid);
+        Review review = toReview(json);
+        review.setUserId(user.getUserId());
+        review = reviewService.add(review);
+
+        LOG.info("Finish saving review");
         return review;
     }
 }
