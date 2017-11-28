@@ -8,7 +8,6 @@ import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.User;
 import com.lebediev.movieland.service.MovieService;
 import com.lebediev.movieland.service.authentication.AuthService;
-import com.lebediev.movieland.web.controller.interceptor.AuthInterceptor;
 import com.lebediev.movieland.web.controller.utils.GlobalExceptionHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -199,6 +198,8 @@ public class MovieControllerTest {
                                                "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
                 header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
 
+        setUserThreadLocal(user);
+
         mockMvc.perform(post("/movie").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
                                                "\"description\" : \"some description\"," +
                                                "\"rating\" : 10.0, \"price\" : 330," +
@@ -212,6 +213,8 @@ public class MovieControllerTest {
                                                "\"description\" : \"some description\"," +
                                                "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
                 header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
+
+        setUserThreadLocal(user);
 
         mockMvc.perform(put("/movie/1").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
                                                "\"description\" : \"some description\"," +
