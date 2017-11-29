@@ -15,11 +15,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.annotation.Annotation;
 import java.util.UUID;
 
-import static com.lebediev.movieland.service.authentication.AuthService.clearUserThreadLocal;
-import static com.lebediev.movieland.service.authentication.AuthService.setUserThreadLocal;
 
 @Service
 public class AuthInterceptor extends HandlerInterceptorAdapter {
@@ -32,9 +29,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Role requiredRole = null;
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-        Annotation annotation = handlerMethod.getMethodAnnotation(RoleRequired.class);
+        RoleRequired annotation = handlerMethod.getMethod().getAnnotation(RoleRequired.class);
         if (annotation != null) {
-            requiredRole = ((RoleRequired) annotation).role();
+            requiredRole =  annotation.role();
         }
 
         String uuid = request.getHeader("uuid");
@@ -50,7 +47,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 if (requiredRole != null) {
                     checkRequiredRole(user, requiredRole);
                 }
-                setUserThreadLocal(user);
+                authService.setUserThreadLocal(user);
         }
 
 
@@ -59,7 +56,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        clearUserThreadLocal();
+        authService.clearUserThreadLocal();
     }
 
     private void checkRequiredRole(User user, Role role) {

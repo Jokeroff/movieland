@@ -4,6 +4,7 @@ import com.lebediev.movieland.dao.jdbc.entity.Role;
 import com.lebediev.movieland.entity.Review;
 import com.lebediev.movieland.entity.User;
 import com.lebediev.movieland.service.ReviewService;
+import com.lebediev.movieland.service.authentication.AuthService;
 import com.lebediev.movieland.web.controller.utils.RoleRequired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import static com.lebediev.movieland.service.authentication.AuthService.getUserThreadLocal;
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toReview;
 
 
@@ -24,18 +24,21 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
+    @Autowired
+    private AuthService authService;
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     @RoleRequired(role = Role.USER)
     public Review add(@RequestBody String json) {
         LOG.info("Start saving review ");
 
-        User user = getUserThreadLocal();
+        User user = authService.getUserThreadLocal();
         Review review = toReview(json);
         review.setUserId(user.getUserId());
-        review = reviewService.add(review);
+        Review addedReview = reviewService.add(review);
 
         LOG.info("Finish saving review");
-        return review;
+        return addedReview;
     }
 }
