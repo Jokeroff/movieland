@@ -31,7 +31,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Role requiredRole = null;
-
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Annotation annotation = handlerMethod.getMethodAnnotation(RoleRequired.class);
         if (annotation != null) {
@@ -46,16 +45,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (uuid != null) {
-            try {
                 UserToken userToken = authService.authorize(UUID.fromString(uuid));
                 User user = userToken.getUser();
                 if (requiredRole != null) {
                     checkRequiredRole(user, requiredRole);
                 }
                 setUserThreadLocal(user);
-            } catch (SecurityException e) {
-                throw new SecurityException( e);
-            }
         }
 
 
