@@ -1,10 +1,14 @@
 package com.lebediev.movieland.web.controller;
 
+import com.lebediev.movieland.dao.jdbc.entity.Role;
 import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
+import com.lebediev.movieland.entity.User;
 import com.lebediev.movieland.service.MovieService;
+import com.lebediev.movieland.service.authentication.AuthService;
+import com.lebediev.movieland.service.authentication.UserToken;
 import com.lebediev.movieland.web.controller.utils.GlobalExceptionHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +18,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -23,6 +29,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,6 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MovieControllerTest {
     @Mock
     private MovieService movieService;
+    @Mock
+    private AuthService authService;
     @InjectMocks
     private MovieController movieController;
 
@@ -71,6 +81,12 @@ public class MovieControllerTest {
         when(movieService.getRandomMovies()).thenReturn(movieList);
         when(movieService.getMovieById(anyInt())).thenReturn(movieOne);
 
+        User user = new User(1, "nickname", "email", "password", Arrays.asList(Role.USER));
+        User admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
+        UserToken userTokenUser = new UserToken(UUID.randomUUID(), LocalDateTime.now(), user);
+        UserToken userTokenAdmin = new UserToken(UUID.randomUUID(), LocalDateTime.now(), admin);
+        when(authService.authorize(UUID.fromString("096f33e2-a224-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenUser);
+        when(authService.authorize(UUID.fromString("096f33e2-a335-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenAdmin);
     }
 
     @Test
@@ -174,6 +190,37 @@ public class MovieControllerTest {
         mockMvc.perform(get("/movie/1")).
                 andExpect(status().isOk()).
                 andExpect(jsonPath("$.id", is(44)));
+    }
+
+    @Test
+    public void testAdd() throws Exception {
+        mockMvc.perform(post("/movie").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
+                                               "\"description\" : \"some description\"," +
+                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
+
+        mockMvc.perform(post("/movie").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
+                                               "\"description\" : \"some description\"," +
+                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        mockMvc.perform(put("/movie/1").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
+                                               "\"description\" : \"some description\"," +
+                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
+
+        mockMvc.perform(put("/movie/1").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
+                                               "\"description\" : \"some description\"," +
+                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/movie/1").content("{  }").
+                header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/movie/1").content("{  }")).andExpect(status().isBadRequest());
     }
 
 }
