@@ -5,6 +5,7 @@ import com.lebediev.movieland.entity.User;
 import com.lebediev.movieland.service.ReviewService;
 import com.lebediev.movieland.service.authentication.AuthService;
 import com.lebediev.movieland.service.authentication.UserToken;
+import com.lebediev.movieland.web.controller.interceptor.AuthInterceptor;
 import com.lebediev.movieland.web.controller.utils.GlobalExceptionHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,17 +29,23 @@ public class ReviewControllerTest {
     private ReviewService reviewService;
     @Mock
     private AuthService authService;
+    @Mock
+    private AuthInterceptor authInterceptor;
+
     @InjectMocks
     private ReviewController reviewController;
 
     private MockMvc mockMvc;
 
+    private User admin;
+
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(reviewController).setControllerAdvice(new GlobalExceptionHandler()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(reviewController).setControllerAdvice(new GlobalExceptionHandler()).
+                addInterceptors(authInterceptor).build();
         User user = new User(1, "nickname", "email", "password", Arrays.asList(Role.USER));
-        User admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
+        admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
         UserToken userTokenOne = new UserToken(UUID.randomUUID(), LocalDateTime.now(), user);
         UserToken userTokenTwo = new UserToken(UUID.randomUUID(), LocalDateTime.now(), admin);
         when(authService.authorize(UUID.fromString("096f33e2-a224-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenOne);
@@ -50,7 +57,7 @@ public class ReviewControllerTest {
         mockMvc.perform(post("/review").content("{ \"movieId\" : 1,\"text\" : \"some review\" }").
                 header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
 
-        mockMvc.perform(post("/review").content("{ \"movieId\" : 1,\"text\" : \"some review\" }").
-                header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
+        mockMvc.perform(post("/review").content("{ \"movieId\" : 1,\"text\" : \"some review\" }")
+                ).andExpect(status().isBadRequest());
     }
 }

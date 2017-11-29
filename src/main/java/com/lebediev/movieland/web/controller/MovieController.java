@@ -1,13 +1,13 @@
 package com.lebediev.movieland.web.controller;
 
+import com.lebediev.movieland.dao.jdbc.entity.Role;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.MovieService;
-import com.lebediev.movieland.service.authentication.AuthService;
-import com.lebediev.movieland.service.authentication.UserToken;
 import com.lebediev.movieland.service.conversion.CurrencyConverter;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import com.lebediev.movieland.web.controller.utils.JsonConverter;
+import com.lebediev.movieland.web.controller.utils.RoleRequired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toMovieDtoForUpdate;
@@ -35,8 +34,6 @@ public class MovieController {
     private MovieService movieService;
     @Autowired
     private CurrencyConverter currencyConverter;
-    @Autowired
-    private AuthService authService;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -90,41 +87,28 @@ public class MovieController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void add(@RequestHeader String uuid,
-                    @RequestBody String json) {
-        LOG.info("Start saving movie from /movie for uuid: {}", uuid);
-        UserToken userToken = authService.authorize(UUID.fromString(uuid));
-        if (userToken.isAdmin()) {
+    @RoleRequired(role = Role.ADMIN)
+    public void add(@RequestBody String json) {
+        LOG.info("Start saving movie");
 
-            MovieDtoForUpdate movie = toMovieDtoForUpdate(json);
-            movieService.add(movie);
+        MovieDtoForUpdate movie = toMovieDtoForUpdate(json);
+        movieService.add(movie);
 
-            LOG.info("Finish saving movie from /movie for uuid: {}", uuid);
-        } else {
-            LOG.info("Saving movie failed. 'ADMIN' role not assigned for user with uuid: {}. ", uuid);
-            throw new SecurityException("You must have ADMIN role to add movie!");
-        }
-
+        LOG.info("Finish saving movie");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
+    @RoleRequired(role = Role.ADMIN)
     public void update(@PathVariable int id,
-                       @RequestHeader String uuid,
                        @RequestBody String json) {
-        LOG.info("Start updating movie from /movie/{} for uuid: {}", id, uuid);
-        UserToken userToken = authService.authorize(UUID.fromString(uuid));
-        if (userToken.isAdmin()) {
-            MovieDtoForUpdate movie = toMovieDtoForUpdate(json);
-            movie.setId(id);
-            movieService.update(movie);
+        LOG.info("Start updating movie from /movie/{}", id);
 
-            LOG.info("Finish updating movie from /movie/{} for uuid: {}", id, uuid);
-        } else {
-            LOG.info("Updating movie failed. 'ADMIN' role not assigned for user with uuid: {}. ", uuid);
-            throw new SecurityException("You must have ADMIN role to add movie!");
-        }
+        MovieDtoForUpdate movie = toMovieDtoForUpdate(json);
+        movie.setId(id);
+        movieService.update(movie);
 
+        LOG.info("Finish updating movie from /movie/{}", id);
     }
 
 
