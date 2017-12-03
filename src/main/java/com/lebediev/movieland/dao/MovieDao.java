@@ -1,5 +1,6 @@
 package com.lebediev.movieland.dao;
 
+import com.lebediev.movieland.dao.jdbc.entity.MovieRating;
 import com.lebediev.movieland.dao.jdbc.entity.SortParams;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
@@ -21,4 +22,8 @@ public interface MovieDao {
     void add(MovieDtoForUpdate movie);
 
     void update(MovieDtoForUpdate movie);
+
+    void addRatings(List<MovieRating> movieRatingList);
+
+    List<MovieRating> getRatings();
 }

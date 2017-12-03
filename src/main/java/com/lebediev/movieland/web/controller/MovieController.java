@@ -1,8 +1,10 @@
 package com.lebediev.movieland.web.controller;
 
+import com.lebediev.movieland.dao.jdbc.entity.MovieRating;
 import com.lebediev.movieland.dao.jdbc.entity.Role;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.MovieService;
+import com.lebediev.movieland.service.authentication.AuthService;
 import com.lebediev.movieland.service.conversion.CurrencyConverter;
 import com.lebediev.movieland.web.controller.dto.MovieDto;
 import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
@@ -34,13 +36,15 @@ public class MovieController {
     private MovieService movieService;
     @Autowired
     private CurrencyConverter currencyConverter;
+    @Autowired
+    private AuthService authService;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getAllMovies(@RequestParam(required = false) Map <String, String> params) {
+    public String getAllMovies(@RequestParam(required = false) Map<String, String> params) {
         LOG.info("Start getting Json all movies /movie with params: ", params);
         long startTime = System.currentTimeMillis();
-        List <MovieDto> moviesList = toMovieDtoList(movieService.getAllMovies(isValidParams(params)));
+        List<MovieDto> moviesList = toMovieDtoList(movieService.getAllMovies(isValidParams(params)));
         String allMovies = toJson(moviesList, JsonConverter.JsonView.BASE);
         LOG.info("Finish getting Json all movies /movie with params: {} . It took {} ms", params, System.currentTimeMillis() - startTime);
         return allMovies;
@@ -51,7 +55,7 @@ public class MovieController {
     public String getRandomMovies() {
         LOG.info("Start getting Json random movies (/movie/random)");
         long startTime = System.currentTimeMillis();
-        List <MovieDto> moviesList = toMovieDtoList(movieService.getRandomMovies());
+        List<MovieDto> moviesList = toMovieDtoList(movieService.getRandomMovies());
         String allRandomMovies = toJson(moviesList, JsonConverter.JsonView.EXTENDED);
         LOG.info("Finish getting Json random movies (/movie/random). It took {} ms", System.currentTimeMillis() - startTime);
         return allRandomMovies;
@@ -60,10 +64,10 @@ public class MovieController {
     @RequestMapping(value = "/genre/{genreId}", method = RequestMethod.GET)
     @ResponseBody
     public String getMoviesByGenreId(@PathVariable int genreId,
-                                     @RequestParam(required = false) Map <String, String> params) {
+                                     @RequestParam(required = false) Map<String, String> params) {
         LOG.info("Start getting Json movies by genreId ={} /movie/genre/{genreId} with params: ", genreId, params);
         long startTime = System.currentTimeMillis();
-        List <MovieDto> moviesList = toMovieDtoList(movieService.getMoviesByGenreId(genreId, isValidParams(params)));
+        List<MovieDto> moviesList = toMovieDtoList(movieService.getMoviesByGenreId(genreId, isValidParams(params)));
         String moviesByGenreId = toJson(moviesList, JsonConverter.JsonView.BASE);
         LOG.info("Finish getting Json movies with genreId ={} /movie/genre/{genreId} with params: {} . It took {} ms", genreId, params, System.currentTimeMillis() - startTime);
         return moviesByGenreId;
@@ -111,5 +115,29 @@ public class MovieController {
         LOG.info("Finish updating movie from /movie/{}", id);
     }
 
+    @RequestMapping(value = "/{movieId}/rating", method = RequestMethod.POST)
+    @ResponseBody
+    @RoleRequired(role = Role.USER)
+    public void addRating(@PathVariable int movieId,
+                          @RequestBody MovieRating movieRating) {
+        LOG.info("Start adding rating for movieId = {}", movieId);
 
+        movieRating.setMovieId(movieId);
+        movieRating.setUserId(authService.getUserThreadLocal().getUserId());
+        movieService.addRating(isValidParams(movieRating));
+
+        LOG.info("Finish adding rating for movieId = {}", movieId);
+    }
+
+    @RequestMapping(value = "/{movieId}/rating", method = RequestMethod.GET)
+    @ResponseBody
+    public String getRating(@PathVariable int movieId) {
+        LOG.info("Start getting rating for movie id = {} /movie/{movieId}/rating", movieId);
+        long startTime = System.currentTimeMillis();
+
+        Double rating = movieService.getRating(movieId);
+
+        LOG.info("Finish getting rating for movie id = {} /movie/{movieId}/rating. It took {} ms", movieId, System.currentTimeMillis() - startTime);
+        return rating.toString();
+    }
 }

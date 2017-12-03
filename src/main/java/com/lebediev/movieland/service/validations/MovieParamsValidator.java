@@ -1,5 +1,6 @@
 package com.lebediev.movieland.service.validations;
 
+import com.lebediev.movieland.dao.jdbc.entity.MovieRating;
 import com.lebediev.movieland.dao.jdbc.entity.OrderBy;
 import com.lebediev.movieland.dao.jdbc.entity.SortDirection;
 import com.lebediev.movieland.dao.jdbc.entity.SortParams;
@@ -38,5 +39,12 @@ public class MovieParamsValidator {
             return getCurrency(currency);
         }
         throw new IllegalArgumentException("Wrong param: " + currency);
+    }
+
+    public static MovieRating isValidParams(MovieRating movieRating){
+        if(movieRating.getRating() >= 1 && movieRating.getRating() <= 10){
+            return movieRating;
+        }
+        throw new IllegalArgumentException("Rating should be between 1 and 10!");
     }
 }

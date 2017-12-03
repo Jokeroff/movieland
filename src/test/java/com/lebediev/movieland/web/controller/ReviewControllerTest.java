@@ -27,17 +27,15 @@ public class ReviewControllerTest {
 
     @Mock
     private ReviewService reviewService;
-    @Mock
-    private AuthService authService;
-    @Mock
-    private AuthInterceptor authInterceptor;
-
     @InjectMocks
     private ReviewController reviewController;
 
-    private MockMvc mockMvc;
+    @Mock
+    private AuthService authService;
+    @InjectMocks
+    private AuthInterceptor authInterceptor ;
 
-    private User admin;
+    private MockMvc mockMvc;
 
     @Before
     public void setup(){
@@ -45,17 +43,22 @@ public class ReviewControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(reviewController).setControllerAdvice(new GlobalExceptionHandler()).
                 addInterceptors(authInterceptor).build();
         User user = new User(1, "nickname", "email", "password", Arrays.asList(Role.USER));
-        admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
+        User admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
         UserToken userTokenOne = new UserToken(UUID.randomUUID(), LocalDateTime.now(), user);
         UserToken userTokenTwo = new UserToken(UUID.randomUUID(), LocalDateTime.now(), admin);
         when(authService.authorize(UUID.fromString("096f33e2-a224-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenOne);
+        when(authService.getUserThreadLocal()).thenReturn(user);
         when(authService.authorize(UUID.fromString("096f33e2-a335-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenTwo);
+        when(authService.getUserThreadLocal()).thenReturn(admin);
     }
 
     @Test
     public void testAdd() throws Exception {
         mockMvc.perform(post("/review").content("{ \"movieId\" : 1,\"text\" : \"some review\" }").
                 header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
+
+        mockMvc.perform(post("/review").content("{ \"movieId\" : 1,\"text\" : \"some review\" }").
+                header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
 
         mockMvc.perform(post("/review").content("{ \"movieId\" : 1,\"text\" : \"some review\" }")
                 ).andExpect(status().isBadRequest());

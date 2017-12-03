@@ -1,5 +1,6 @@
 package com.lebediev.movieland.service.validations;
 
+import com.lebediev.movieland.dao.jdbc.entity.MovieRating;
 import com.lebediev.movieland.dao.jdbc.entity.OrderBy;
 import com.lebediev.movieland.dao.jdbc.entity.SortDirection;
 import com.lebediev.movieland.dao.jdbc.entity.SortParams;
@@ -21,7 +22,7 @@ public class MovieParamsValidatorTest {
 
     @Test
     public void testIsValidParams() {
-        Map <String, String> params = new HashMap <>();
+        Map<String, String> params = new HashMap<>();
 
         SortParams expected = new SortParams(OrderBy.PRICE, SortDirection.ASC);
 
@@ -51,7 +52,7 @@ public class MovieParamsValidatorTest {
 
     @Test
     public void testIsValidParamsWithWrongParams() {
-        Map <String, String> params = new HashMap <>();
+        Map<String, String> params = new HashMap<>();
         thrown.expect(IllegalArgumentException.class);
         params.put("wrong", "params");
         isValidParams(params);
@@ -59,7 +60,7 @@ public class MovieParamsValidatorTest {
 
     @Test
     public void testIsValidParamsWithMultiParams() {
-        Map <String, String> params = new HashMap <>();
+        Map<String, String> params = new HashMap<>();
         thrown.expect(IllegalArgumentException.class);
         params.put("some", "params");
         params.put("another", "param");
@@ -67,14 +68,34 @@ public class MovieParamsValidatorTest {
     }
 
     @Test
-    public void testIsValidParamsForCurrency(){
+    public void testIsValidParamsForCurrency() {
         assertEquals(isValidParams("usd"), Currency.USD);
         assertEquals(isValidParams("EuR"), Currency.EUR);
 
         thrown.expect(IllegalArgumentException.class);
         isValidParams("ABC");
+    }
 
+    @Test
+    public void testIsValidParamsForMovieRatingDto() {
+        MovieRating dto = new MovieRating();
+        dto.setRating(5.2);
+        assertEquals(isValidParams(dto), dto);
+    }
 
+    @Test
+    public void testIsValidParamsForMovieRatingDtoEmpty() {
+        MovieRating dto = new MovieRating();
+        thrown.expect(IllegalArgumentException.class);
+        isValidParams(dto);
+    }
+
+    @Test
+    public void testIsValidParamsForMovieRatingDtoOutOfRange() {
+        MovieRating dto = new MovieRating();
+        thrown.expect(IllegalArgumentException.class);
+        dto.setRating(-2);
+        isValidParams(dto);
     }
 
 
