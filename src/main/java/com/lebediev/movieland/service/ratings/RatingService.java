@@ -12,8 +12,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.DoubleAdder;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -24,38 +23,47 @@ public class RatingService {
     @Autowired
     private MovieService movieService;
 
-    private volatile List<MovieRating> movieRatingCache = new ArrayList<>();
-    private Set<MovieRating> movieRatingsPrepared = new HashSet<>();
+    private List<MovieRating> movieRatingCache = new ArrayList<>();
+    private Queue<MovieRating> movieRatingsPrepared = new ConcurrentLinkedQueue<>();
+    private ReentrantLock lock = new ReentrantLock();
 
     public void addRating(MovieRating movieRating) {
         log.info("Start adding movie rating to queue");
 
-        movieRatingsPrepared.add(movieRating);
-
-        log.info("Finish adding movie rating to queue");
+        while (true) {
+            if (lock.tryLock()) {
+                try {
+                    movieRatingsPrepared.add(movieRating);
+                    break;
+                } finally {
+                    log.info("Finish adding movie rating to queue");
+                    lock.unlock();
+                }
+            }
+        }
     }
 
     public double getRating(int movieId) {
         log.info("Start calculating rating for movie = {}", movieId);
 
-        DoubleAdder ratingSum = new DoubleAdder();
-        AtomicInteger count = new AtomicInteger();
+        double ratingSum = 0;
+        int count = 0;
 
         for (MovieRating movieRating : movieRatingsPrepared) {
             if (movieRating.getMovieId() == movieId) {
-                ratingSum.add(movieRating.getRating());
-                count.incrementAndGet();
+                ratingSum += movieRating.getRating();
+                count++;
             }
         }
 
-        Optional<MovieRating> movieRating = movieRatingCache.stream().filter(n -> n.getMovieId() == movieId).findAny();
+        Optional<MovieRating> currentRating = movieRatingCache.stream().filter(n -> n.getMovieId() == movieId).findAny();
 
-        movieRating.ifPresent(movieRating1 -> {
-            ratingSum.add(movieRating1.getRating());
-            count.addAndGet(movieRating1.getVoteCount());
-        });
+        if (currentRating.isPresent()) {
+            ratingSum += currentRating.get().getRating();
+            count += currentRating.get().getVoteCount();
+        }
 
-        BigDecimal ratingRounded = new BigDecimal(Double.toString(ratingSum.sum() / count.get()));
+        BigDecimal ratingRounded = new BigDecimal(Double.toString(ratingSum / count));
         ratingRounded = ratingRounded.setScale(2, RoundingMode.HALF_UP);
 
         log.info("Finish calculating rating for movie = {}", movieId);
@@ -66,15 +74,11 @@ public class RatingService {
     private void invalidateCache() {
         log.info("Start invalidating ratings cache");
         long startTime = System.currentTimeMillis();
-        ReentrantLock lock = new ReentrantLock();
+        System.out.println("cache locked");
 
-        try {
-            lock.lock();
-            movieRatingCache = movieService.getRatings();
-        } finally {
-            lock.unlock();
-        }
+        movieRatingCache = movieService.getRatings();
 
+        System.out.println("cache realized");
         log.info("Finish invalidating ratings cache. It took {} ms", System.currentTimeMillis() - startTime);
     }
 
@@ -83,19 +87,17 @@ public class RatingService {
         log.info("Start adding ratings from cache");
         long startTime = System.currentTimeMillis();
 
-        ReentrantLock lock = new ReentrantLock();
         try {
             lock.lock();
             if (!movieRatingsPrepared.isEmpty()) {
                 movieService.addRatings(new ArrayList<>(movieRatingsPrepared));
                 movieRatingsPrepared.clear();
+
+                invalidateCache();
             }
         } finally {
+            log.info("Finish adding ratings from cache. It took {} ms", System.currentTimeMillis() - startTime);
             lock.unlock();
         }
-
-        invalidateCache();
-
-        log.info("Finish adding ratings from cache. It took {} ms", System.currentTimeMillis() - startTime);
     }
 }

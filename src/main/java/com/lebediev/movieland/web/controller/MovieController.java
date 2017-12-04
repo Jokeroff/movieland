@@ -123,7 +123,7 @@ public class MovieController {
         LOG.info("Start adding rating for movieId = {}", movieId);
 
         movieRating.setMovieId(movieId);
-        movieRating.setUserId(authService.getUserThreadLocal().getUserId());
+        movieRating.setUserId(authService.getCurrentUser().getUserId());
         movieService.addRating(isValidParams(movieRating));
 
         LOG.info("Finish adding rating for movieId = {}", movieId);

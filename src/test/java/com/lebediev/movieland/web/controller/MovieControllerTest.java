@@ -91,9 +91,9 @@ public class MovieControllerTest {
         UserToken userTokenOne = new UserToken(UUID.randomUUID(), LocalDateTime.now(), user);
         UserToken userTokenTwo = new UserToken(UUID.randomUUID(), LocalDateTime.now(), admin);
         when(authService.authorize(UUID.fromString("096f33e2-a224-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenOne);
-        //when(authService.getUserThreadLocal()).thenReturn(user);
+        //when(authService.getCurrentUser()).thenReturn(user);
         when(authService.authorize(UUID.fromString("096f33e2-a335-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenTwo);
-        //when(authService.getUserThreadLocal()).thenReturn(admin);
+        //when(authService.getCurrentUser()).thenReturn(admin);
 
     }
 

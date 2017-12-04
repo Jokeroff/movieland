@@ -9,10 +9,10 @@ public class MovieRating {
     public MovieRating() {
     }
 
-    public MovieRating(int movieId, int voteCount, double rating) {
+    public MovieRating(int movieId,  int voteCount, double rating) {
         this.movieId = movieId;
-        this.voteCount = voteCount;
         this.rating = rating;
+        this.voteCount = voteCount;
     }
 
     public int getMovieId() {
@@ -41,23 +41,6 @@ public class MovieRating {
 
     public int getVoteCount() {
         return voteCount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MovieRating that = (MovieRating) o;
-
-        return movieId == that.movieId && userId == that.userId;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = movieId;
-        result = 31 * result + userId;
-        return result;
     }
 
     @Override

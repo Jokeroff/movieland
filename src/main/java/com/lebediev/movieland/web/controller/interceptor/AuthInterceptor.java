@@ -47,7 +47,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 if (requiredRole != null) {
                     checkRequiredRole(user, requiredRole);
                 }
-                authService.setUserThreadLocal(user);
+                authService.setCurrentUser(user);
         }
         return super.preHandle(request, response, handler);
     }
