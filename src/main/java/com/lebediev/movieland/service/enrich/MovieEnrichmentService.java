@@ -9,7 +9,6 @@ import com.lebediev.movieland.entity.Country;
 import com.lebediev.movieland.entity.Genre;
 import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.entity.Review;
-import com.lebediev.movieland.service.ratings.RatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class MovieEnrichmentService {
 
     @Autowired
     private ReviewDao reviewDao;
-
-    @Autowired
-    private RatingService ratingService;
 
     public void enrichByGenres(Movie movie) {
         log.info("Start enriching movie by genres ");
@@ -117,26 +113,6 @@ public class MovieEnrichmentService {
             ids.add(movie.getId());
         }
         return ids;
-    }
-
-    public void enrichByRatings(Movie movie) {
-        log.info("Start enriching movie by ratings ");
-        long startTime = System.currentTimeMillis();
-
-        movie.setRating(ratingService.getRating(movie.getId()));
-
-        log.info("Finish enriching movie by ratings. It took {} ms", System.currentTimeMillis() - startTime);
-    }
-
-    public void enrichByRatings(List<Movie> movieList) {
-        log.info("Start enriching movies by ratings ");
-        long startTime = System.currentTimeMillis();
-
-        for (Movie movie : movieList) {
-            movie.setRating(ratingService.getRating(movie.getId()));
-        }
-
-        log.info("Finish enriching movies by ratings. It took {} ms", System.currentTimeMillis() - startTime);
     }
 
 }

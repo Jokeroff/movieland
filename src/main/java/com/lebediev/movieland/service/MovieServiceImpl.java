@@ -21,22 +21,30 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getRandomMovies() {
-        return movieDao.getRandomMovies();
+        List<Movie> movieList = movieDao.getRandomMovies();
+        ratingService.enrichByRatings(movieList);
+        return movieList;
     }
 
     @Override
     public List<Movie> getAllMovies(SortParams params) {
-        return movieDao.getAll(params);
+        List<Movie> movieList = movieDao.getAll(params);
+        ratingService.enrichByRatings(movieList);
+        return movieList;
     }
 
     @Override
     public List<Movie> getMoviesByGenreId(int genreId, SortParams params) {
-        return movieDao.getMoviesByGenreId(genreId, params);
+        List<Movie> movieList = movieDao.getMoviesByGenreId(genreId, params);
+        ratingService.enrichByRatings(movieList);
+        return movieList;
     }
 
     @Override
     public Movie getMovieById(int id) {
-        return movieDao.getMovieById(id);
+        Movie movie = movieDao.getMovieById(id);
+        ratingService.enrichByRatings(movie);
+        return movie;
     }
 
     @Override

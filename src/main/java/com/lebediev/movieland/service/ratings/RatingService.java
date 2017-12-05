@@ -1,6 +1,7 @@
 package com.lebediev.movieland.service.ratings;
 
 import com.lebediev.movieland.dao.jdbc.entity.MovieRating;
+import com.lebediev.movieland.entity.Movie;
 import com.lebediev.movieland.service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +31,12 @@ public class RatingService {
     public void addRating(MovieRating movieRating) {
         log.info("Start adding movie rating to queue");
 
-        while (true) {
-            if (lock.tryLock()) {
-                try {
-                    movieRatingsPrepared.add(movieRating);
-                    break;
-                } finally {
-                    log.info("Finish adding movie rating to queue");
-                    lock.unlock();
-                }
-            }
+        try {
+            lock.lock();
+            movieRatingsPrepared.add(movieRating);
+        } finally {
+            log.info("Finish adding movie rating to queue");
+            lock.unlock();
         }
     }
 
@@ -74,11 +71,9 @@ public class RatingService {
     private void invalidateCache() {
         log.info("Start invalidating ratings cache");
         long startTime = System.currentTimeMillis();
-        System.out.println("cache locked");
 
         movieRatingCache = movieService.getRatings();
 
-        System.out.println("cache realized");
         log.info("Finish invalidating ratings cache. It took {} ms", System.currentTimeMillis() - startTime);
     }
 
@@ -99,5 +94,24 @@ public class RatingService {
             log.info("Finish adding ratings from cache. It took {} ms", System.currentTimeMillis() - startTime);
             lock.unlock();
         }
+    }
+
+    public void enrichByRatings(Movie movie) {
+        log.info("Start enriching movie by ratings ");
+        long startTime = System.currentTimeMillis();
+
+        movie.setRating(getRating(movie.getId()));
+
+        log.info("Finish enriching movie by ratings. It took {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    public void enrichByRatings(List<Movie> movieList) {
+        log.info("Start enriching movies by ratings ");
+        long startTime = System.currentTimeMillis();
+
+        for (Movie movie : movieList) {
+            movie.setRating(getRating(movie.getId()));
+        }
+        log.info("Finish enriching movies by ratings. It took {} ms", System.currentTimeMillis() - startTime);
     }
 }

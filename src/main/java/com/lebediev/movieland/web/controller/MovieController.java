@@ -128,16 +128,4 @@ public class MovieController {
 
         LOG.info("Finish adding rating for movieId = {}", movieId);
     }
-
-    @RequestMapping(value = "/{movieId}/rating", method = RequestMethod.GET)
-    @ResponseBody
-    public String getRating(@PathVariable int movieId) {
-        LOG.info("Start getting rating for movie id = {} /movie/{movieId}/rating", movieId);
-        long startTime = System.currentTimeMillis();
-
-        Double rating = movieService.getRating(movieId);
-
-        LOG.info("Finish getting rating for movie id = {} /movie/{movieId}/rating. It took {} ms", movieId, System.currentTimeMillis() - startTime);
-        return rating.toString();
-    }
 }
