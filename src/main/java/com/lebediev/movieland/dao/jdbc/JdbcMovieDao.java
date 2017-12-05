@@ -79,6 +79,7 @@ public class JdbcMovieDao implements MovieDao {
             queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
         }
         List<Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
+        movieEnrichmentService.enrichByRatings(allMoviesOrderedList);
         log.info("Finish query get all movies with params {}. It took {} ms", params, System.currentTimeMillis() - startTime);
         return allMoviesOrderedList;
     }
@@ -92,6 +93,7 @@ public class JdbcMovieDao implements MovieDao {
             queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
         }
         List<Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
+        movieEnrichmentService.enrichByRatings(moviesByGenreOrderedList);
         log.info("Finish getting movies by genreId = {} with params {}. It took {} ms", genreId, params, System.currentTimeMillis() - startTime);
         return moviesByGenreOrderedList;
     }
@@ -104,6 +106,7 @@ public class JdbcMovieDao implements MovieDao {
         movieEnrichmentService.enrichByReviews(movie);
         movieEnrichmentService.enrichByCountries(movie);
         movieEnrichmentService.enrichByGenres(movie);
+        movieEnrichmentService.enrichByRatings(movie);
         log.info("Finish getting movies by id = {}. It took {} ms", id, System.currentTimeMillis() - startTime);
         return movie;
     }
