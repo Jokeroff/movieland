@@ -17,7 +17,7 @@ public class LoggingInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        User user = authService.getUserThreadLocal();
+        User user = authService.getCurrentUser();
         String userName = "guest";
         if (user != null) {
             userName = user.getEmail();

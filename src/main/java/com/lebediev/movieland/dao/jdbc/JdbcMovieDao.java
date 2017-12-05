@@ -1,9 +1,12 @@
 package com.lebediev.movieland.dao.jdbc;
 
 import com.lebediev.movieland.dao.MovieDao;
+import com.lebediev.movieland.dao.jdbc.entity.MovieRating;
 import com.lebediev.movieland.dao.jdbc.entity.SortParams;
+import com.lebediev.movieland.dao.jdbc.mapper.MovieRatingRowMapper;
 import com.lebediev.movieland.dao.jdbc.mapper.MovieRowMapper;
 import com.lebediev.movieland.entity.Movie;
+import com.lebediev.movieland.service.authentication.AuthService;
 import com.lebediev.movieland.service.enrich.MovieEnrichmentService;
 import com.lebediev.movieland.web.controller.dto.MovieDtoForUpdate;
 import org.slf4j.Logger;
@@ -29,8 +32,11 @@ public class JdbcMovieDao implements MovieDao {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private MovieEnrichmentService movieEnrichmentService;
+    @Autowired
+    private AuthService authService;
 
     private final MovieRowMapper movieRowMapper = new MovieRowMapper();
+    private final MovieRatingRowMapper movieRatingRowMapper = new MovieRatingRowMapper();
 
     @Value("${query.getAllMovies}")
     private String queryGetAllMovies;
@@ -48,12 +54,16 @@ public class JdbcMovieDao implements MovieDao {
     private String queryAddMovieCountry;
     @Value("${query.addMovieGenre}")
     private String queryAddMovieGenre;
+    @Value("${query.addRating}")
+    private String queryAddRating;
+    @Value("${query.getRatings}")
+    private String queryGetRatings;
 
     @Override
-    public List <Movie> getRandomMovies() {
+    public List<Movie> getRandomMovies() {
         log.info("Start getting random movies ");
         long startTime = System.currentTimeMillis();
-        List <Movie> randomMovieList = jdbcTemplate.query(queryGetRandomMovies, movieRowMapper);
+        List<Movie> randomMovieList = jdbcTemplate.query(queryGetRandomMovies, movieRowMapper);
         log.info("Finish getting random movies. It took {} ms", System.currentTimeMillis() - startTime);
         movieEnrichmentService.enrichByGenres(randomMovieList);
         movieEnrichmentService.enrichByCountries(randomMovieList);
@@ -61,27 +71,28 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public List <Movie> getAll(SortParams params) {
+    public List<Movie> getAll(SortParams params) {
         log.info("Start query get all movies with params {}", params);
         long startTime = System.currentTimeMillis();
         String queryGetAllMoviesOrdered = queryGetAllMovies;
         if (params.getOrderBy() != null) {
             queryGetAllMoviesOrdered = queryGetAllMovies + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
         }
-        List <Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
+        List<Movie> allMoviesOrderedList = jdbcTemplate.query(queryGetAllMoviesOrdered, movieRowMapper);
+
         log.info("Finish query get all movies with params {}. It took {} ms", params, System.currentTimeMillis() - startTime);
         return allMoviesOrderedList;
     }
 
     @Override
-    public List <Movie> getMoviesByGenreId(int genreId, SortParams params) {
+    public List<Movie> getMoviesByGenreId(int genreId, SortParams params) {
         log.info("Start getting movies by genreId = {} with params {}", genreId, params);
         long startTime = System.currentTimeMillis();
         String queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId;
         if (params.getOrderBy() != null) {
             queryGetMoviesByGenreIdOrdered = queryGetMoviesByGenreId + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection();
         }
-        List <Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
+        List<Movie> moviesByGenreOrderedList = jdbcTemplate.query(queryGetMoviesByGenreIdOrdered, movieRowMapper, genreId);
         log.info("Finish getting movies by genreId = {} with params {}. It took {} ms", genreId, params, System.currentTimeMillis() - startTime);
         return moviesByGenreOrderedList;
     }
@@ -124,7 +135,7 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start adding mappings movieToCountry to db");
         int[] countries = movie.getCountries();
         int movieId = movie.getId();
-        List <Object[]> batch = new ArrayList <>();
+        List<Object[]> batch = new ArrayList<>();
         for (int countryId : countries) {
             Object[] values = new Object[]{
                     movieId,
@@ -140,7 +151,7 @@ public class JdbcMovieDao implements MovieDao {
         log.info("Start adding mappings movieToGenre to db");
         int[] genres = movie.getGenres();
         int movieId = movie.getId();
-        List <Object[]> batch = new ArrayList <>();
+        List<Object[]> batch = new ArrayList<>();
         for (int genreId : genres) {
             Object[] values = new Object[]{
                     movieId,
@@ -176,7 +187,37 @@ public class JdbcMovieDao implements MovieDao {
 
     }
 
+    @Override
+    public void addRatings(List<MovieRating> movieRatingList) {
+        log.info("Start adding ratings to db");
+        long startTime = System.currentTimeMillis();
+        List<Object[]> batch = new ArrayList<>();
 
+        for (MovieRating movieRating : movieRatingList) {
+            Object[] values = new Object[]{
+                    movieRating.getMovieId(),
+                    movieRating.getUserId(),
+                    movieRating.getRating(),
+                    movieRating.getRating()
+            };
+            batch.add(values);
+        }
+
+        jdbcTemplate.batchUpdate(queryAddRating, batch);
+
+        log.info("Finish adding ratings to db. It took {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    @Override
+    public List<MovieRating> getRatings() {
+        log.info("Start getting ratings for all movies");
+        long startTime = System.currentTimeMillis();
+
+        List<MovieRating> movieRatingList = jdbcTemplate.query(queryGetRatings, movieRatingRowMapper);
+
+        log.info("Finish getting ratings for all movies. It took {} ms", System.currentTimeMillis() - startTime);
+        return movieRatingList;
+    }
 }
 
 

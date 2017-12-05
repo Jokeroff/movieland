@@ -42,15 +42,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (uuid != null) {
-                UserToken userToken = authService.authorize(UUID.fromString(uuid));
+            UserToken userToken = authService.authorize(UUID.fromString(uuid));
                 User user = userToken.getUser();
                 if (requiredRole != null) {
                     checkRequiredRole(user, requiredRole);
                 }
-                authService.setUserThreadLocal(user);
+                authService.setCurrentUser(user);
         }
-
-
         return super.preHandle(request, response, handler);
     }
 
@@ -61,7 +59,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private void checkRequiredRole(User user, Role role) {
         if (!(user.getRoles().contains(role))) {
-
             LOG.error("Required role not assigned to current user");
             throw new SecurityException("Required role not assigned to current user");
         }

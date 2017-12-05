@@ -24,18 +24,18 @@ public class AuthService {
     @Autowired
     private UserDao userDao;
     private final Map <UUID, UserToken> userTokenCache = new ConcurrentHashMap <>();
-    private final ThreadLocal <User> userThreadLocal = new ThreadLocal <>();
+    private final ThreadLocal <User> currentUser = new ThreadLocal <>();
 
-    public User getUserThreadLocal() {
-        return userThreadLocal.get();
+    public User getCurrentUser() {
+        return currentUser.get();
     }
 
-    public void setUserThreadLocal(User user) {
-        userThreadLocal.set(user);
+    public void setCurrentUser(User user) {
+        currentUser.set(user);
     }
 
     public void clearUserThreadLocal() {
-        userThreadLocal.remove();
+        currentUser.remove();
     }
 
     public UserToken authenticate(String email, String password) {

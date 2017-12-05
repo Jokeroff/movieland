@@ -33,7 +33,7 @@ public class ReviewController {
     public Review add(@RequestBody String json) {
         LOG.info("Start saving review ");
 
-        User user = authService.getUserThreadLocal();
+        User user = authService.getCurrentUser();
         Review review = toReview(json);
         review.setUserId(user.getUserId());
         Review addedReview = reviewService.add(review);
