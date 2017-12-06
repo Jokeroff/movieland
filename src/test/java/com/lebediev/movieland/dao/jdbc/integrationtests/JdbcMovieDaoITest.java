@@ -136,4 +136,12 @@ public class JdbcMovieDaoITest {
         jdbcTemplate.update("DELETE FROM movie WHERE nameNative = 'after update' AND yearOfRelease = 1900");
     }
 
+    @Test
+    public void testSearch(){
+        List<Movie> movieList = jdbcMovieDao.searchByTitle("миля");
+        assertEquals(movieList.size(), 1);
+        movieList = jdbcMovieDao.searchByTitle("mile");
+        assertEquals(movieList.size(), 1);
+    }
+
 }

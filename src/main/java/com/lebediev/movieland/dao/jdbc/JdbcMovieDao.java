@@ -58,6 +58,8 @@ public class JdbcMovieDao implements MovieDao {
     private String queryAddRating;
     @Value("${query.getRatings}")
     private String queryGetRatings;
+    @Value("${query.searchByTitle}")
+    private String querySearchByTitle;
 
     @Override
     public List<Movie> getRandomMovies() {
@@ -217,6 +219,18 @@ public class JdbcMovieDao implements MovieDao {
 
         log.info("Finish getting ratings for all movies. It took {} ms", System.currentTimeMillis() - startTime);
         return movieRatingList;
+    }
+
+    @Override
+    public List<Movie> searchByTitle(String title) {
+        log.info("Start search movies by title = '{}' in db", title);
+        long startTime = System.currentTimeMillis();
+        String param = "%" + title.toLowerCase().trim() + "%";
+
+        List<Movie> movieList = jdbcTemplate.query(querySearchByTitle, movieRowMapper, param, param);
+
+        log.info("Finish search movies by title = '{}' in db. It took {} ms", title, System.currentTimeMillis() - startTime);
+        return movieList;
     }
 }
 

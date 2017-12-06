@@ -128,4 +128,16 @@ public class MovieController {
 
         LOG.info("Finish adding rating for movieId = {}", movieId);
     }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @ResponseBody
+    public String search(@RequestParam (value = "title") String title){
+        LOG.info("Start searching movies by name '{}'", title);
+        long startTime = System.currentTimeMillis();
+
+        List<MovieDto> moviesList = toMovieDtoList(movieService.searchByTitle(title));
+        String allMovies = toJson(moviesList, JsonConverter.JsonView.BASE);
+        LOG.info("Finish searching movies by name '{}' . It took {} ms", title, System.currentTimeMillis() - startTime);
+        return allMovies;
+    }
 }
