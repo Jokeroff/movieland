@@ -138,9 +138,9 @@ public class JdbcMovieDaoITest {
 
     @Test
     public void testSearch(){
-        List<Movie> movieList = jdbcMovieDao.searchByTitle("миля");
+        List<Movie> movieList = jdbcMovieDao.searchByTitle("миля", 0);
         assertEquals(movieList.size(), 1);
-        movieList = jdbcMovieDao.searchByTitle("mile");
+        movieList = jdbcMovieDao.searchByTitle("mile", 0);
         assertEquals(movieList.size(), 1);
     }
 

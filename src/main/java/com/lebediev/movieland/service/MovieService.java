@@ -29,6 +29,6 @@ public interface MovieService {
 
     double getRating(int movieId);
 
-    List<Movie> searchByTitle(String title);
+    List<Movie> searchByTitle(String title, int page);
 
 }

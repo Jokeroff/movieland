@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -79,22 +81,31 @@ public class MovieControllerTest {
         movieTwo.setGenres(Arrays.asList(genre));
         movieTwo.setCountries(Arrays.asList(country));
         movieTwo.setPicturePath("testPicturePathTwo");
-        List <Movie> movieList = Arrays.asList(movieOne, movieTwo);
+        List<Movie> movieList = Arrays.asList(movieOne, movieTwo);
+        List<Movie> sixMoviesList = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            sixMoviesList.add(movieOne);
+        }
+        List<Movie> fiveMoviesList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            fiveMoviesList.add(movieOne);
+        }
+
 
         when(movieService.getAllMovies(any(SortParams.class))).thenReturn(movieList);
         when(movieService.getMoviesByGenreId(anyInt(), any(SortParams.class))).thenReturn(movieList);
         when(movieService.getRandomMovies()).thenReturn(movieList);
         when(movieService.getMovieById(anyInt())).thenReturn(movieOne);
 
+        when(movieService.searchByTitle("any", 0)).thenReturn(sixMoviesList);
+        when(movieService.searchByTitle("any", 1)).thenReturn(fiveMoviesList);
+
         User user = new User(1, "nickname", "email", "password", Arrays.asList(Role.USER));
         User admin = new User(1, "nickname", "email", "password", Arrays.asList(Role.ADMIN));
         UserToken userTokenOne = new UserToken(UUID.randomUUID(), LocalDateTime.now(), user);
         UserToken userTokenTwo = new UserToken(UUID.randomUUID(), LocalDateTime.now(), admin);
         when(authService.authorize(UUID.fromString("096f33e2-a224-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenOne);
-        //when(authService.getCurrentUser()).thenReturn(user);
         when(authService.authorize(UUID.fromString("096f33e2-a335-3aed-9f93-a82fc74549fe"))).thenReturn(userTokenTwo);
-        //when(authService.getCurrentUser()).thenReturn(admin);
-
     }
 
     @Test
@@ -200,45 +211,52 @@ public class MovieControllerTest {
                 andExpect(jsonPath("$.id", is(44)));
     }
 
-   @Test
+    @Test
     public void testAdd() throws Exception {
         mockMvc.perform(post("/movie").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
-                                               "\"description\" : \"some description\"," +
-                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                "\"description\" : \"some description\"," +
+                "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
                 header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
 
 
-
         mockMvc.perform(post("/movie").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
-                                               "\"description\" : \"some description\"," +
-                                               "\"rating\" : 10.0, \"price\" : 330," +
+                "\"description\" : \"some description\"," +
+                "\"rating\" : 10.0, \"price\" : 330," +
                 "\"countries\" : [1,2,3], \"genres\" : [4,5,6,7], \"picturePath\" : \"http:somepath\" }").
                 header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
 
-       mockMvc.perform(post("/movie").
-               header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
+        mockMvc.perform(post("/movie").
+                header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
 
-       mockMvc.perform(post("/movie")).andExpect(status().isBadRequest());
+        mockMvc.perform(post("/movie")).andExpect(status().isBadRequest());
     }
 
     @Test
     public void testUpdate() throws Exception {
         mockMvc.perform(put("/movie/1").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
-                                               "\"description\" : \"some description\"," +
-                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                "\"description\" : \"some description\"," +
+                "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
                 header("uuid", "096f33e2-a335-3aed-9f93-a82fc74549fe")).andExpect(status().isOk());
 
 
-
         mockMvc.perform(put("/movie/1").content("{ \"nameRussian\" : \"название\", \"nameNative\" : \"testName\", \"yearOfRelease\" : 2000," +
-                                               "\"description\" : \"some description\"," +
-                                               "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
+                "\"description\" : \"some description\"," +
+                "\"rating\" : 10.0, \"price\" : 330,\"picturePath\" : \"http:somepath\" }").
                 header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
 
         mockMvc.perform(put("/movie/1").
                 header("uuid", "096f33e2-a224-3aed-9f93-a82fc74549fe")).andExpect(status().isBadRequest());
 
         mockMvc.perform(put("/movie/1")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testSearchPagination() throws Exception {
+        mockMvc.perform(get("/movie/search").param("title", "any").param("page", "0")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(6)));
+
+        mockMvc.perform(get("/movie/search").param("title", "any").param("page", "1")).andExpect(status().isOk()).
+                andExpect(jsonPath("$", hasSize(5)));
     }
 
 }

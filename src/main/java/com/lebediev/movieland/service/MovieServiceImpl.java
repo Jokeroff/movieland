@@ -78,7 +78,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> searchByTitle(String title) {
-        return movieDao.searchByTitle(title);
+    public List<Movie> searchByTitle(String title, int page) {
+        return movieDao.searchByTitle(title, page);
     }
 }

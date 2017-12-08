@@ -27,5 +27,5 @@ public interface MovieDao {
 
     List<MovieRating> getRatings();
 
-    List<Movie> searchByTitle(String title);
+    List<Movie> searchByTitle(String title, int page);
 }

@@ -60,8 +60,11 @@ public class RatingService {
             count += currentRating.get().getVoteCount();
         }
 
-        BigDecimal ratingRounded = new BigDecimal(Double.toString(ratingSum / count));
-        ratingRounded = ratingRounded.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal ratingRounded = new BigDecimal(0);
+        if (count != 0) {
+            ratingRounded = new BigDecimal(ratingSum / count);
+            ratingRounded = ratingRounded.setScale(2, RoundingMode.HALF_UP);
+        }
 
         log.info("Finish calculating rating for movie = {}", movieId);
         return ratingRounded.doubleValue();
