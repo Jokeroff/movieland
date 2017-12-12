@@ -15,14 +15,14 @@ import static com.lebediev.movieland.service.conversion.Currency.isValid;
 public class MovieParamsValidator {
 
 
-    public static SortParams isValidParams(Map <String, String> params) {
+    public static SortParams isValidParams(Map<String, String> params) {
         if (params.size() > 1) {
             throw new IllegalArgumentException("To many parameters: " + params);
         } else if (params.isEmpty()) {
             return new SortParams();
         }
 
-        for (Map.Entry <String, String> entrySet : params.entrySet()) {
+        for (Map.Entry<String, String> entrySet : params.entrySet()) {
             OrderBy orderBy = OrderBy.getOrderBy(entrySet.getKey());
             SortDirection sortDirection = SortDirection.getDirection(entrySet.getValue());
 
@@ -33,18 +33,31 @@ public class MovieParamsValidator {
         throw new IllegalArgumentException("Invalid parameters: " + params);
     }
 
-    public static Currency isValidParams(String currency){
+    public static Currency isValidParams(String currency) {
 
-        if(isValid(currency)){
+        if (isValid(currency)) {
             return getCurrency(currency);
         }
         throw new IllegalArgumentException("Wrong param: " + currency);
     }
 
-    public static MovieRating isValidParams(MovieRating movieRating){
-        if(movieRating.getRating() >= 1 && movieRating.getRating() <= 10){
+    public static MovieRating isValidParams(MovieRating movieRating) {
+        if (movieRating.getRating() >= 1 && movieRating.getRating() <= 10) {
             return movieRating;
         }
         throw new IllegalArgumentException("Rating should be between 1 and 10!");
+    }
+
+    public static int isValidParam(String param) {
+        int page = 0;
+        if (param == null) {
+            return page;
+        }
+        try {
+            page = Integer.parseInt(param);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid parameter page: " + param);
+        }
+        return page;
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.lebediev.movieland.service.validations.MovieParamsValidator.isValidParam;
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toJson;
 import static com.lebediev.movieland.web.controller.utils.JsonConverter.toMovieDtoForUpdate;
 import static com.lebediev.movieland.web.controller.utils.MovieDtoConverter.toMovieDto;
@@ -131,12 +132,14 @@ public class MovieController {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @ResponseBody
-    public String search(@RequestParam (value = "title") String title){
+    public String search(@RequestParam(value = "title") String title,
+                         @RequestParam(value = "page", required = false) String page) {
         LOG.info("Start searching movies by name '{}'", title);
         long startTime = System.currentTimeMillis();
 
-        List<MovieDto> moviesList = toMovieDtoList(movieService.searchByTitle(title));
+        List<MovieDto> moviesList = toMovieDtoList(movieService.searchByTitle(title, isValidParam(page)));
         String allMovies = toJson(moviesList, JsonConverter.JsonView.BASE);
+
         LOG.info("Finish searching movies by name '{}' . It took {} ms", title, System.currentTimeMillis() - startTime);
         return allMovies;
     }

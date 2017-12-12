@@ -222,14 +222,19 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
-    public List<Movie> searchByTitle(String title) {
-        log.info("Start search movies by title = '{}' in db", title);
+    public List<Movie> searchByTitle(String title, int page) {
+        log.info("Start search movies by title = '{}' and page = {} in db", title, page);
         long startTime = System.currentTimeMillis();
         String param = "%" + title.toLowerCase().trim() + "%";
+        String preparedQuery = querySearchByTitle;
 
-        List<Movie> movieList = jdbcTemplate.query(querySearchByTitle, movieRowMapper, param, param);
+        if (page != 0) {
+            preparedQuery = preparedQuery + " ORDER BY id LIMIT " + (page * 5 - 5) + ", 5";
+        }
 
-        log.info("Finish search movies by title = '{}' in db. It took {} ms", title, System.currentTimeMillis() - startTime);
+        List<Movie> movieList = jdbcTemplate.query(preparedQuery, movieRowMapper, param, param);
+
+        log.info("Finish search movies by title = '{}' and page = {} in db. It took {} ms", title, page, System.currentTimeMillis() - startTime);
         return movieList;
     }
 }
