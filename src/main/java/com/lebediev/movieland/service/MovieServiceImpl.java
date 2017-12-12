@@ -76,4 +76,9 @@ public class MovieServiceImpl implements MovieService {
     public double getRating(int movieId) {
         return ratingService.getRating(movieId);
     }
+
+    @Override
+    public List<Movie> searchByTitle(String title) {
+        return movieDao.searchByTitle(title);
+    }
 }
