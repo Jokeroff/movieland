@@ -6,6 +6,8 @@ import com.lebediev.movieland.service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 @Service
+@ManagedResource
 public class RatingService {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -71,7 +74,8 @@ public class RatingService {
     }
 
     @PostConstruct
-    private void invalidateCache() {
+    @ManagedOperation
+    public void invalidateCache() {
         log.info("Start invalidating ratings cache");
         long startTime = System.currentTimeMillis();
 
