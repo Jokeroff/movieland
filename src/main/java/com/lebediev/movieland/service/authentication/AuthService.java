@@ -6,6 +6,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 @Service
+@ManagedResource
 public class AuthService {
     private final static Logger LOG = LoggerFactory.getLogger(AuthService.class);
 
@@ -95,7 +98,8 @@ public class AuthService {
 
     @PostConstruct
     @Scheduled(fixedRateString = "${token.cache.fixedDelay.in.milliseconds}", initialDelayString = "${token.cache.fixedDelay.in.milliseconds}")
-    private void invalidateCache() {
+    @ManagedOperation
+    public void invalidateCache() {
         LOG.info("Auth cache. Start invalidating token cache");
         Iterator <UserToken> iterator = userTokenCache.values().iterator();
         while (iterator.hasNext()) {

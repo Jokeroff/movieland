@@ -45,5 +45,22 @@
     <task:executor id="executor" pool-size="2"/>
     <task:scheduler id="scheduler" pool-size="1"/>
 
+    <context:mbean-server id="mbeanServer" />
+
+    <context:mbean-export server="mbeanServer" />
+
+    <bean class="org.springframework.jmx.export.MBeanExporter">
+        <property name="server" ref="mbeanServer" />
+        <property name="namingStrategy">
+            <bean id="namingStrategy"
+                  class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
+                <property name="attributeSource">
+                    <bean
+                            class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource" />
+                </property>
+            </bean>
+        </property>
+    </bean>
+
 
 </beans>

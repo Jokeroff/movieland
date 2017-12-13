@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,7 @@ import java.util.List;
 
 @Repository
 @Primary
+@ManagedResource
 public class GenreCache implements GenreDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private volatile List <Genre> genreListCached;
@@ -42,7 +45,8 @@ public class GenreCache implements GenreDao {
 
     @Scheduled(fixedRateString = "${genreCache.fixedRate.in.milliseconds}", initialDelayString = "${genreCache.fixedRate.in.milliseconds}")
     @PostConstruct
-    private void invalidateCache() {
+    @ManagedOperation
+    public void invalidateCache() {
         log.info("Genre cache. Start getting genres from DB");
         long startTime = System.currentTimeMillis();
         genreListCached = jdbcGenreDao.getAll();

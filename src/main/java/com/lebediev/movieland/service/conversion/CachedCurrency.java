@@ -6,6 +6,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@ManagedResource
 public class CachedCurrency {
     private final static Logger LOG = LoggerFactory.getLogger(CachedCurrency.class);
     private volatile List <CurrencyEntity> currencyList;
@@ -89,7 +92,8 @@ public class CachedCurrency {
 
     @Scheduled(cron = "${currency.cache.cron.start.at}")
     @PostConstruct
-    private void invalidateCache() {
+    @ManagedOperation
+    public void invalidateCache() {
         LOG.info("Start invalidating currency cache");
         Security.insertProviderAt(new BouncyCastleProvider(), 1);
         long startTime = System.currentTimeMillis();
